@@ -3,18 +3,19 @@
 	{
 		"selected_items":
 		[
+			[
+				"pri",
+				"print"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"contents": "--[[\n\n基础篇， 初识lua\nprint 和 type都是 lua内建的函数。\n初识lua类型\n\nhttp://blog.csdn.net/glp3329/article/details/52511855\n--]]\n\n--[[\n    lua多行注释\n--]] --这里习惯在前面加上'--'\nprint(type(a)) -- 输出 nil\na = \"123\"\nprint(type(a)) -- 输出 string\na = 12\nprint(type(a)) -- 输出 number\na = 12.3\nprint(type(a)) -- 输出 number\nprint(0/0) -- 输出 nan  意思就是Not a Number 不是数字\nprint(type(0/0)) -- 输出 number , 意思就是nan都是number\n\n",
-			"file": "lua/a.lua",
-			"file_size": 460,
-			"file_write_time": 131226331069339072,
+			"file": "py/b.py",
 			"settings":
 			{
-				"buffer_size": 377,
+				"buffer_size": 142,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -23,7 +24,7 @@
 			"file": "py/a.py",
 			"settings":
 			{
-				"buffer_size": 647,
+				"buffer_size": 1837,
 				"encoding": "UTF-8 with BOM",
 				"line_ending": "Windows"
 			}
@@ -78,10 +79,13 @@
 	"expanded_folders":
 	[
 		"/E/Work/Github/PL/py",
+		"/E/Work/Github/PL/py/__pycache__",
 		"/E/Work/Github/PL/lua"
 	],
 	"file_history":
 	[
+		"/E/Work/Github/PL/py/a.py",
+		"/E/Work/Github/PL/lua/a.lua",
 		"/E/Work/Github/PL/pl.sublime-project"
 	],
 	"find":
@@ -122,24 +126,24 @@
 			[
 				{
 					"buffer": 0,
-					"file": "lua/a.lua",
+					"file": "py/b.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 377,
+						"buffer_size": 142,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								104,
-								51
+								141,
+								141
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax"
+							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -154,15 +158,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 647,
+						"buffer_size": 1837,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								112,
-								112
+								293,
+								0
 							]
 						],
 						"settings":

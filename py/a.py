@@ -15,6 +15,7 @@ http://blog.csdn.net/glp3329/article/details/52511855
 #  File "<stdin>", line 1, in <module> type(a) 
 #NameError: name 'a' is not defined
 '''
+
 a = "123"
 print(type(a)) # 输出 <class 'str'>
 print(id(a)) # 输出 35672112 - 每个人的结果不一样
