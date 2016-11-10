@@ -106,7 +106,7 @@ def check_in_number(num,code):
 		url = "api.sociapoker.com"
 	conn = http.client.HTTPConnection(url)
 
-	formalUids = [110191,110192,110195,103265,109886,102243,104859,134975,135061,110457]
+	formalUids = [110191,110192,110195,103265,109886,102243,104859,134975,135061,110457,135569]
 
 	if(IS_TEST):
 		for uid in range(10000,10000+num):
