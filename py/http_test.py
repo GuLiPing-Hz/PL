@@ -4,6 +4,9 @@ import time as _time
 import random
 import hashlib
 
+IS_TEST = False
+#必须要增加这个headers，否则会提示参数错误
+HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"} 
 HTTP_HEADER_TOKEN = "Dddi23*DOO#LKD3"
 
 def get_sign(rand,time):
@@ -49,13 +52,44 @@ def add_head(params):
 
 	return head
 
+#战鱼比赛报名
+def check_in(conn,uid,code):
+	'''
+	conn：HTTPConnection连接
+	uid: 用户ID
+	code: 指定需要加入的牌局
+	'''
+	print("current uid is ",uid,"do check in!")
 
-def check_in(num):
+	tempHead = dict(HEADERS)
+	print("tempHead = ",tempHead);
+	
+	dictParams = {'uid': uid, 'code': code, "os": 1} # 1 android
+	authHead = add_head(dictParams)
+	print("authHead = ",authHead);
+	tempHead.update(authHead)
+	print("tempHead = ",tempHead);
+
+	params =  urllib.parse.urlencode(dictParams)
+	#print(params)
+
+	try:
+		conn.request("POST", "/game/mttcheckin", params, tempHead)
+	except Exception as e:
+		print(str(e))
+	else:
+		pass
+	finally:
+		pass
+	
+	response = conn.getresponse()
+	data = response.read()
+	print(response.status, response.reason, data,sep=';') #指定分隔符
+
+
+def check_in_number(num,code):
 	#战鱼德州
 	#报名参加MTT 
-
-	#必须要增加这个headers，否则会提示参数错误
-	headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"} 
 
 	'''
 	请求域名的HttpConnection方法
@@ -65,28 +99,22 @@ def check_in(num):
 	# h3 = http.client.HTTPConnection('www.python.org', 80) #指定域名，端口
 	# h4 = http.client.HTTPConnection('www.python.org', 80, timeout=10) #指定域名，端口，超时时间
 
-	conn = http.client.HTTPConnection("120.27.162.46:8009")
+	url = ""
+	if(IS_TEST):
+		url = "120.27.162.46:8009"
+	else:
+		url = "api.sociapoker.com"
+	conn = http.client.HTTPConnection(url)
 
-	for uid in range(10000,10000+num):
-		print("current uid is ",uid,"do check in!")
+	formalUids = [110191,110192,110195,103265,109886,102243,104859,134975,135061,110457]
 
-		tempHead = dict(headers)
-		print("tempHead = ",tempHead);
-
-		
-		dictParams = {'uid': uid, 'code': 134294, "os": 1} # 1 android
-		authHead = add_head(dictParams)
-		print("authHead = ",authHead);
-		tempHead.update(authHead)
-		print("tempHead = ",tempHead);
-
-		params =  urllib.parse.urlencode(dictParams)
-		#print(params)
-
-		conn.request("POST", "/game/mttcheckin", params, tempHead)
-		response = conn.getresponse()
-		data = response.read()
-		print(response.status, response.reason, data,sep=';') #指定分隔符
+	if(IS_TEST):
+		for uid in range(10000,10000+num):
+			check_in(conn,uid,code)
+	else:
+		end = min(len(formalUids),num)
+		for uid in range(0,end):
+			check_in(conn,formalUids[uid],code)
 
 
 def login():
@@ -94,4 +122,4 @@ def login():
 
 
 if __name__ == '__main__':
-	check_in(1)
+	check_in_number(100,892621)
