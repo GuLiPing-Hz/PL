@@ -1,7 +1,12 @@
+#Http 模块
 import http.client, urllib.parse
+#日期
 from datetime import datetime, date, time
+#UTC time
 import time as _time
+#随机数
 import random
+#md5 sh1 加密模块
 import hashlib
 
 IS_TEST = False
@@ -27,20 +32,20 @@ def get_md5(params):
 	keys = sorted(keys)
 	for key in keys:
 		s = s+str(key)+str(params[key])
-	print("md5 origin =",s)
+	#print("md5 origin =",s)
 	return hashlib.md5(bytes(s,"utf_8")).hexdigest()
 
 def add_head(params):
 	utcTime = int(_time.time())
-	print("utcTime = ",utcTime)
+	#print("utcTime = ",utcTime)
 	randNum = int(random.random()*(9999-1000))+1000
-	print("randNum = ",randNum)
+	#print("randNum = ",randNum)
 
 	sign1 = get_sign(randNum,utcTime);
-	print("sign1 = ",sign1)
+	#print("sign1 = ",sign1)
 
 	sign2 = get_md5(params)
-	print("sign2 = ",sign2)
+	#print("sign2 = ",sign2)
 
 	head = {};
 	head["04B29480233F4DEF5C875875B6BDC3B1"] = sign1
@@ -52,7 +57,7 @@ def add_head(params):
 
 	return head
 
-#战鱼比赛报名
+#战鱼德州圈 比赛报名
 def check_in(conn,uid,code):
 	'''
 	conn：HTTPConnection连接
@@ -62,35 +67,31 @@ def check_in(conn,uid,code):
 	print("current uid is ",uid,"do check in!")
 
 	tempHead = dict(HEADERS)
-	print("tempHead = ",tempHead);
+	#print("tempHead = ",tempHead);
 	
 	dictParams = {'uid': uid, 'code': code, "os": 1} # 1 android
 	authHead = add_head(dictParams)
-	print("authHead = ",authHead);
+	#print("authHead = ",authHead);
 	tempHead.update(authHead)
-	print("tempHead = ",tempHead);
+	#print("tempHead = ",tempHead);
 
 	params =  urllib.parse.urlencode(dictParams)
 	#print(params)
 
 	try:
 		conn.request("POST", "/game/mttcheckin", params, tempHead)
+
+		response = conn.getresponse()
+		data = response.read()
+		print(response.status, response.reason, data,sep=';') #指定分隔符
 	except Exception as e:
 		print(str(e))
 	else:
 		pass
 	finally:
 		pass
-	
-	response = conn.getresponse()
-	data = response.read()
-	print(response.status, response.reason, data,sep=';') #指定分隔符
 
-
-def check_in_number(num,code):
-	#战鱼德州
-	#报名参加MTT 
-
+def check_in_number(conn,num,code):
 	'''
 	请求域名的HttpConnection方法
 	'''
@@ -98,13 +99,6 @@ def check_in_number(num,code):
 	# h2 = http.client.HTTPConnection('www.python.org:80') #指定域名，端口
 	# h3 = http.client.HTTPConnection('www.python.org', 80) #指定域名，端口
 	# h4 = http.client.HTTPConnection('www.python.org', 80, timeout=10) #指定域名，端口，超时时间
-
-	url = ""
-	if(IS_TEST):
-		url = "120.27.162.46:8009"
-	else:
-		url = "api.sociapoker.com"
-	conn = http.client.HTTPConnection(url)
 
 	formalUids = [110191,110192,110195,103265,109886,102243,104859,134975,135061,110457,135569]
 
@@ -116,10 +110,26 @@ def check_in_number(num,code):
 		for uid in range(0,end):
 			check_in(conn,formalUids[uid],code)
 
-
 def login():
 	pass
 
-
 if __name__ == '__main__':
-	check_in_number(100,892621)
+
+	import sys
+	print("len(sys.argv) = ",len(sys.argv))
+	for i,s in enumerate(sys.argv) :
+		print("sys.argv["+str(i)+"] =",s)
+
+	IS_TEST = True
+
+	url = ""
+	if(IS_TEST):
+		url = "120.27.162.46:8009"
+	else:
+		url = "api.sociapoker.com"
+	conn = http.client.HTTPConnection(url)
+
+	#批量报名
+	#check_in_number(conn,2000,644988)
+	#单独报名
+	#check_in(conn,11252,115656)
