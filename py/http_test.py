@@ -57,6 +57,35 @@ def add_head(params):
 
 	return head
 
+#参加普通比赛
+def join_in(conn,uid,code):
+	print("current uid is ",uid,"do join in!")
+
+	tempHead = dict(HEADERS)
+	#print("tempHead = ",tempHead);
+	
+	dictParams = {'uid': uid, 'code': code, "os": 1,"from_tid":"14786427"} # 1 android
+	authHead = add_head(dictParams)
+	#print("authHead = ",authHead);
+	tempHead.update(authHead)
+	#print("tempHead = ",tempHead);
+
+	params =  urllib.parse.urlencode(dictParams)
+	#print(params)
+
+	try:
+		conn.request("POST", "/game/join", params, tempHead)
+
+		response = conn.getresponse()
+		data = response.read()
+		print(response.status, response.reason, data,sep=';') #指定分隔符
+	except Exception as e:
+		print(str(e))
+	else:
+		pass
+	finally:
+		pass
+
 #战鱼德州圈 比赛报名
 def check_in(conn,uid,code):
 	'''
@@ -69,7 +98,7 @@ def check_in(conn,uid,code):
 	tempHead = dict(HEADERS)
 	#print("tempHead = ",tempHead);
 	
-	dictParams = {'uid': uid, 'code': code, "os": 1} # 1 android
+	dictParams = {'uid': uid, 'code': code, "os": 1,"from_tid":"14786427"} # 1 android , 书本 1418543
 	authHead = add_head(dictParams)
 	#print("authHead = ",authHead);
 	tempHead.update(authHead)
@@ -92,14 +121,6 @@ def check_in(conn,uid,code):
 		pass
 
 def check_in_number(conn,num,code):
-	'''
-	请求域名的HttpConnection方法
-	'''
-	# h1 = http.client.HTTPConnection('www.python.org')    #指定域名
-	# h2 = http.client.HTTPConnection('www.python.org:80') #指定域名，端口
-	# h3 = http.client.HTTPConnection('www.python.org', 80) #指定域名，端口
-	# h4 = http.client.HTTPConnection('www.python.org', 80, timeout=10) #指定域名，端口，超时时间
-
 	formalUids = [110191,110192,110195,103265,109886,102243,104859,134975,135061,110457,135569]
 
 	if(IS_TEST):
@@ -109,6 +130,17 @@ def check_in_number(conn,num,code):
 		end = min(len(formalUids),num)
 		for uid in range(0,end):
 			check_in(conn,formalUids[uid],code)
+
+def join_in_number(conn,num,code):
+	formalUids = [110191,110192,110195,103265,109886,102243,104859,134975,135061,110457,135569]
+
+	if(IS_TEST):
+		for uid in range(10000,10000+num):
+			join_in(conn,uid,code)
+	else:
+		end = min(len(formalUids),num)
+		for uid in range(0,end):
+			join_in(conn,formalUids[uid],code)
 
 def login():
 	pass
@@ -122,14 +154,26 @@ if __name__ == '__main__':
 
 	IS_TEST = True
 
+	'''
+	请求域名的HttpConnection方法
+	'''
+	# h1 = http.client.HTTPConnection('www.python.org')    #指定域名
+	# h2 = http.client.HTTPConnection('www.python.org:80') #指定域名，端口
+	# h3 = http.client.HTTPConnection('www.python.org', 80) #指定域名，端口
+	# h4 = http.client.HTTPConnection('www.python.org', 80, timeout=10) #指定域名，端口，超时时间
 	url = ""
 	if(IS_TEST):
-		url = "120.27.162.46:8009"
+		url = "10.200.1.238:8005"
 	else:
 		url = "api.sociapoker.com"
 	conn = http.client.HTTPConnection(url)
 
+	#比赛报名
 	#批量报名
-	#check_in_number(conn,2000,644988)
+	check_in_number(conn,2000,97657714786427)
 	#单独报名
-	#check_in(conn,11252,115656)
+	#check_in(conn,20000,115656)
+
+	#普通加入
+	#join_in_number(conn,10,819798100023);
+
