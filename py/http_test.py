@@ -52,7 +52,7 @@ def add_head(params):
 	head["34D1C35063280164066ECC517050DA0B"] = randNum
 	head["07CC694B9B3FC636710FA08B6922C42B"] = utcTime
 	head["8D777F385D3DFEC8815D20F7496026DC"] = sign2 # md5
-	head["my-app-ver"] = "1.3.2" #app 版本号
+	head["my-app-ver"] = "1.4.2" #app 版本号
 	head["area"] = "86" #app 地区版本
 
 	return head
@@ -163,14 +163,14 @@ if __name__ == '__main__':
 	# h4 = http.client.HTTPConnection('www.python.org', 80, timeout=10) #指定域名，端口，超时时间
 	url = ""
 	if(IS_TEST):
-		url = "10.200.1.238:8005"
+		url = "10.200.1.238:8009"
 	else:
 		url = "api.sociapoker.com"
 	conn = http.client.HTTPConnection(url)
 
 	#比赛报名
 	#批量报名
-	check_in_number(conn,2000,97657714786427)
+	check_in_number(conn,11,995749)
 	#单独报名
 	#check_in(conn,20000,115656)
 

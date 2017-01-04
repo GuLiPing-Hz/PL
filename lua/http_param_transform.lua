@@ -6,4 +6,4 @@ function parse(s)
 	end
 end	
 
-parse("{uid=10327, os=1, ccode=86}")
+parse("{uid=10327, word=5368873, os=1, ccode=86}")

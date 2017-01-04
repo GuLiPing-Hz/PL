@@ -47,7 +47,16 @@
 			"file": "lua/http_param_transform.lua",
 			"settings":
 			{
-				"buffer_size": 172,
+				"buffer_size": 186,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py/http_test.py",
+			"settings":
+			{
+				"buffer_size": 4228,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -175,15 +184,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 172,
+						"buffer_size": 186,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								172,
-								172
+								186,
+								186
 							]
 						],
 						"settings":
@@ -199,8 +208,37 @@
 				},
 				{
 					"buffer": 1,
+					"file": "py/http_test.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4228,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4177,
+								4177
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "lua/a.lua",
-					"semi_transient": true,
+					"semi_transient": false,
 					"settings":
 					{
 						"buffer_size": 1225,
