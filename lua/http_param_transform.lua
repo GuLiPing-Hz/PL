@@ -1,3 +1,6 @@
+-- lua 5.3.2
+--@ guliping
+
 function parse(s)
 	local str = "map = "..s.." return map"
 	local f = load(str)
@@ -6,4 +9,8 @@ function parse(s)
 	end
 end	
 
-parse("{uid=10327, word=5368873, os=1, ccode=86}")
+--调用的时候务必把参数中的中文改成英文或数字
+parse("{gid=248957, uid=110457, lid=100000, os=1, tid=7474412, ccode=86}")
+
+--URL = http://api.sociapoker.com/league/getSettlementInfo;
+--Param={gid=248957, uid=110457, lid=100000, os=1, tid=7474412, ccode=86}

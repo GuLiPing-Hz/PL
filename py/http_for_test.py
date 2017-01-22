@@ -1,4 +1,5 @@
 #! python3.4
+#@ guliping
 
 #Http 模块
 import http.client, urllib.parse
@@ -93,7 +94,7 @@ def check_in(conn,uid,code):
 	'''
 	conn：HTTPConnection连接
 	uid: 用户ID
-	code: 指定需要加入的牌局
+	code: 指定需要加入的牌局code
 	'''
 	print("current uid is ",uid,"do check in!")
 
@@ -123,6 +124,11 @@ def check_in(conn,uid,code):
 		pass
 
 def check_in_number(conn,num,code):
+	"""
+	conn ：HTTPConnection连接
+	num ： 人数
+	code ： 牌局code
+	"""
 	formalUids = [110191,110192,110195,103265,109886,102243,104859,134975,135061,110457,135569]
 
 	if(IS_TEST):
@@ -155,25 +161,18 @@ if __name__ == '__main__':
 		print("sys.argv["+str(i)+"] =",s)
 
 	#正式测试的开关 --------------------------------------------------------------------------------------------------------------------------------
-	IS_TEST = True
+	IS_TEST = False
 
-	'''
-	请求域名的HttpConnection方法
-	'''
-	# h1 = http.client.HTTPConnection('www.python.org')    #指定域名
-	# h2 = http.client.HTTPConnection('www.python.org:80') #指定域名，端口
-	# h3 = http.client.HTTPConnection('www.python.org', 80) #指定域名，端口
-	# h4 = http.client.HTTPConnection('www.python.org', 80, timeout=10) #指定域名，端口，超时时间
 	url = ""
 	if(IS_TEST):
-		url = "10.200.1.203:8010"
+		url = "10.200.1.238:8009"
 	else:
 		url = "api.sociapoker.com"
 	conn = http.client.HTTPConnection(url)
 
 	#比赛报名
 	#批量报名
-	check_in_number(conn,10,613654)
+	check_in_number(conn,10,291879)
 	#单独报名
 	#check_in(conn,20000,115656)
 
