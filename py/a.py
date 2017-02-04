@@ -1,4 +1,5 @@
-﻿'''
+﻿#!python3.4.2
+'''
 
 基础篇， 初识python
 print 和 type都是 python内建的函数。
@@ -8,8 +9,21 @@ help函数可以给我们提供帮助文档
 
 http://blog.csdn.net/glp3329/article/details/52511855
 '''
+'''
+import keyword
+keyword.kwlist
+
+控制台输入，获取当前python的关键字
+
+'''
+
+# 单行注释
+'''
+多行注释 ， python讲究代码块的缩进保持一致
+'''
 
 #type(a)  不能使用未定义的变量
+
 ''' 输出
 #Traceback (most recent call last): 
 #  File "<stdin>", line 1, in <module> type(a) 
@@ -25,6 +39,21 @@ print(id(a)) # 输出 1488898480 - 每个人的结果不一样
 a = 12.3
 print(type(a)) # 输出 <class 'float'>
 print(id(a)) # 输出 5734688 - 每个人的结果不一样
+
+'''
+Python3 中有六个标准的数据类型:
+
+Number（数字） int、float、bool、complex 
+	只有一种整数类型 int，表示为长整型，没有 python2 中的 Long
+String（字符串）
+List（列表）
+Tuple（元组）
+Sets（集合）
+Dictionary（字典）
+
+申明的变量，可以使用del语句删除一些对象引用
+del a, b
+'''
 
 '''作死除法
 Traceback (most recent call last):
@@ -43,6 +72,7 @@ print(a,b,c)
 '''
 python操作符
 
+在交互模式下，python会把运算的结果保存在 '_' 里面
 '''
 
 # 1.算术运算符:
