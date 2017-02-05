@@ -48,12 +48,6 @@ function、thread（其实是协同进程的概念，跟线程的区别是同一
 table
 --]]
 
---多重赋值
--- a = b = c = 10 不允许连等
-print(a,b,c) -- 未定义的变量默认值是nil
-a,b,c = 1,"a",2
-print(a,b,c)
-
 
 --[[
 lua操作符
@@ -90,6 +84,19 @@ print(a and b) 	--等价与 &&
 print(a or b) 	--等价与 ||
 print(not a) 	--等价与 !
 
+--[[
+运算符优先级
+从高到低的顺序：
+^
+not    - (unary)
+*      /
++      -
+..
+<      >      <=     >=     ~=     ==
+and
+or
+--]]
+
 -- 4.其他运算符
 
 --字符串连接符 ..
@@ -102,3 +109,39 @@ print(#a) -- 计算字符串长度
 b = {1,2}
 print(#b) -- 计算table size
 
+--table 访问有三个方法，使用[],或者点，或者内建函数
+tab = {}
+tab["n"] = 10 -- tab["n"] 等价于 tab.n
+tab[1] = 9 -- 数字无法使用第二种表示方法 tab.1 会报错
+print("tab.n=",tab.n,';tab[1]=',tab[1])
+print("tab.n=",rawget(tab,"n"),';tab[1]=',tab[1])
+
+-- lua可以计算 数字的字符串和数字的相加
+print("1"+2)
+
+
+-- 字符串
+s = "Hello World"
+s1 = 'Hello World'
+s2 = [[Hello
+		World]]
+print(s,s1,s2)
+print(string.rep("*",30))--"*********************************")
+
+-- lua 对字符串的访问支持正负索引
+print(string.sub(s,1)) -- lua 的所有索引起点都是1 区别于其他的从0开始的索引
+print(string.sub(s,1,3)) -- 前后闭区间
+print(string.sub(s,3,2)) -- 无输出
+print(string.sub(s,-5,-2)) -- 前后闭区间 ->Worl
+print("长度=",#s,string.len(s)) -- 查看字符串长度
+
+print("字符串复制",string.rep("*",30))
+print("字符串格式化",string.format("the first code is %s",s)) -- 格式等价于C语言
+print("字符串全部转为大写字母",string.upper(s))
+print("字符串全部转为小写字母",string.lower(s))
+print("字符串查找",string.find(s,"ll",1)) -- 返回在字符串中的开始位置和结束位置，找不到返回nil
+print("字符串查找替换",string.gsub(s,"l","L",2)) -- 最后一个参数是要替换的次数，不填，默认全部替换
+print("字符串查找替换2",string.gsub(s,"l","L"))
+print("字符串反转",string.reverse(s))
+-- char是把数字转换成字符串，byte把字符串转换成数字
+print("字符串ASII码",string.char(0),string.char(97),string.byte(s,2))
