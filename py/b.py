@@ -10,7 +10,7 @@ a = 1         # 全局变量
 b = 1         # 全局变量
 
 def joke():
-    c = 2     # 局部变量
+    c = 2     # 局部变量 python中函数体内部的是局部变量
 
 joke()
 #print(c)    # 报错，这里c是未定义
@@ -86,6 +86,10 @@ for i in range(len(fruits)) :
 	break # 跳出循环 , 可以尝试把continue语句注释
 else:
 	print("水果结束了") #当有break 的时候我们这个else就不会执行
+print("\n"+"*"*30)
+
+for i,v in enumerate(fruits) : # enumerate 的用法等价于上面那个循环，只不过可以获得索引跟值
+	print("fruits[",i,"]=",fruits[i],end=",")
 print()
 
 # pass 语句

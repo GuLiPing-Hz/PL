@@ -58,3 +58,7 @@ print("*"*30)
 # ** 也可以解包字典
 testmap(**{"a":1,"b":2})
 
+# lambda 创建匿名函数
+# 语法 lambda [arg1 [,arg2,.....argn]]:expression
+mul = lambda arg1,arg2:arg1*arg2
+print("3*4 = ",mul(3,4)) 
