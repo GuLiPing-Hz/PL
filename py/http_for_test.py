@@ -55,7 +55,7 @@ def add_head(params):
 	head["34D1C35063280164066ECC517050DA0B"] = randNum
 	head["07CC694B9B3FC636710FA08B6922C42B"] = utcTime
 	head["8D777F385D3DFEC8815D20F7496026DC"] = sign2 # md5
-	head["my-app-ver"] = "1.4.2" #app 版本号
+	head["my-app-ver"] = "1.4.7" #app 版本号
 	head["area"] = "86" #app 地区版本
 
 	return head
@@ -112,7 +112,6 @@ def check_in(conn,uid,code):
 
 	try:
 		conn.request("POST", "/game/mttcheckin", params, tempHead)
-
 		response = conn.getresponse()
 		data = response.read()
 		print(response.status, response.reason, data,sep=';') #指定分隔符
@@ -150,6 +149,45 @@ def join_in_number(conn,num,code):
 		for uid in range(0,end):
 			join_in(conn,formalUids[uid],code)
 
+def buy_vip(conn,uid,vip_level,os):
+	'''
+	conn：HTTPConnection连接
+	uid: 用户ID
+	vip_level: 1白金，2黑金
+	os: 0 ios ；1 android 
+	'''
+	print(uid,"buy vip ",vip_level)
+
+	tempHead = dict(HEADERS)
+	print("tempHead = ",tempHead);
+	
+	goodsid = 0
+	if vip_level == 1 :
+		goodsid = 3001
+	elif vip_level == 2:
+		goodsid = 3002
+
+	dictParams = {'uid': uid, "os": os,"uid":uid,"goodsid":goodsid} # 1 android , 书本 1418543
+	authHead = add_head(dictParams)
+	print("authHead = ",authHead);
+	tempHead.update(authHead)
+	print("tempHead = ",tempHead);
+
+	params =  urllib.parse.urlencode(dictParams)
+	print(params)
+	try:
+		conn.request("POST", "/shop/buy", params, tempHead)
+		response = conn.getresponse()
+		data = response.read()
+		print(response.status, response.reason, data,sep=';') #指定分隔符
+	except Exception as e:
+		print(str(e))
+	else:
+		pass
+	finally:
+		pass
+
+
 def login():
 	pass
 
@@ -172,10 +210,13 @@ if __name__ == '__main__':
 
 	#比赛报名
 	#批量报名
-	check_in_number(conn,10,291879)
+	#check_in_number(conn,1,427861)
 	#单独报名
 	#check_in(conn,20000,115656)
 
 	#普通加入
 	#join_in_number(conn,10,819798100023);
+
+	#购买VIP
+	#buy_vip(conn,110457,1,1)#uid; 1:白金,2:黑金;  0:ios,1:android
 
