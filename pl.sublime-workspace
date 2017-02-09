@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"vip",
+				"vip_level"
+			],
+			[
 				"p",
 				"parse"
 			],
@@ -44,37 +48,10 @@
 	"buffers":
 	[
 		{
-			"file": "lua/http_param_transform.lua",
-			"settings":
-			{
-				"buffer_size": 395,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "py/a.py",
-			"settings":
-			{
-				"buffer_size": 1837,
-				"encoding": "UTF-8 with BOM",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "py/http_test.py",
-			"settings":
-			{
-				"buffer_size": 4381,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "py/http_for_test.py",
 			"settings":
 			{
-				"buffer_size": 4148,
+				"buffer_size": 5053,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -84,6 +61,15 @@
 			"settings":
 			{
 				"buffer_size": 1225,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lua/http_param_transform.lua",
+			"settings":
+			{
+				"buffer_size": 395,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -146,13 +132,14 @@
 	],
 	"file_history":
 	[
-		"/E/Work/Github/PL/py/http_for_test.py",
+		"/E/Work/Github/PL/lua/http_param_transform.lua",
+		"/E/Work/Github/PL/lua/a.lua",
 		"/E/Work/Github/PL/py/http_test.py",
+		"/E/Work/Github/PL/py/http_for_test.py",
 		"/E/Work/Github/PL/py/b.py",
 		"/E/Work/Github/PL/py/test.py",
 		"/C/Python34/lib/socket.py",
 		"/C/Python34/lib/http/client.py",
-		"/E/Work/Github/PL/lua/a.lua",
 		"/E/Work/Github/PL/py/a.py",
 		"/E/Work/eclipse/bin/AndroidManifest.xml",
 		"/C/Users/admin/Desktop/编辑1",
@@ -194,32 +181,33 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "lua/http_param_transform.lua",
+					"file": "py/http_for_test.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 395,
+						"buffer_size": 5053,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								395,
-								395
+								4850,
+								4850
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Lua/Lua.sublime-syntax"
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 4872.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
@@ -227,92 +215,6 @@
 				},
 				{
 					"buffer": 1,
-					"file": "py/a.py",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1837,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								504,
-								504
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2436.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "py/http_test.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4381,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								517,
-								517
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 84.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "py/http_for_test.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4148,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								24,
-								13
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
 					"file": "lua/a.lua",
 					"semi_transient": false,
 					"settings":
@@ -324,8 +226,8 @@
 						"selection":
 						[
 							[
-								1156,
-								1156
+								222,
+								222
 							]
 						],
 						"settings":
@@ -333,10 +235,38 @@
 							"syntax": "Packages/Lua/Lua.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 252.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "lua/http_param_transform.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 395,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								261,
+								261
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -375,7 +305,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 312.0
+		"height": 279.0
 	},
 	"output.find_results":
 	{
