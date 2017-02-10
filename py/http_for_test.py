@@ -210,7 +210,7 @@ if __name__ == '__main__':
 
 	#比赛报名
 	#批量报名
-	#check_in_number(conn,1,427861)
+	check_in_number(conn,10,567792)
 	#单独报名
 	#check_in(conn,20000,115656)
 
