@@ -36,7 +36,7 @@ function show_utf8(s)
 		utf8s = utf8s..utf8.char(c_num)
 		
 	end
-	print("接口返回utf8字符转中文:"..temp.." ->"..utf8s)
+	print("接口返回utf8字符转中文:"..s.." ->"..utf8s)
 	-- print(utf8.len(temp))
 	-- print(utf8.char(0x7248))
 end
