@@ -3,3 +3,11 @@
 1 下载安装node.js
 2 运行cmd  npm install -g typescript 参考http://www.typescriptlang.org/#download-links
 3 编译ts成js tsc xxx.ts
+
+
+sublime 安装typescript 
+#1 Preferences -> Browse Packages... 
+1 Preferences -> Package Control
+2 install Package
+3 等待弹出选择，搜索TypeScript
+4 安装 完成 重启
