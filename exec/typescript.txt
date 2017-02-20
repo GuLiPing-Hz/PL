@@ -1,0 +1,5 @@
+
+
+1 下载安装node.js
+2 运行cmd  npm install -g typescript 参考http://www.typescriptlang.org/#download-links
+3 编译ts成js tsc xxx.ts
