@@ -179,7 +179,8 @@ def buy_vip(conn,uid,vip_level,os):
 		conn.request("POST", "/shop/buy", params, tempHead)
 		response = conn.getresponse()
 		data = response.read()
-		print(response.status, response.reason, data,sep=';') #指定分隔符
+		print(type(data))
+		print(response.status, response.reason, data.decode(),sep=';') #指定分隔符
 	except Exception as e:
 		print(str(e))
 	else:
@@ -199,7 +200,7 @@ if __name__ == '__main__':
 		print("sys.argv["+str(i)+"] =",s)
 
 	#正式测试的开关 --------------------------------------------------------------------------------------------------------------------------------
-	IS_TEST = False
+	IS_TEST = True
 
 	url = ""
 	if(IS_TEST):
@@ -210,7 +211,7 @@ if __name__ == '__main__':
 
 	#比赛报名
 	#批量报名
-	check_in_number(conn,10,567792)
+	check_in_number(conn,2,164456)
 	#单独报名
 	#check_in(conn,20000,115656)
 
