@@ -66,12 +66,28 @@ if __name__ == '__main__':
 	#main()
 	numbers = ["13732293103"]
 
+	# 查看系统运行状态 pip install psutil
+	# https://pypi.python.org/pypi/psutil
+	import psutil
+	print(psutil.cpu_percent()) #查看CPU
+	print("*"*60)
+	vm = psutil.virtual_memory()
+	print(type(vm),vm)
+	print("*"*60)
+	print(vm.total,vm.available,vm.percent) #查看虚拟内存
+	print("*"*60)
+	print(psutil.disk_partitions()) #查看硬盘分区
+	print("*"*60)
+	print(psutil.disk_usage('/')) #查看硬盘使用
+	print("*"*60)
+	print(psutil.net_io_counters(pernic=True)) #查看网络链接
+	#print(psutil.net_connections()) #查看网络连接
+
 	"""
 	Token令牌
 	通知内容
 	通知列表
 	是否全员通知
 	"""
-	ding_text("f65cce87009618e5ba38b901aa2a0405f05832fca03da130ce5feea569f55709"
-		,"Hello World",numbers,True)
+	#ding_text("f65cce87009618e5ba38b901aa2a0405f05832fca03da130ce5feea569f55709","Hello World",numbers,True)
 

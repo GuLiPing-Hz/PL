@@ -6,6 +6,8 @@ dir(builtins)#跟lua一样，查看当前内建的变量和函数，模块
 dir()#查看当前定义的变量,函数,模块
 import sys
 dir(sys)#查看该sys包下可用的变量，函数，模块
+
+python 安装第三方包库 参见http://blog.csdn.net/glp3329/article/details/52664998
 '''
 
 '''
