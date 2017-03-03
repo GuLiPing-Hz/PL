@@ -1,4 +1,4 @@
-#!python3.4.2
+#!python3.4
 '''
 python 数据类型详解
 '''
@@ -21,7 +21,7 @@ print(s[-5:-2]) # 前闭后开区间 ->Wor
 print("长度=",len(s)) # 查看字符串长度
 
 print("字符串复制","*"*30)
-print("字符串格式化","the first code is %s" % (s))
+print("字符串格式化","the first code is {}".format(s)) # 替代 %   -> "%s" % (s)
 print("字符串成员运算符in,Hello 是否存在","Hello" in s)
 print("字符串成员运算符not in,Hello 是否不存在","Hello" not in s)
 print("原始字符串",r"Hello\n",R"World\n")

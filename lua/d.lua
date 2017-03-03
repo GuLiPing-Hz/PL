@@ -111,3 +111,6 @@ for v in my_itera(tab) do
 end
 
 -- 不过感觉lua内建的 ipairs 和 pairs 已经够用了
+
+
+-- lua元表更多内容参见 http://blog.csdn.net/glp3329/article/details/52713288

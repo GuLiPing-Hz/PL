@@ -2,12 +2,12 @@
 模块示例
 ]]
 
-dA = {}
+eA = {}
 
 --定义模块变量
-dA.a = 1
+eA.a = 1
 
-function dA.b()
+function eA.b()
 	print("call dA.b()")
 end
 
@@ -17,13 +17,13 @@ local function c()
 end
 
 --模块函数，调用模块私有函数
-function dA.d()
+function eA.d()
 	c()
 end
 
 --模块函数
-dA.e = function()
+eA.e = function()
 	print("call e()")
 end
 
-return dA
+return eA

@@ -1,4 +1,4 @@
-﻿#!python3.4.2
+﻿#!python3.4
 '''
 查询python环境
 import builtins

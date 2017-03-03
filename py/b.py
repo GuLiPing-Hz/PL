@@ -1,4 +1,4 @@
-#!python3.4.2
+#!python3.4
 '''
 python 变量
 python 默认都是局部变量

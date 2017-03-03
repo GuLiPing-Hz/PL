@@ -16,7 +16,7 @@ function parse(s)
 end	
 
 --调用的时候务必把参数中的中文改成英文或数字
-parse("{uid=10318,hid='5885bedcbeb4c23b803673e5', os=1,play_mode=1,ccode=86}")
+parse("{uid=10318, os=1, ccode=86, tid=14097332, promoter_uid=10321, members=11633}")
 
 --URL = http://api.sociapoker.com/league/getSettlementInfo;
 --Param={gid=248957, uid=110457, lid=100000, os=1, tid=7474412, ccode=86}
