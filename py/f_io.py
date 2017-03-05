@@ -1,4 +1,5 @@
 #!python3.4
+#@ guliping
 
 """
 IO，标准IO，文件IO

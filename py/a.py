@@ -1,4 +1,6 @@
 ﻿#!python3.4
+#@ guliping
+
 '''
 查询python环境
 import builtins

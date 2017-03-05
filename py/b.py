@@ -1,4 +1,6 @@
 #!python3.4
+#@ guliping
+
 '''
 python 变量
 python 默认都是局部变量

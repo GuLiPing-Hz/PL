@@ -1,4 +1,6 @@
 #!python3.4
+#@ guliping
+
 '''
 python 数据类型详解
 '''

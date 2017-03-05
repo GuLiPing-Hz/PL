@@ -1,5 +1,5 @@
 #!python3.4
-
+#@ guliping
 
 ''' 函数
 http://blog.csdn.net/glp3329/article/details/52538511

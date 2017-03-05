@@ -1,4 +1,5 @@
 #! python3.4
+#@ guliping
 
 #Http 模块
 import http.client, urllib.parse
@@ -50,10 +51,10 @@ def add_head(params):
 	#print("sign2 = ",sign2)
 
 	head = {};
-	head["04B29480233F4DEF5C875875B6BDC3B1"] = sign1
+	head["04B29480233F4DEF5C875875B6BDC3B1"] = "" #sign1
 	head["34D1C35063280164066ECC517050DA0B"] = randNum
 	head["07CC694B9B3FC636710FA08B6922C42B"] = utcTime
-	head["8D777F385D3DFEC8815D20F7496026DC"] = sign2 # md5
+	head["8D777F385D3DFEC8815D20F7496026DC"] = "" #sign2 # md5
 	head["my-app-ver"] = "1.4.2" #app 版本号
 	head["area"] = "86" #app 地区版本
 

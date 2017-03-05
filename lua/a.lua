@@ -1,4 +1,6 @@
 #!lua 5.3.2
+--@guliping
+
 --[[
 查询lua环境
 for k,v in pairs(_G) do print(k,v) end
