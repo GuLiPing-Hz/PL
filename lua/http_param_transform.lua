@@ -7,16 +7,20 @@ function parse(s)
 	local status,f = pcall(load,str);
 	print(status,f)
 	if status and f then
+		print(str.rep("*",60))
 		for k,v in pairs(f()) do
 			print(k..":"..v)
 		end
 	else
+		print(str.rep("*",60))
 		print("load error = ")
 	end
+	print(str.rep("*",60))
 end	
 
 --调用的时候务必把参数中的中文改成英文或数字
-parse("{uid=10318, os=1, ccode=86, tid=14097332, promoter_uid=10321, members=11633}")
+parse("{gid=322724, uid=146953, lid=100004, os=1, ccode=86, play_mode=0}")
+parse("{8D777F385D3DFEC8815D20F7496026DC=5b70d8f2baa23057f1d45b251cee8b97, 34D1C35063280164066ECC517050DA0B=2880, 07CC694B9B3FC636710FA08B6922C42B=1489486803, area=86, 04B29480233F4DEF5C875875B6BDC3B1=79c091ece0898a0ae6c699493cd8c7f049c5d1d3, my-app-ver=1.5.0}")
 
 --URL = http://api.sociapoker.com/league/getSettlementInfo;
 --Param={gid=248957, uid=110457, lid=100000, os=1, tid=7474412, ccode=86}
