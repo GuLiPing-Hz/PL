@@ -17,7 +17,7 @@ import json
 #HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"} 
 HEADERS = {"Content-type": "application/json","Accept": "text/plain"} 
 
-#启动钉钉通知消息
+	#启动钉钉通知消息
 def ding_text(token,content,numbers,is_all):
 	"""
 	token：Token令牌
