@@ -23,4 +23,4 @@ if __name__ == '__main__':
 	path = total[1]
 
 	for f in file:
-		print(f.replace(".","_")+":"+'"'+f+'",')
+		print(f.replace(".","_")+":"+'"res/seafish/'+f+'",')

@@ -1,8 +1,10 @@
-#! python3.4
+#! python2.7
+# -*- coding: utf-8 -*-
 #@ guliping
 
 #Http 模块
-import http.client, urllib.parse
+#import http.client, urllib.parse
+import httplib
 #日期
 from datetime import datetime, date, time
 #UTC time
@@ -27,7 +29,8 @@ def ding_text(token,content,numbers,is_all):
 	"""
 
 	print("ding_text")
-	conn = http.client.HTTPSConnection("oapi.dingtalk.com")
+	#conn = http.client.HTTPSConnection("oapi.dingtalk.com")
+	conn = httplib.HTTPSConnection("oapi.dingtalk.com")
 	print(conn)
 
 	tempHead = dict(HEADERS)
@@ -55,7 +58,7 @@ def ding_text(token,content,numbers,is_all):
 		data = response.read()
 
 		#print(type(data))
-		print(response.status, response.reason, data.decode(),sep=' ; ') #指定分隔符
+		print response.status, response.reason, data.decode() #指定分隔符
 	except Exception as e:
 		print(str(e))
 	else:
@@ -90,5 +93,6 @@ if __name__ == '__main__':
 	通知列表
 	是否全员通知
 	"""
-	ding_text("997af53119922cdeac1386caec4a6c89352e191e85d9178e86788ed8a22e4dfa","Hello World",numbers,True)
+	for i in range(10):
+		ding_text("997af53119922cdeac1386caec4a6c89352e191e85d9178e86788ed8a22e4dfa","Hello World",numbers,True)
 
