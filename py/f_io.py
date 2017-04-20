@@ -23,7 +23,7 @@ print("{1},{0},{all}".format("apple","pen",all="applepen")) #关键字参数只�
 
 table = {'Google': 1, 'Runoob': 2, 'Taobao': 3}
 print('Runoob: {0[Runoob]:d}; Google: {0[Google]:d}; '
-          'Taobao: {0[Taobao]:d}'.format(table))
+	'Taobao: {0[Taobao]:d}'.format(table))
 
 
 #'!a' (使用 ascii()), '!s' (使用 str()) 和 '!r' (使用 repr()) 
@@ -105,8 +105,8 @@ print("*"*60)
 with open("zzz_io_test","r") as f5:
 	for line in f5:
 		print("循环读取文件行",line,end="") #读取的行内容带有换行符 \n
-print()
-print("f5 文件关了吗？",f5.closed)
+		print()
+		print("f5 文件关了吗？",f5.closed)
 
 
 #pickle模块，支持python基本数据到保存文件的序列化和反序列化
@@ -212,3 +212,35 @@ os.spawnvpe(mode, file, args, env)
 执行系统脚本
 os.system(command) 
 '''
+
+
+import shutil
+import tempfile
+
+def copyFile(src_path,dst_path):
+	# filename1 = tempfile.mktemp (".txt")
+	open (dst_path, "w").close ()
+
+	# if(os.path.isfile(dst_path)):
+	# 	os.remove(dst_path)
+
+	#dst_path = src_path + ".copy"
+	print(src_path, "=>", dst_path)
+
+	#拷文件
+	shutil.copy (src_path, dst_path)
+	if os.path.isfile (dst_path): 
+		print(dst_path,"Copy Success")
+
+
+def copyDir(src_path,dst_path):
+	#拷贝目录
+	#dirname1 = tempfile.mktemp (".dir")
+	os.mkdir (dst_path)
+	dst_path = src_path + ".copy"
+	print(src_path, "=>", dst_path)
+
+	shutil.copytree (src_path, dst_path)
+	if os.path.isdir (dst_path): print(dst_path,"Copy Success")
+
+copyFile("test/testCopy","test/testCopy_")

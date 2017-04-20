@@ -23,7 +23,8 @@ print(s[-5:-2]) # 前闭后开区间 ->Wor
 print("长度=",len(s)) # 查看字符串长度
 
 print("字符串复制","*"*30)
-print("字符串格式化","the first code is {}".format(s)) # 替代 %   -> "%s" % (s)
+# python 3 不同于 python2的%表示法 ，都用大括号表示占位，并且支持索引和关键字，跟c的printf相比只是多了{:},不用写%了
+print("字符串格式化","the first code is {0} {1:02d} {jack}".format(s,1,jack="jack son")) 
 print("字符串成员运算符in,Hello 是否存在","Hello" in s)
 print("字符串成员运算符not in,Hello 是否不存在","Hello" not in s)
 print("原始字符串",r"Hello\n",R"World\n")

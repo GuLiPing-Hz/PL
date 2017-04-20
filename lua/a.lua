@@ -125,3 +125,7 @@ print("tab.n=",rawget(tab,"n"),';tab[1]=',tab[1])
 -- lua可以计算 数字的字符串和数字的相加
 print("1"+2)
 
+
+--字符串数字转换
+print("字符串->数字",type(tonumber("1")))
+print("数字->字符串",type(tostring(1)))
