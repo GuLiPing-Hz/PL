@@ -212,8 +212,9 @@ os.spawnvpe(mode, file, args, env)
 执行系统脚本
 os.system(command) 
 '''
+print("**************************拷贝目录")
 
-
+#拷贝目录与文件
 import shutil
 import tempfile
 
@@ -244,3 +245,24 @@ def copyDir(src_path,dst_path):
 	if os.path.isdir (dst_path): print(dst_path,"Copy Success")
 
 copyFile("test/testCopy","test/testCopy_")
+
+print("**************************遍历目录结构")
+#遍历所有目录结构
+def visitDir(path,func=None):
+	retPaths=[]#文件路径列表
+	retFiles = [];#文件名列表
+
+	for dirpath,dirnames,filenames in os.walk(path):
+		print("dirpath=",dirpath,",dirnames=",dirnames,",filenames=",filenames)
+
+		for file in filenames:
+			retFiles.append(file)
+			fullpath=os.path.join(dirpath,file)
+			retPaths.append(fullpath)
+
+			if(func and callable(func)):
+				func(dirpath,file)
+	
+	return retFiles,retPaths
+
+print(visitDir("."))

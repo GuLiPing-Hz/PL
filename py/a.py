@@ -52,6 +52,8 @@ a = 12.3
 print(type(a)) # 输出 <class 'float'>
 print(id(a)) # 输出 5734688 - 每个人的结果不一样
 
+print(bytes)#不可编辑的二进制
+print(bytearray(10))#可编辑的二进制数组
 '''
 Python3 中有六个标准的数据类型:
 
@@ -185,3 +187,4 @@ print("123"+"abc")
 print("字符串->数字",type(int("1")))
 print("数字->字符串",type(str(1)))
 
+print(not True);#不能使用!
