@@ -1,0 +1,206 @@
+#python 3.4
+
+"""
+一，包名、模块名、局部变量名、函数名
+
+全小写+下划线式驼峰
+
+example：this_is_var
+
+二，全局变量
+
+全大写+下划线式驼峰
+
+example：GLOBAL_VAR
+
+三，类名
+
+首字母大写式驼峰
+
+example：ClassName()
+
+四，关于下划线
+
+以单下划线开头，是弱内部使用标识，from M import * 时，将不会导入该对象（python 一切皆对象）。
+以双下划线开头的变量名，主要用于类内部标识类私有，不能直接访问。模块中使用见上一条。
+双下划线开头且双下划线截尾的命名方法尽量不要用，这是标识
+"""
+
+import os
+import hashlib
+import shutil
+import tempfile
+
+def md5_str(str):
+	return hashlib.md5(bytes(s,"utf_8")).hexdigest()
+
+def md5_file(file_path):
+  f = open(file_path,'rb')  
+  md5_obj = hashlib.md5()
+  while True:
+    d = f.read(8096)
+    if not d:
+      break
+    md5_obj.update(d)
+  hash_code = md5_obj.hexdigest()
+  f.close()
+  md5 = str(hash_code)#.lower()
+  return md5
+
+def write_str_to_file(file,str):
+	v_writed = 0
+	with open(file,"w") as f:# r rb r+ rb+ w wb w+ wb+ a ab a+ ab+
+		v_writed = f.write(str)
+		f.flush()
+		#print("写入字节数:",v_writed)
+		f.close()
+	return v_writed;
+
+def copy_file(src_path,dst_path):
+	""" 拷贝文件 """
+	try:
+		pos_1 = dst_path.rfind("/")
+		pos_2 = dst_path.rfind("\\")
+		pos = max(pos_1,pos_2)
+		dir_dir = dst_path[0:pos]
+		#print("需要创建的目录:",dir_dir)
+
+		os.makedirs(dir_dir) #只能创建目录
+	except FileExistsError:
+		pass
+	open (dst_path, "w").close ()
+
+	# if(os.path.isfile(dst_path)):
+	# 	os.remove(dst_path)
+
+	#dst_path = src_path + ".copy"
+	print(src_path, "=>", dst_path,end=" : ")
+
+	#拷文件
+	shutil.copy (src_path, dst_path)
+	if os.path.isfile (dst_path): 
+		print("Copy Success")
+	else:
+		print("Copy Fail")
+
+
+def copy_dir(src_path,dst_path):
+	"""拷贝目录"""
+	#dirname1 = tempfile.mktemp (".dir")
+	os.mkdir (dst_path)
+	dst_path = src_path + ".copy"
+	print(src_path, "=>", dst_path)
+
+	shutil.copytree (src_path, dst_path)
+	if os.path.isdir (dst_path): 
+		print(dst_path,"Copy Dir Success")
+
+class Diskwalk(object):
+	def __init__(self,path,recursive=True):
+		""" 
+			构造函数 
+			@path 		指定目录
+			@recursive 	是否遍历子目录
+		"""
+		self.path = path
+		self.recursive = recursive
+
+	def walk(self,func=None):
+		""" 
+			遍历目录文件
+			@func 		指定回调, 回传当前路径和文件
+
+			@return 	返回 文件名数组,全路径文件名数组  一一对应
+		"""
+		path_collection=[]
+		files = []
+		for dirpath,dirnames,filenames in os.walk(self.path):
+
+			#print("dirpath=",dirpath)
+			#print("dirnames=",dirnames)
+			#print("filenames=",filenames)
+
+			for file in filenames:
+				if(func and callable(func)):
+					func(dirpath,file)
+
+				files.append(file)
+				fullpath=os.path.join(dirpath,file)
+				path_collection.append(fullpath)
+
+			if(not self.recursive):
+				break
+
+		return files,path_collection
+
+	def walk_dir(self,func=None):
+		""" 
+			遍历目录子目录
+			@func 		指定回调, 回传当前路径和文件
+
+			@return 	返回 所有子目录
+		"""
+		path_collection=[]
+		for dirpath,dirnames,filenames in os.walk(self.path):
+
+			#print("dirpath=",dirpath)
+			#print("dirnames=",dirnames)
+			#print("filenames=",filenames)
+
+			for dirname in dirnames:
+				if(func and callable(func)):
+					func(dirpath,dirname)
+
+				fullpath=os.path.join(dirpath,dirname)
+				path_collection.append(fullpath)
+
+			if(not self.recursive):
+				break
+
+		return path_collection
+
+
+def make_dir(dir):
+	try:
+		print("make dir =>",dir)
+		os.mkdir(dir)
+	except FileExistsError: #异常捕获
+		pass
+
+def remove_dir(dir):
+	file_names,file_paths = Diskwalk(dir).walk();
+	for i in range(len(file_paths)):
+		os.remove(file_paths[i])
+	dir_paths = Diskwalk(dir).walk_dir();
+	#print(dir_paths);
+	for i in range(len(dir_paths)-1,-1,-1):
+		try:
+			print("remvoe dir =>",dir_paths[i])
+			os.rmdir(dir_paths[i])
+		except FileNotFoundError:
+			pass
+
+def main():
+	print("**************************遍历目录文件结构")
+	print("结果数组=",Diskwalk(".").walk())
+	print("**************************遍历目录目录结构")
+	testDir = "D:\\glp\\work\\temp\\fishjs_hotupdate"
+	print("结果数组=",Diskwalk(testDir).walk_dir())
+	remove_dir(testDir)
+
+	text = """	
+echo 当前盘符：%~d0
+echo 当前路径：%cd%
+echo 当前执行命令行：%0
+echo 当前bat文件路径：%~dp0
+echo 当前bat文件短路径：%~sdp0
+
+%~d0
+cd %~dp0
+cocos jscompile -s update -d update_jsc
+		"""
+	write_str_to_file(os.path.join(testDir,"jscompile.bat"),text)
+
+if __name__ == '__main__':
+	main()
+

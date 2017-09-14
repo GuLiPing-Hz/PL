@@ -16,7 +16,7 @@ python 安装第三方包库 参见http://blog.csdn.net/glp3329/article/details/
 基础篇， 初识python
 print 和 type都是 python内建的函数。
 初识python类型和运算符
-
+	
 help函数可以给我们提供帮助文档
 
 http://blog.csdn.net/glp3329/article/details/52511855
@@ -51,7 +51,7 @@ print(id(a)) # 输出 1488898480 - 每个人的结果不一样
 a = 12.3
 print(type(a)) # 输出 <class 'float'>
 print(id(a)) # 输出 5734688 - 每个人的结果不一样
-
+	
 print(bytes)#不可编辑的二进制
 print(bytearray(10))#可编辑的二进制数组
 '''

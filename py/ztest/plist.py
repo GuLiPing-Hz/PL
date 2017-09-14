@@ -2,6 +2,7 @@
 # 遍历cocos的plist文件
 
 import os,sys
+#pip install Pillow
 from PIL import Image
 from xml.etree import ElementTree
 import math

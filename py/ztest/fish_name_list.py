@@ -1,57 +1,7 @@
 #!python 3.4
 
-import os
-import sys
-import shutil
-import tempfile
 from xml.etree import ElementTree
-
-def copyFile(src_path,dst_path):
-	# filename1 = tempfile.mktemp (".txt")
-
-	try:
-		pos_1 = dst_path.find("/")
-		pos_2 = dst_path.find("\\")
-		pos = max(pos_1,pos_2)
-		dir_dir = dst_path[0:pos]
-
-		os.makedirs(dir_dir) #只能创建目录
-	except FileExistsError:
-		pass
-	open (dst_path, "w").close ()
-
-	#dst_path = src_path + ".copy"
-	print(src_path, "=>", dst_path)
-
-	#拷文件
-	shutil.copy (src_path, dst_path)
-	if os.path.isfile (dst_path): 
-		print(dst_path,"Copy Success")
-
-class Diskwalk(object):
-	def __init__(self,path,recursive=True):
-		self.path = path;
-		self.recursive = recursive;
-	def paths(self,func):
-		path_collection=[]
-		files = [];
-		for dirpath,dirnames,filenames in os.walk(self.path):
-
-			# print("dirpath=",dirpath);
-			# print("dirnames=",dirnames);
-			# print("filenames=",filenames);
-
-			for file in filenames:
-				func(dirpath,file);
-
-				files.append(file)
-				fullpath=os.path.join(dirpath,file)
-				path_collection.append(fullpath);
-
-			if(not self.recursive):
-				break
-
-		return files,path_collection
+import file_helper
 
 def optionRename(path,file):
 	fullpath=os.path.join(path,file)
@@ -66,7 +16,7 @@ def optionRename(path,file):
 	print(file,">>",new_path);
 	new_full_path = os.path.join(path,"new/"+new_path)
 	# print("new_full_path=",new_full_path)
-	copyFile(fullpath,new_full_path)
+	file_helper.copy_file(fullpath,new_full_path)
 
 def optionJSRes1(path,file):
 	name = file.replace(".","_");
@@ -134,26 +84,25 @@ def optionJSRes4(path,file):
 			pass
 
 		tree.write(newFilePath+"\\"+file);
-			
-
 
 if __name__ == '__main__':
 
+	print(file_helper)
 	#遍历目录改文件名
 	#C:\Users\JJ\Desktop\LF_boss_fish_PList.Dir
-	#total = Diskwalk("C:\\Users\\JJ\\Desktop\\LF_boss_fish_PList.Dir").paths(optionRename);
+	#total = file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\LF_boss_fish_PList.Dir").walk(optionRename);
 	# file = total[0]
 	# path = total[1]
 
 	#平台 图片文件
-	# Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).paths(optionJSRes1);
+	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
 	#音频文件
-	#Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).paths(optionJSRes1_);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
-	#Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).paths(optionJSRes2);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
-	Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\games\\fish",False).paths(optionJSRes3);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\games\\fish",False).walk(optionJSRes3);
 
 	#游动plist文件 png->webp
-	#Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).paths(optionJSRes4);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes4);
 

@@ -90,5 +90,5 @@ if __name__ == '__main__':
 	通知列表
 	是否全员通知
 	"""
-	ding_text("997af53119922cdeac1386caec4a6c89352e191e85d9178e86788ed8a22e4dfa","Hello World",numbers,True)
+	#ding_text("997af53119922cdeac1386caec4a6c89352e191e85d9178e86788ed8a22e4dfa","Hello World",numbers,True)
 
