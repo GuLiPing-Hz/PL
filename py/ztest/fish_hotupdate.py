@@ -81,6 +81,9 @@ def main(src_dir,dst_dir):
 		#print(">>",i,v);
 		file_helper.copy_file(v,arra_c_to[i])
 
+	print(">> 移除game_2")
+	file_helper.remove_dir(newDir+"\\src\\game\\game_2_hide");
+
 	print(">> 写入JS加密脚本 需要python27")
 
 	text = """	

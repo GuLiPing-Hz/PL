@@ -179,6 +179,11 @@ def remove_dir(dir):
 			os.rmdir(dir_paths[i])
 		except FileNotFoundError:
 			pass
+	try:
+		print("remvoe dir =>",dir)
+		os.rmdir(dir)
+	except FileNotFoundError:
+		pass
 
 def main():
 	print("**************************遍历目录文件结构")
