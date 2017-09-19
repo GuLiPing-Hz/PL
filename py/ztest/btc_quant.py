@@ -22,7 +22,7 @@ import numpy as np
 # 可以仿照格式修改，基本都能运行。如果想了解详情请参考新手学堂的API文档。
 PARAMS = {
     "start_time": "2016-01-01 00:00:00",#回测的起始时间
-    "end_time": "2017-09-06 00:00:00",#回测的结束时间
+    "end_time": "2017-09-08 00:00:00",#回测的结束时间
     "commission": 0.002,  # 此处设置交易佣金
     "slippage": 0.001,  # 此处设置交易滑点
     "account_initial": {"huobi_cny_cash": 100000,
@@ -34,7 +34,7 @@ PARAMS = {
 # initialize函数是两大核心函数之一（另一个是handle_data），用于初始化策略变量。
 # 策略变量包含：必填变量，以及非必填（用户自己方便使用）的变量
 def initialize(context):
-    context.log.info("进入初始化函数")
+    #context.log.info("进入初始化函数")
     """
     设置回测频率
     "1m" – 每1分钟生成数据，从00分00秒开始计算一分钟，01分00秒属于下一分钟，不重复计算，以此类推
@@ -72,7 +72,7 @@ def initialize(context):
     #设置买入atr倍数
     context.user_data.BuyAtr = 0.5
     #设置卖出atr倍数
-    context.user_data.SellAtr = 4
+    context.user_data.SellAtr = 3.6#4#3.6
 
     context.user_data.BuyUnit = 0.01
     
@@ -83,7 +83,7 @@ def initialize(context):
     #all_securities = context.data.get_all_securities()
     #context.log.info(context.account)
 
-    context.log.info("进入初始化函数 end")
+    #context.log.info("进入初始化函数 end")
     # 至此initialize函数定义完毕。
 
 # 用户自定义的函数，可以被handle_data调用:用于初始化一些用户数据
