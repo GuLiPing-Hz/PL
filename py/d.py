@@ -17,7 +17,7 @@ print("*"*30)
 # python 对字符串的访问支持正负索引
 print(s[:])
 print(s[1:]) # python 的所有索引起点都是0 区别于lua的从1开始的索引
-print(s[1:3]) # 前闭后开区间
+print(s[1:4]) # 前闭后开区间
 print(s[3:2]) # 无输出
 print(s[-5:-2]) # 前闭后开区间 ->Wor
 print("长度=",len(s)) # 查看字符串长度
