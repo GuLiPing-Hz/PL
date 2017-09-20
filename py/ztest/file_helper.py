@@ -56,6 +56,12 @@ def write_str_to_file(file,str):
 		f.close()
 	return v_writed;
 
+def move_file(src_file,dst_file):
+	try:
+		os.rename(src_file,dst_file)
+	except FileNotFoundError:
+		pass
+
 def copy_file(src_path,dst_path):
 	""" 拷贝文件 """
 	try:

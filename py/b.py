@@ -63,6 +63,12 @@ else:
 	print("a~=0")
 print("*"*30)
 
+# ? python
+b = 5 if a!=1 else 6
+print("? b =",b)
+print("*"*30)
+
+
 '''循环'''
 n = 5
 while(n > 0):  #另外，在Python中没有do..while循环

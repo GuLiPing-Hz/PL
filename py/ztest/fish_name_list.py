@@ -2,6 +2,7 @@
 
 from xml.etree import ElementTree
 import file_helper
+import os
 
 def optionRename(path,file):
 	fullpath=os.path.join(path,file)
@@ -17,6 +18,14 @@ def optionRename(path,file):
 	new_full_path = os.path.join(path,"new/"+new_path)
 	# print("new_full_path=",new_full_path)
 	file_helper.copy_file(fullpath,new_full_path)
+
+def optionRenameFishId(path,file):
+	fullpath=os.path.join(path,file)
+
+	new_file = file.replace("fish_27","fish_32");
+	new_path = os.path.join(path,new_file);
+	print(fullpath,">>",new_path);
+	file_helper.move_file(fullpath,new_path)
 
 def optionJSRes1(path,file):
 	name = file.replace(".","_");
@@ -95,7 +104,7 @@ if __name__ == '__main__':
 	# path = total[1]
 
 	#平台 图片文件
-	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
 	#音频文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
@@ -105,4 +114,7 @@ if __name__ == '__main__':
 
 	#游动plist文件 png->webp
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes4);
+
+	#鱼图片文件名字修改
+	file_helper.Diskwalk("D:\\glp\\work\\UI\\20170919\\package\\fishs",False).walk(optionRenameFishId);
 
