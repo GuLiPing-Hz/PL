@@ -85,11 +85,11 @@ def stock_sell(name,price,count):
     print("卖出["+name+"]成功 剩余现金 =",context.account.money,",持有股票 =",context.account.stock
         ,"成交额 =",sell_money,"总费用 =",fee,"印花税 =",fee1);
 
-def summarize(price):
+def summarize(date,price):
     curTotal = context.account.money+context.account.stock*price
     orignTotal = context.account_initial.money
     orignPrice = context.account_initial.price_start
-    print("当前我的资产总价值 money = ",curTotal,"策略收益 ="
+    print(date+" 当前我的资产总价值 money = ",curTotal,"策略收益 ="
         ,str((curTotal-orignTotal)/orignTotal*100)+"%","基准收益 = "
         ,str((price-orignPrice)/orignPrice*100)+"%");
 
@@ -265,7 +265,7 @@ def handle_data(context,k_data):
                 else:
                     print("尚未入场或已经离场，不产生离场信号")
 
-    context.summarize(price)
+    context.summarize(hist_end_data.date,price)
     print("进入处理函数 end")
 
 def main():
@@ -289,8 +289,8 @@ def main():
     print("first open =",context.account_initial.price_start)
 
     needCount = context.user_data.T+1
-    # print("needCount =",needCount)
-    # print(k_data[0:needCount])
+    print("needCount =",needCount)
+    print(k_data[0:needCount])
     for i in range(len(k_data)):
         # print("i",i)
         k_data_seg = []
