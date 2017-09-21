@@ -96,7 +96,9 @@ def summarize(date,price):
 #开始日期 format：YYYY-MM-DD 为空时取上市首日
 #结束日期 format：YYYY-MM-DD 为空时取最近一个交易日
 #数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
-context = QuantStockContext("","","D") #2015-08-10
+
+#159915  起始日期为 2011-12-09
+context = QuantStockContext("2011-12-09","","D") #2015-08-10
 
 context.order.buy = stock_buy
 context.order.sell = stock_sell
@@ -205,6 +207,7 @@ def handle_data(context,k_data):
     #print("hist_end_data =\n",hist_end_data)
     #print("hist_end_data.open =",hist_end_data.open);
     price = hist_end_data.close
+    print("当前价格 =",price)
 
     if len(hist.index) < (context.user_data.T + 1):
         print("bar的数量不足, 等待下一根bar...")
@@ -286,11 +289,11 @@ def main():
     k_data_start = k_data.iloc[0]
     # print(k_data_start)
     context.account_initial.price_start = k_data_start.open
-    print("first open =",context.account_initial.price_start)
+    print(k_data_start.date + " first open =",context.account_initial.price_start)
 
     needCount = context.user_data.T+1
-    print("needCount =",needCount)
-    print(k_data[0:needCount])
+    #print("needCount =",needCount)
+    #print(k_data[0:needCount])
     for i in range(len(k_data)):
         # print("i",i)
         k_data_seg = []

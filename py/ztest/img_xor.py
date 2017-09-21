@@ -56,7 +56,7 @@ def encFile(path,file):
 		return
 
 	fullpath=os.path.join(path,file)
-	print("cur file = ",fullpath,", gImgKey=",gImgKey)
+	print("cur file = ",fullpath)
 	with open(fullpath,"rb+") as fp:
 		data = fp.read()
 		dataLen = len(data)

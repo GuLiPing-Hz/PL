@@ -96,7 +96,7 @@ def optionJSRes4(path,file):
 
 if __name__ == '__main__':
 
-	print(file_helper)
+	#print(file_helper)
 	#遍历目录改文件名
 	#C:\Users\JJ\Desktop\LF_boss_fish_PList.Dir
 	#total = file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\LF_boss_fish_PList.Dir").walk(optionRename);
@@ -110,11 +110,11 @@ if __name__ == '__main__':
 	#捕鱼 游动plist文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\games\\fish",False).walk(optionJSRes3);
+	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\games\\fish",False).walk(optionJSRes3);
 
 	#游动plist文件 png->webp
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes4);
 
 	#鱼图片文件名字修改
-	file_helper.Diskwalk("D:\\glp\\work\\UI\\20170919\\package\\fishs",False).walk(optionRenameFishId);
+	#file_helper.Diskwalk("D:\\glp\\work\\UI\\20170919\\package\\fishs",False).walk(optionRenameFishId);
 
