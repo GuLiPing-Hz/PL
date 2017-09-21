@@ -11,6 +11,19 @@
 import tushare
 import numpy as np
 
+import matplotlib
+import matplotlib.pyplot as plt 
+import matplotlib.dates as mdates
+
+import datetime
+import time
+
+class QuantMatplot(object):
+    """docstring for QuantMatplot"""
+    def __init__(self):
+        super(QuantMatplot, self).__init__()
+        
+
 class QuantOrder(object):
 	"""docstring for QuantOrder"""
 	def __init__(self):
@@ -29,28 +42,32 @@ class QuantUserData(object):
 		"""
 		
 class QuantStockContext(object):
-	def __init__(self,start,end,frequency):
-		""" 
-			构造函数 
-		"""
-		#开始日期 format：YYYY-MM-DD 为空时取上市首日
-		self.start_time= start 
+    def __init__(self,start,end,frequency):
+        """ 
+        	构造函数 
+        """
+        #开始日期 format：YYYY-MM-DD 为空时取上市首日
+        self.start_time= start 
 
-		#结束日期 format：YYYY-MM-DD 为空时取最近一个交易日
-		self.end_time= end
+        #结束日期 format：YYYY-MM-DD 为空时取最近一个交易日
+        self.end_time= end
 
-		#数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
-		self.frequency = frequency
+        #数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
+        self.frequency = frequency
 
-		#自定义数据
-		self.user_data = QuantUserData()
-		print("self.user_data =",id(self.user_data))
+        #自定义数据
+        self.user_data = QuantUserData()
+        print("self.user_data =",id(self.user_data))
 
-		self.account = QuantAccountData()
+        self.account = QuantAccountData()
 
-		self.account_initial = QuantAccountData()
+        self.order = QuantOrder()
 
-		self.order = QuantOrder()
+        self.account_initial = QuantAccountData()
+        self.matplot = QuantMatplot() 
+        self.matplot.date = []
+        self.matplot.my = []
+        self.matplot.standard = []
 
 STOCK_FLOAT = 0.001
 def stock_buy(name,price,cash):
@@ -89,9 +106,17 @@ def summarize(date,price):
     curTotal = context.account.money+context.account.stock*price
     orignTotal = context.account_initial.money
     orignPrice = context.account_initial.price_start
+
+    my_profit = (curTotal-orignTotal)/orignTotal*100
+    standard_profit = (price-orignPrice)/orignPrice*100
     print(date+" 当前我的资产总价值 money = ",curTotal,"策略收益 ="
-        ,str((curTotal-orignTotal)/orignTotal*100)+"%","基准收益 = "
-        ,str((price-orignPrice)/orignPrice*100)+"%");
+        ,str(my_profit)+"%","基准收益 = "
+        ,str(standard_profit)+"%")
+    print("我的现金 =",context.account.money,"我的股票 =",context.account.stock,"*",price)
+
+    context.matplot.date.append(date);
+    context.matplot.my.append(my_profit)
+    context.matplot.standard.append(standard_profit)
 
 #开始日期 format：YYYY-MM-DD 为空时取上市首日
 #结束日期 format：YYYY-MM-DD 为空时取最近一个交易日
@@ -271,6 +296,36 @@ def handle_data(context,k_data):
     context.summarize(hist_end_data.date,price)
     print("进入处理函数 end")
 
+def draw_figure(context):
+    fig = plt.figure("盈利分析")
+
+    date_times = [datetime.datetime.strptime(x,'%Y-%m-%d') for x in context.matplot.date]
+    # print(date_times[0])
+
+    dates = matplotlib.dates.date2num(date_times)
+
+
+    #设置标题
+    fig.suptitle('diff', fontsize = 14, fontweight='bold')
+    ax = fig.add_subplot(1,1,1)
+    ax.plot(dates,context.matplot.my,'r')
+    ax.plot(dates,context.matplot.standard)
+
+    #x轴标签旋转角度
+    plt.xticks(rotation=30)
+    # for label in ax.xaxis.get_ticklabels():
+    #   label.set_rotation(45)
+
+    ax.set_xlabel("x label")      
+    ax.set_ylabel("y label")
+
+    ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=range(1,32), interval=1)) 
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
+
+    plt.savefig("easyplot.jpg") 
+    plt.show()
+
+
 def main():
 
     #初始化我的账户钱和股票数量
@@ -305,6 +360,8 @@ def main():
 
         if len(k_data_seg) != 0:
             handle_data(context,k_data_seg)
+
+    draw_figure(context)
 
 if __name__ == '__main__':
 	main()
