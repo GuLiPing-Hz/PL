@@ -20,12 +20,6 @@ import time
 
 import math
 
-#海龟策略
-#import file_helper as quant_strategy
-import quant_stock.haigui as quant_strategy
-
-#quant_strategy = haigui
-
 class QuantMatplot(object):
     """docstring for QuantMatplot"""
     def __init__(self):
@@ -178,6 +172,9 @@ def draw_figure(context):
 
     #plt.savefig("easyplot.jpg") 
     plt.show()
+
+#海龟策略
+import quant_stock.haigui as quant_strategy
 
 def main():
 	#初始化我的账户钱和股票数量
