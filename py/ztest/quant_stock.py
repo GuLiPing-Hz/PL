@@ -124,7 +124,7 @@ def summarize(date,price):
 #数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
 
 #159915  起始日期为 2011-12-09
-context = QuantStockContext("2011-12-09","","D") #2015-08-10
+context = QuantStockContext("2011-06-09","","D") #2015-08-10
 
 context.order.buy = stock_buy
 context.order.sell = stock_sell
@@ -202,21 +202,23 @@ def main():
 	#print("needCount =",needCount)
 	#print(k_data[0:needCount])
 	for i in range(len(k_data)):
-	    # print("i",i)
-	    k_data_seg = []
+	# print("i",i)
+		k_data_seg = []
 
-	    if i < needCount:
-	        k_data_seg = k_data[0:i];
-	    else:
-	        k_data_seg = k_data[i-needCount:i];
+		if i < needCount:
+		    k_data_seg = k_data[0:i];
+		else:
+		    k_data_seg = k_data[i-needCount:i];
 
-	    if len(k_data_seg) != 0:
-	        quant_strategy.handle_data(context,k_data_seg)
+		if len(k_data_seg) != 0:
+			print("进入处理函数"+("*"*100))
+			quant_strategy.handle_data(context,k_data_seg)
+			print("进入处理函数 end"+("*"*100))
 
-	        hist_end_data = k_data_seg.iloc[len(k_data_seg)-1]#获取当前时间段内的收盘价
-	        # print(k_data_seg)
-	        # print(hist_end_data.close)
-	        context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
+			hist_end_data = k_data_seg.iloc[len(k_data_seg)-1]#获取当前时间段内的收盘价
+			# print(k_data_seg)
+			# print(hist_end_data.close)
+			context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
 
 
 	draw_figure(context)

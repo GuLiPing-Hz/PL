@@ -6,7 +6,7 @@ def init_local_context(context):
     # 是否持有头寸标志
     context.user_data.hold_flag = False#context.account.huobi_cny_btc >= HUOBI_CNY_BTC_MIN_ORDER_QUANTITY
     # 限制最多买入的单元数
-    context.user_data.limit_unit = 4
+    context.user_data.limit_unit = 10
     # 现在买入1单元的security数目
     context.user_data.unit = 0
     # 买入次数
@@ -18,11 +18,11 @@ def quant_init(context):
 
 	#认为未来将上涨
 	#设置买入atr倍数
-	context.user_data.BuyAtr = 1
+	context.user_data.BuyAtr = 0.6
 	#设置卖出atr倍数
-	context.user_data.SellAtr = 3.6#4#3.6
+	context.user_data.SellAtr = 2#4#3.6
 
-	context.user_data.BuyUnit = 0.005
+	context.user_data.BuyUnit = 0.01
 
 	context.user_data.IsFirstInHandle = True
 
@@ -33,8 +33,6 @@ def quant_need_count(context):
 	return context.user_data.T+1
 
 def handle_data(context,k_data):
-    print("进入处理函数")
-    
     #print(context.account)
     # if context.user_data.IsFirstInHandle:
     #     context.user_data.hold_flag = context.account_initial.huobi_cny_btc >= HUOBI_CNY_BTC_MIN_ORDER_QUANTITY
@@ -111,7 +109,7 @@ def handle_data(context,k_data):
                     context.order.sell(context.security,price, context.account.stock)
                 else:
                     print("尚未入场或已经离场，不产生离场信号")
-    print("进入处理函数 end")
+    
 
 # 用户自定义的函数，可以被handle_data调用: 唐奇安通道计算及判断入场离场
 # data是日线级别的历史数据，price是当前分钟线数据（用来获取当前行情），T代表需要多少根日线
