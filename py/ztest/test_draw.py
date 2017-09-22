@@ -14,7 +14,7 @@ import time
 x=[0,1]  
 y=[0,1.5]  
 #y = []
-fig = plt.figure("盈利分析")  
+fig = plt.figure("盈利分析",(18,5))  
 #plt.plot(x,y)
 #plt.plot_date(x,y)
 
@@ -49,7 +49,7 @@ plt.xticks(rotation=30)
 ax.set_xlabel("x label")      
 ax.set_ylabel("y label")
 
-ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=range(1,32), interval=1)) 
+ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=range(1,31), interval=1)) 
 ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
 
 
