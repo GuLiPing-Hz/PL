@@ -150,9 +150,12 @@ def add_or_stop(price, lastprice, atr, context):
 def calc_atr(data):  # data是日线级别的历史数据
     tr_list = []
     for i in range(len(data)):
-        tr = max(data["high"].iloc[i] - data["low"].iloc[i], data["high"].iloc[i] - data["close"].iloc[i - 1],
-                 data["close"].iloc[i - 1] - data["low"].iloc[i])
+        tr = max(data["high"].iloc[i] - data["low"].iloc[i]
+            , data["high"].iloc[i] - data["close"].iloc[i - 1]
+            , data["close"].iloc[i - 1] - data["low"].iloc[i])
         tr_list.append(tr)
+
+    print("calc_atr tr_list =",tr_list)
     atr = np.array(tr_list).mean()
     return atr
 
