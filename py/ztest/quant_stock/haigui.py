@@ -12,21 +12,26 @@ def init_local_context(context):
     # 买入次数
     context.user_data.add_time = 0
 
+    #持有的时候所经历过的最高价
+    context.user_data.HistoryHigh = 0 #历史最高价,
+    context.user_data.HistoryHighPercent = 0.2 #收市均价较历史最高价跌去10% 我们止盈
+
+
 def quant_init(context):
-	# 设置ATR值回看窗口
-	context.user_data.T = 10 # >= 1
+    # 设置ATR值回看窗口
+    context.user_data.T = 10 # >= 1
 
-	#认为未来将上涨
-	#设置买入atr倍数
-	context.user_data.BuyAtr = 0.6
-	#设置卖出atr倍数
-	context.user_data.SellAtr = 2#4#3.6
+    #认为未来将上涨
+    #设置买入atr倍数
+    context.user_data.BuyAtr = 0.6
+    #设置卖出atr倍数
+    context.user_data.SellAtr = 2#4#3.6
 
-	context.user_data.BuyUnit = 0.01
+    context.user_data.BuyUnit = 0.01
 
-	context.user_data.IsFirstInHandle = True
+    context.user_data.IsFirstInHandle = True
 
-	init_local_context(context)
+    init_local_context(context)
 
 def quant_need_count(context):
 
@@ -39,7 +44,6 @@ def handle_data(context,k_data):
     #     #print(str(context.account_initial.huobi_cny_btc)+";"+str(context.account.huobi_cny_btc))
     #     context.user_data.IsFirstInHandle = False
         
-    
     # 获取历史数据
     hist = k_data #DataFrame
     #print("hist.index=",hist.index)
@@ -54,14 +58,41 @@ def handle_data(context,k_data):
     if len(hist.index) < (context.user_data.T + 1):
         print("bar的数量不足, 等待下一根bar...")
     else:
+        #计算最高价和收市均值
+        last_seg_high = hist.loc[1:,["high"]]
+        print(last_seg_high)
+        last_seg_high_max = np.max(last_seg_high)
+        print("last_seg_high_max",last_seg_high_max)
+        context.user_data.HistoryHigh = max(last_seg_high_max["high"],context.user_data.HistoryHigh)
+        print("历史最高价 =",context.user_data.HistoryHigh)
+
+        last_seg_close = hist.loc[1:,["close"]]
+        last_seg_close_2 = hist.loc[(context.user_data.T/2):,["close"]]
+        print(last_seg_close)
+        print("last_seg_close"+("*"*50))
+        print(last_seg_close_2)
+        last_seg_close_mean = np.mean(last_seg_close)["close"]
+        last_seg_close_mean_2 = np.mean(last_seg_close_2)["close"]
+        print("收bar均值 =",last_seg_close_mean)
+        print("收bar后半均值 =",last_seg_close_mean_2)
+
         # 1 计算ATR
         atr = calc_atr(hist.iloc[:len(hist)-1])
         print("art = ",atr)
 
         # 2 判断加仓或止损
-        if context.user_data.hold_flag is True and context.account.stock > 0:  # 先判断是否持仓
-            print("判断是加仓还是止损")
-            temp = add_or_stop(price, context.user_data.last_buy_price, atr, context)
+        if context.user_data.hold_flag and context.account.stock > 0:  # 先判断是否持仓
+            temp = 0
+            print("判断历史最高价是否与我们收bar均值背离")
+            deviate_high = context.user_data.HistoryHigh*(1-context.user_data.HistoryHighPercent)
+            if last_seg_close_mean_2 < deviate_high:
+            # if price < deviate_high:
+                print("正在背离",last_seg_close_mean_2,"<",deviate_high)
+                temp = -1
+            else:
+                print("没有背离,判断是加仓还是止损")
+                temp = add_or_stop(price, context.user_data.last_buy_price, atr, context)
+            
             if temp == 1:  # 判断加仓
                 if context.user_data.add_time < context.user_data.limit_unit:  # 判断加仓次数是否超过上限
                     print("产生加仓信号")

@@ -70,7 +70,8 @@ class QuantStockContext(object):
         self.matplot.my = []
         self.matplot.standard = []
 
-STOCK_FLOAT = 0.001
+#收盘价购买,没有滑点
+STOCK_FLOAT = 0.0
 def stock_buy(name,price,cash):
     count = int(cash/price//100*100)
     if(count > 100):
@@ -185,7 +186,7 @@ def main():
 	print("*"*100)
 
 	k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
-	#print(k_data)
+	print(k_data)
 	#print(type(k_data))
 	#print(len(k_data))
 
@@ -202,21 +203,26 @@ def main():
 	#print("needCount =",needCount)
 	#print(k_data[0:needCount])
 	for i in range(len(k_data)):
-	# print("i",i)
+		# print("i",i)
 		k_data_seg = []
 
-		if i < needCount:
-		    k_data_seg = k_data[0:i];
+		realIndex = i+1
+		if realIndex < needCount:
+		    k_data_seg = k_data[0:realIndex];
 		else:
-		    k_data_seg = k_data[i-needCount:i];
+		    k_data_seg = k_data[realIndex-needCount:realIndex];
+		    break
 
+		#DataFrame 只支持正向的索引,不支持负数访问
+		#print(k_data_seg.loc[0:5,["close"]])
+		
+		# print(k_data_seg)
 		if len(k_data_seg) != 0:
-			print("进入处理函数"+("*"*100))
+			print("进入处理函数    "+(">"*100))
 			quant_strategy.handle_data(context,k_data_seg)
-			print("进入处理函数 end"+("*"*100))
+			print("进入处理函数 end"+("<"*100))
 
 			hist_end_data = k_data_seg.iloc[len(k_data_seg)-1]#获取当前时间段内的收盘价
-			# print(k_data_seg)
 			# print(hist_end_data.close)
 			context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
 
