@@ -178,56 +178,89 @@ def draw_figure(context):
 import quant_stock.haigui as quant_strategy
 
 def main():
-	#初始化我的账户钱和股票数量
-	context.account.money = context.account_initial.money
-	context.account.stock = context.account_initial.stock
+    #初始化我的账户钱和股票数量
+    context.account.money = context.account_initial.money
+    context.account.stock = context.account_initial.stock
 
-	print("tushare version =",tushare.__version__)
-	print("*"*100)
+    print("tushare version =",tushare.__version__)
+    print("*"*100)
 
-	k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
-	print(k_data)
-	#print(type(k_data))
-	#print(len(k_data))
+    k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
+    #print(k_data)
+    #print(type(k_data))
+    #print(len(k_data))
 
-	k_data_start = k_data.iloc[0]
-	# print(k_data_start)
-	context.account_initial.price_start = k_data_start.open
-	print(k_data_start.date + " first open =",context.account_initial.price_start)
+    #测试 pandas.core.series.Series 和 pandas.core.frame.DataFrame
+    # k_data_seg = k_data[1399:1410] # [1399,1410)             这里弄个开区间
+    # print(k_data_seg)
+    # print(k_data_seg[-10:])#取最后10行数据
+    # print("***1")
+    # print(k_data_seg[5:])#取第5行到后面的数据
+    # print("***2")
+    # #下面这个访问，指定第1401行到第1406行(行数由总索引指定)，指定 high列
+    # print(k_data_seg.loc[1401:1406,["high"]]) #[1401:1406]    这里弄个闭区间，卧槽
+    # print("**")
+    # print(k_data_seg.loc[5:7,["high"]]) # 空数据
+    # print("**")
+    # print(k_data_seg.loc[-7:-5,["high"]]) # 空数据，不支持负行数索引
+    # print("***3")
+    # #下面这个访问，指定第1行到第2行(行数由当前分片所决定)，指定 2、3列
+    # print(k_data_seg.iloc[1:2,[2,3]]) #[1:2) 这里又是开区间...
+    # print("**")
+    # print(k_data_seg.iloc[1401:1406,[2,3]]) #空数据  卧槽，，真烦，行数代表意义不统一
+    # print("**")
+    # print(k_data_seg.iloc[-10:-9,[2,3]]) # 支持负行数索引
+    # print("***4")
+    # k_data_seg_high = k_data_seg["high"]
+    # print(k_data_seg_high,type(k_data_seg_high)) # 访问指定列 
+    # print("**")
+    # print(k_data_seg_high[1:3])
+    # print(k_data_seg_high[-10:-8])
+    # # last_seg_high_max = np.max(k_data_seg_high[1:3])
+    # # print("last_seg_high_max",last_seg_high_max)
+    # #pandas.core.series.Series 转换成数组然后再访问
+    # k_data_seg_high_arra =  k_data_seg_high[1:3].get_values()
+    # print(k_data_seg_high_arra,type(k_data_seg_high_arra)) 
+    # print(k_data_seg_high_arra[0]) #numpy.ndarray
+    # return 
+
+    k_data_start = k_data.iloc[0]
+    # print(k_data_start)
+    context.account_initial.price_start = k_data_start.open
+    print(k_data_start.date + " first open =",context.account_initial.price_start)
 
 
-	#初始化量化策略
-	quant_strategy.quant_init(context)
-	#获取策略要求的bar数量
-	needCount = quant_strategy.quant_need_count(context)
-	#print("needCount =",needCount)
-	#print(k_data[0:needCount])
-	for i in range(len(k_data)):
-		# print("i",i)
-		k_data_seg = []
+    #初始化量化策略
+    quant_strategy.quant_init(context)
+    #获取策略要求的bar数量
+    needCount = quant_strategy.quant_need_count(context)
+    #print("needCount =",needCount)
+    #print(k_data[0:needCount])
+    for i in range(len(k_data)):
+        # print("i",i)
+        k_data_seg = []
 
-		realIndex = i+1
-		if realIndex < needCount:
-		    k_data_seg = k_data[0:realIndex];
-		else:
-		    k_data_seg = k_data[realIndex-needCount:realIndex];
-		    break
+        realIndex = i+1
+        if realIndex < needCount:
+            k_data_seg = k_data[0:realIndex];
+        else:
+            k_data_seg = k_data[realIndex-needCount:realIndex];
 
-		#DataFrame 只支持正向的索引,不支持负数访问
-		#print(k_data_seg.loc[0:5,["close"]])
-		
-		# print(k_data_seg)
-		if len(k_data_seg) != 0:
-			print("进入处理函数    "+(">"*100))
-			quant_strategy.handle_data(context,k_data_seg)
-			print("进入处理函数 end"+("<"*100))
+        #DataFrame 只支持正向的索引,不支持负数访问
+        #print(k_data_seg.loc[0:5,["close"]])
 
-			hist_end_data = k_data_seg.iloc[len(k_data_seg)-1]#获取当前时间段内的收盘价
-			# print(hist_end_data.close)
-			context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
+        # print(k_data_seg)
+        if len(k_data_seg) != 0:
+        	print("进入处理函数    "+(">"*100))
+        	quant_strategy.handle_data(context,k_data_seg)
+        	print("进入处理函数 end"+("<"*100))
+
+        	hist_end_data = k_data_seg.iloc[len(k_data_seg)-1]#获取当前时间段内的收盘价
+        	# print(hist_end_data.close)
+        	context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
 
 
-	draw_figure(context)
+    draw_figure(context)
 
 if __name__ == '__main__':
 	main()

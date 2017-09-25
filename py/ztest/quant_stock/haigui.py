@@ -6,7 +6,7 @@ def init_local_context(context):
     # 是否持有头寸标志
     context.user_data.hold_flag = False#context.account.huobi_cny_btc >= HUOBI_CNY_BTC_MIN_ORDER_QUANTITY
     # 限制最多买入的单元数
-    context.user_data.limit_unit = 10
+    context.user_data.limit_unit = 8
     # 现在买入1单元的security数目
     context.user_data.unit = 0
     # 买入次数
@@ -19,15 +19,15 @@ def init_local_context(context):
 
 def quant_init(context):
     # 设置ATR值回看窗口
-    context.user_data.T = 10 # >= 1
+    context.user_data.T = 19 # 19 226.3723
 
     #认为未来将上涨
     #设置买入atr倍数
-    context.user_data.BuyAtr = 0.6
+    context.user_data.BuyAtr = 0.5 # 0.5 226.3723
     #设置卖出atr倍数
-    context.user_data.SellAtr = 2#4#3.6
+    context.user_data.SellAtr = 1.6 # 1.6  226.3723
 
-    context.user_data.BuyUnit = 0.01
+    context.user_data.BuyUnit = 0.0035 # 0.003 244.21
 
     context.user_data.IsFirstInHandle = True
 
@@ -53,27 +53,27 @@ def handle_data(context,k_data):
     #print("hist_end_data =\n",hist_end_data)
     #print("hist_end_data.open =",hist_end_data.open);
     price = hist_end_data.close
-    print("当前价格 =",price)
+    print("当前价格 =",price,"len =",len(hist.index))
 
     if len(hist.index) < (context.user_data.T + 1):
         print("bar的数量不足, 等待下一根bar...")
     else:
         #计算最高价和收市均值
-        last_seg_high = hist.loc[1:,["high"]]
-        print(last_seg_high)
+        last_seg_high = hist["high"][-context.user_data.T:]
+        # print(last_seg_high)
         last_seg_high_max = np.max(last_seg_high)
         print("last_seg_high_max",last_seg_high_max)
-        context.user_data.HistoryHigh = max(last_seg_high_max["high"],context.user_data.HistoryHigh)
+        context.user_data.HistoryHigh = max(last_seg_high_max,context.user_data.HistoryHigh)
         print("历史最高价 =",context.user_data.HistoryHigh)
 
-        last_seg_close = hist.loc[1:,["close"]]
-        last_seg_close_2 = hist.loc[(context.user_data.T/2):,["close"]]
-        print(last_seg_close)
-        print("last_seg_close"+("*"*50))
-        print(last_seg_close_2)
-        last_seg_close_mean = np.mean(last_seg_close)["close"]
-        last_seg_close_mean_2 = np.mean(last_seg_close_2)["close"]
-        print("收bar均值 =",last_seg_close_mean)
+        last_seg_close = hist["close"][-context.user_data.T:]
+        last_seg_close_2 = hist["close"][int(-context.user_data.T/2):]
+        # print(last_seg_close)
+        # print("last_seg_close"+("*"*50))
+        # print(last_seg_close_2)
+        # last_seg_close_mean = np.mean(last_seg_close)
+        last_seg_close_mean_2 = np.mean(last_seg_close_2)
+        # print("收bar均值 =",last_seg_close_mean)
         print("收bar后半均值 =",last_seg_close_mean_2)
 
         # 1 计算ATR
@@ -186,7 +186,7 @@ def calc_atr(data):  # data是日线级别的历史数据
             , data["close"].iloc[i - 1] - data["low"].iloc[i])
         tr_list.append(tr)
 
-    print("calc_atr tr_list =",tr_list)
+    # print("calc_atr tr_list =",tr_list)
     atr = np.array(tr_list).mean()
     return atr
 
