@@ -125,7 +125,7 @@ def summarize(date,price):
 #数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
 
 #159915  起始日期为 2011-12-09
-context = QuantStockContext("2011-06-09","","D") #2015-08-10
+context = QuantStockContext("2017-09-08","","D") #2015-08-10
 
 context.order.buy = stock_buy
 context.order.sell = stock_sell
@@ -184,6 +184,10 @@ def main():
 
     print("tushare version =",tushare.__version__)
     print("*"*100)
+
+	print(tushare.set_broker("csc"))
+
+	return
 
     k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
     #print(k_data)
