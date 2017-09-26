@@ -2,7 +2,7 @@
 import json
 
 def TestJson():
-	data1 = {'b':789,'c':456,'a':123}
+	data1 = {'b':789,'c':456,'a':123} 
 	d1 = json.dumps(data1,sort_keys=False,indent=0)
 	print(d1,type(d1))
 

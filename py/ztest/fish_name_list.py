@@ -104,13 +104,13 @@ if __name__ == '__main__':
 	# path = total[1]
 
 	#平台 图片文件
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
+	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
 	#音频文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
-	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\games\\fish",False).walk(optionJSRes3);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\games\\fish",False).walk(optionJSRes3);
 
 	#游动plist文件 png->webp
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes4);

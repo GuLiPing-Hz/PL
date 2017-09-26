@@ -20,6 +20,8 @@ import time
 
 import math
 
+import json
+
 class QuantMatplot(object):
     """docstring for QuantMatplot"""
     def __init__(self):
@@ -45,7 +47,7 @@ class QuantUserData(object):
 class QuantStockContext(object):
     def __init__(self,start,end,frequency):
         """ 
-        	构造函数 
+            构造函数 
         """
         #开始日期 format：YYYY-MM-DD 为空时取上市首日
         self.start_time= start 
@@ -185,9 +187,15 @@ def main():
     print("tushare version =",tushare.__version__)
     print("*"*100)
 
-	print(tushare.set_broker("csc"))
+    account_stock = {}
+    try:
+        with open("account_stock","r") as file:
+            account_stock = json.load(file)
+    except FileNotFoundError:
+        return #再见
+    
 
-	return
+    return
 
     k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
     #print(k_data)
@@ -255,16 +263,16 @@ def main():
 
         # print(k_data_seg)
         if len(k_data_seg) != 0:
-        	print("进入处理函数    "+(">"*100))
-        	quant_strategy.handle_data(context,k_data_seg)
-        	print("进入处理函数 end"+("<"*100))
+            print("进入处理函数    "+(">"*100))
+            quant_strategy.handle_data(context,k_data_seg)
+            print("进入处理函数 end"+("<"*100))
 
-        	hist_end_data = k_data_seg.iloc[len(k_data_seg)-1]#获取当前时间段内的收盘价
-        	# print(hist_end_data.close)
-        	context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
+            hist_end_data = k_data_seg.iloc[len(k_data_seg)-1]#获取当前时间段内的收盘价
+            # print(hist_end_data.close)
+            context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
 
 
     draw_figure(context)
 
 if __name__ == '__main__':
-	main()
+    main()
