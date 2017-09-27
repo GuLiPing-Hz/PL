@@ -200,11 +200,13 @@ def main():
         print("再见")
         return #再见
 
-    tushare.set_broker("csc",account_stock["account"],account_stock["pwd"])
-    context.trader = tushare.trader.trader.TraderAPI("csc")
-    context.trader.login()
-    print(context.trader.baseinfo())
-    return
+    # 测试实盘登陆账号 中信
+    # tushare.set_broker("csc",account_stock["account"],account_stock["pwd"])
+    # context.trader = tushare.trader.trader.TraderAPI("csc")
+    # context.trader.login()
+    # print(context.trader.baseinfo())
+
+    # return
 
     k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
     #print(k_data)

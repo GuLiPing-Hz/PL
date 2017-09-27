@@ -1,20 +1,55 @@
+import json
 import numpy as np
 
-def init_local_context(context):
-    # 上一次买入价
-    context.user_data.last_buy_price = 0
-    # 是否持有头寸标志
-    context.user_data.hold_flag = False#context.account.huobi_cny_btc >= HUOBI_CNY_BTC_MIN_ORDER_QUANTITY
+def init_local_context(context,fromFile=False):
+
     # 限制最多买入的单元数
     context.user_data.limit_unit = 8
-    # 现在买入1单元的security数目
-    context.user_data.unit = 0
-    # 买入次数
-    context.user_data.add_time = 0
 
-    #持有的时候所经历过的最高价
-    context.user_data.HistoryHigh = 0 #历史最高价,
     context.user_data.HistoryHighPercent = 0.2 #收市均价较历史最高价跌去10% 我们止盈
+
+    data = None
+    if fromFile:#如果读取来自文件的
+        try:
+            with open("haigui.temp","r") as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            pass
+
+    if data:#如果有数据
+        # 上一次买入价
+        context.user_data.last_buy_price = data['last_buy_price']
+        # 是否持有头寸标志
+        context.user_data.hold_flag = data['hold_flag'] #context.account.huobi_cny_btc >= HUOBI_CNY_BTC_MIN_ORDER_QUANTITY
+        
+        # 现在买入1单元的security数目
+        context.user_data.unit = data['unit']
+        # 买入次数
+        context.user_data.add_time = data['add_time']
+
+        #持有的时候所经历过的最高价
+        context.user_data.HistoryHigh = data['HistoryHigh'] #历史最高价,
+    else:
+        # 上一次买入价
+        context.user_data.last_buy_price = 0
+        # 是否持有头寸标志
+        context.user_data.hold_flag = False#context.account.huobi_cny_btc >= HUOBI_CNY_BTC_MIN_ORDER_QUANTITY
+        # 现在买入1单元的security数目
+        context.user_data.unit = 0
+        # 买入次数
+        context.user_data.add_time = 0
+
+        #持有的时候所经历过的最高价
+        context.user_data.HistoryHigh = 0 #历史最高价,
+
+    #都需要保存到文件
+    save_to = {'last_buy_price':context.user_data.last_buy_price
+        ,'hold_flag':context.user_data.hold_flag
+        ,'unit':context.user_data.unit
+        ,'add_time':context.user_data.add_time
+        ,'HistoryHigh':context.user_data.HistoryHigh}
+    with open("haigui.temp","w") as file:
+        json.dump(save_to,file)
 
 
 def quant_init(context):
@@ -29,9 +64,7 @@ def quant_init(context):
 
     context.user_data.BuyUnit = 0.0035 # 0.003 244.21
 
-    context.user_data.IsFirstInHandle = True
-
-    init_local_context(context)
+    init_local_context(context,True)
 
 def quant_need_count(context):
 
