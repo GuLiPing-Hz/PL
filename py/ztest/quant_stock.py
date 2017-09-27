@@ -9,7 +9,9 @@
 #pip install tushare
 
 #交易部分 
-#tesseract 单独下载,并且需要放到path目录
+#pip install tesseract
+#搜tesseract 单独下载,并且需要放到path目录
+#TESSDATA_PREFIX 标记到环境变量中 训练数据位置 C:\Program Files (x86)\Tesseract-OCR\tessdata
 
 import tushare
 import numpy as np
@@ -195,12 +197,13 @@ def main():
         with open("account_stock","r") as file:
             account_stock = json.load(file)
     except FileNotFoundError:
+        print("再见")
         return #再见
 
     tushare.set_broker("csc",account_stock["account"],account_stock["pwd"])
     context.trader = tushare.trader.trader.TraderAPI("csc")
     context.trader.login()
-    context.trader.baseinfo()
+    print(context.trader.baseinfo())
     return
 
     k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
