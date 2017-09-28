@@ -1,19 +1,19 @@
 import json
 import numpy as np
-import py.ztest.file_helper
 
 def init_local_context(context,fromFile=False):
 
     # 限制最多买入的单元数
-    context.user_data.limit_unit = 8
+    context.user_data.limit_unit = 8 #4(乐视)
 
-    context.user_data.HistoryHighPercent = 0.2 #收市均价较历史最高价跌去10% 我们止盈
+    context.user_data.HistoryHighPercent = 0.2 #0.5(乐视) #收市均价较历史最高价跌去10% 我们止盈 0.2
 
     data = None
+    cur_file = __file__
+    context.user_data.data_file = cur_file[:cur_file.rfind("\\")]+"/haigui.temp"
     if fromFile:#如果读取来自文件的
         try:
-
-            with open("haigui.temp","r") as file:
+            with open(context.user_data.data_file,"r") as file:
                 data = json.load(file)
         except FileNotFoundError:
             pass
@@ -44,29 +44,29 @@ def init_local_context(context,fromFile=False):
         #持有的时候所经历过的最高价
         context.user_data.HistoryHigh = 0 #历史最高价,
 
+def quant_init(context,fromFile):
+    # 设置ATR值回看窗口
+    context.user_data.T = 19 # 19 226.3723  2
+
+    #认为未来将上涨
+    #设置买入atr倍数
+    context.user_data.BuyAtr = 0.5 # 0.5 226.3723 0.35
+    #设置卖出atr倍数
+    context.user_data.SellAtr = 1.6 # 1.6  226.3723 2
+
+    context.user_data.BuyUnit = 0.0035 # 0.0035 244.21 0.01
+
+    init_local_context(context,fromFile)
+
+def save_to_file(context):
     #都需要保存到文件
     save_to = {'last_buy_price':context.user_data.last_buy_price
         ,'hold_flag':context.user_data.hold_flag
         ,'unit':context.user_data.unit
         ,'add_time':context.user_data.add_time
         ,'HistoryHigh':context.user_data.HistoryHigh}
-    with open("haigui.temp","w") as file:
+    with open(context.user_data.data_file,"w") as file:
         json.dump(save_to,file)
-
-
-def quant_init(context):
-    # 设置ATR值回看窗口
-    context.user_data.T = 19 # 19 226.3723
-
-    #认为未来将上涨
-    #设置买入atr倍数
-    context.user_data.BuyAtr = 0.5 # 0.5 226.3723
-    #设置卖出atr倍数
-    context.user_data.SellAtr = 1.6 # 1.6  226.3723
-
-    context.user_data.BuyUnit = 0.0035 # 0.003 244.21
-
-    init_local_context(context,True)
 
 def quant_need_count(context):
 
@@ -136,6 +136,7 @@ def handle_data(context,k_data):
 
                     context.user_data.last_buy_price = price
                     context.user_data.add_time += 1
+                    save_to_file(context)
                     print("正在买入 "+context.security+" ;下单金额为 "+str(cash_amount)+" 元")
                     context.order.buy(context.security,price, cash_amount)
                 else:
@@ -143,6 +144,7 @@ def handle_data(context,k_data):
             elif temp == -1:  # 判断止损
                 # 重新初始化参数！重新初始化参数！重新初始化参数！非常重要！
                 init_local_context(context)
+                save_to_file(context)
                 # 卖出止损
                 print("产生止损信号;正在卖出 "+str(context.security)+";卖出数量为 "+str(context.account.stock))
                 context.order.sell(context.security,price, context.account.stock)
@@ -160,16 +162,17 @@ def handle_data(context,k_data):
                     context.user_data.hold_flag = True
                     context.user_data.last_buy_price = price
                     cash_amount = min(context.account.money, context.user_data.unit * price)
+                    save_to_file(context)
                     # 有买入信号，执行买入
                     print("产生入场信号;正在买入 " + context.security + " ;下单金额为 "+str(cash_amount)+" 元")
-
                     context.order.buy(context.security,price, cash_amount)
                 else:
                     print("已经入场，不产生入场信号")
             elif out == -1:  # 离场
-                if context.account.stock >= 0: #context.user_data.hold_flag is True
+                if context.account.stock > 0: #context.user_data.hold_flag is True
                     # 重新初始化参数！重新初始化参数！重新初始化参数！非常重要！
                     init_local_context(context)
+                    save_to_file(context)
                     # 有卖出信号，且持有仓位，则市价单全仓卖出
                     print("产生止盈离场信号;正在卖出 " + context.security + " ;卖出数量为 "+str(context.account.stock))
                     context.order.sell(context.security,price, context.account.stock)

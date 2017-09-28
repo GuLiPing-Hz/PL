@@ -10,3 +10,6 @@ print(module.a.b.dir_child_child.add(0,3))
 import module.start1
 import module.a.start2 
 import module.a.b.start3
+
+#如果存在一个start目录(与我们脚本名字一样),我们要引入start目录的文件,那么start目录里面,必须含有__init__.py文件
+#import start.xx as xx

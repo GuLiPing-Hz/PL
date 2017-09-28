@@ -92,10 +92,10 @@ def stock_buy(name,price,cash):
         context.account.money -= buy_money #减去买入金额
         context.account.money -= fee #减去费用
         context.account.stock += count;
-        print("买入["+name+"]成功 剩余现金 =",context.account.money,",持有股票 =",context.account.stock
+        print("buy 买入["+name+"]成功 剩余现金 =",context.account.money,",持有股票 =",context.account.stock
             ,"成交额 =",buy_money,"总费用 =",fee,"印花税 =",0);
     else:
-        print("买入["+name+"]失败 现金不足买入一手!!!")
+        print("buy 买入["+name+"]失败 现金不足买入一手!!!")
 
 def stock_sell(name,price,count):
     #直接认为买入成功 价格-误差
@@ -109,7 +109,7 @@ def stock_sell(name,price,count):
     context.account.money += sell_money #加上卖出金额
     context.account.money -= fee #减去费用
     context.account.stock -= count;
-    print("卖出["+name+"]成功 剩余现金 =",context.account.money,",持有股票 =",context.account.stock
+    print("sell 卖出["+name+"]成功 剩余现金 =",context.account.money,",持有股票 =",context.account.stock
         ,"成交额 =",sell_money,"总费用 =",fee,"印花税 =",fee1);
 
 def summarize(date,price):
@@ -127,26 +127,6 @@ def summarize(date,price):
     context.matplot.date.append(date);
     context.matplot.my.append(my_profit)
     context.matplot.standard.append(standard_profit)
-
-#开始日期 format：YYYY-MM-DD 为空时取上市首日
-#结束日期 format：YYYY-MM-DD 为空时取最近一个交易日
-#数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
-
-#159915  起始日期为 2011-12-09
-context = QuantStockContext("2011-09-08","","D") #2015-08-10
-
-context.order.buy = stock_buy
-context.order.sell = stock_sell
-context.summarize = summarize
-
-context.security = "159915"
-#print("context.user_data =",id(context.user_data))
-
-context.account_initial.money = 10000 #起始持有RMB数量
-context.account_initial.stock = 0   #起始持有股票数量
-context.account.commission = 0.00025 #万二点五佣金
-context.account.commission_base = 5  #佣金最低额
-context.account.tax = 0.001          #印花税  交易上海的股票需要过户费,我暂且忽略过户费
 
 def draw_figure(context):
     fig = plt.figure("盈利分析",figsize=(18,6))#
@@ -182,21 +162,50 @@ def draw_figure(context):
     #plt.savefig("easyplot.jpg") 
     plt.show()
 
+#开始日期 format：YYYY-MM-DD 为空时取上市首日
+#结束日期 format：YYYY-MM-DD 为空时取最近一个交易日
+#数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
+
+"""
+159915  起始日期为 2011-12-09
+300033  2009-12-25
+300104  2010-08-31
+"""
+#"2011-09-08","2014-09-08"
+context = QuantStockContext("2010-08-31","2017-09-28","D") #2015-08-10
+context.security = "159915"
+
+context.order.buy = stock_buy
+context.order.sell = stock_sell
+context.summarize = summarize
+#print("context.user_data =",id(context.user_data))
+
+context.account_initial.money = 10000 #起始持有RMB数量
+context.account_initial.stock = 0   #起始持有股票数量
+context.account.commission = 0.00025 #万二点五佣金
+context.account.commission_base = 5  #佣金最低额
+context.account.tax = 0.001          #印花税  交易上海的股票需要过户费,我暂且忽略过户费
+
 #海龟策略
-import quant_stock.haigui as quant_strategy
+import quant.haigui as quant_strategy
 
 def main(fromFile=False):
     #初始化我的账户钱和股票数量
     data = None
+    account_file = "account.temp"
     if fromFile:#如果读取来自文件的
         try:
-            with open("haigui.temp","r") as file:
+            with open(account_file,"r") as file:
                 data = json.load(file)
         except FileNotFoundError:
             pass
 
-    context.account.money = context.account_initial.money
-    context.account.stock = context.account_initial.stock
+    if data :
+        context.account.money = data['money']
+        context.account.stock = data['stock']
+    else:        
+        context.account.money = context.account_initial.money
+        context.account.stock = context.account_initial.stock
 
     print("tushare version =",tushare.__version__)
     print("*"*100)
@@ -204,8 +213,6 @@ def main(fromFile=False):
     # print(sys.path[0])
     #上面两种方式在脚本被其他脚本引入的时候的目录不准确,是引入他们的文件的目录
     print(file_helper.get_curpy_dir(__file__)) 
-
-    return
 
     account_stock = {}
     try:
@@ -224,7 +231,7 @@ def main(fromFile=False):
     # return
 
     k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
-    #print(k_data)
+    print(k_data)
     #print(type(k_data))
     #print(len(k_data))
 
@@ -264,12 +271,15 @@ def main(fromFile=False):
 
     k_data_start = k_data.iloc[0]
     # print(k_data_start)
-    context.account_initial.price_start = k_data_start.open
+    if data:
+        context.account_initial.price_start = data['price_start']
+    else:
+        context.account_initial.price_start = k_data_start.open
     print(k_data_start.date + " first open =",context.account_initial.price_start)
 
 
     #初始化量化策略
-    quant_strategy.quant_init(context)
+    quant_strategy.quant_init(context,fromFile)
     #获取策略要求的bar数量
     needCount = quant_strategy.quant_need_count(context)
     #print("needCount =",needCount)
@@ -297,7 +307,14 @@ def main(fromFile=False):
             # print(hist_end_data.close)
             context.summarize(hist_end_data.date,hist_end_data.close) #总结财富
 
+    #先保存到文件
+    save_to = {'money':context.account.money
+        ,'stock':context.account.stock
+        ,"price_start":context.account_initial.price_start}
+    with open(account_file,"w") as file:
+        json.dump(save_to,file)
 
+    #然后绘制图表
     draw_figure(context)
 
 if __name__ == '__main__':

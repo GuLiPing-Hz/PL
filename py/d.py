@@ -153,3 +153,17 @@ print({x:x**2 for x in vec1})
 vec2 = ["a","b","c"]
 print({x:y for x in vec2 for y in vec1}) # 似乎字典并不能这么用
 print({x:x**3 for x in vec1 if x != 1})
+
+print('*'*100)
+#日期类型
+import datetime
+today = datetime.date.today() #日期类
+print('今天是',today,type(today))
+today_time = datetime.datetime.today() #精确到毫秒
+print('今天是',today_time,type(today_time))
+print("格式化日期",today_time.strftime('%Y-%m-%d %H:%M:%S %f'))
+
+import time
+t = time.time() #utc
+print("时间",t,type(t))
+
