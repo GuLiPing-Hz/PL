@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import py.ztest.file_helper
 
 def init_local_context(context,fromFile=False):
 
@@ -11,6 +12,7 @@ def init_local_context(context,fromFile=False):
     data = None
     if fromFile:#如果读取来自文件的
         try:
+
             with open("haigui.temp","r") as file:
                 data = json.load(file)
         except FileNotFoundError:

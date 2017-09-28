@@ -31,6 +31,9 @@ import hashlib
 import shutil
 import tempfile
 
+def get_curpy_dir(file):
+	return file[:file.rfind("\\")]
+
 def md5_str(str):
 	return hashlib.md5(bytes(s,"utf_8")).hexdigest()
 
@@ -166,14 +169,20 @@ class Diskwalk(object):
 		return path_collection
 
 
-def make_dir(dir):
+def make_dirs(dir):
+	"""
+		依次创建父子目录
+	"""
 	try:
-		print("make dir =>",dir)
-		os.mkdir(dir)
+		print("makedirs dir =>",dir)
+		os.makedirs(dir)
 	except FileExistsError: #异常捕获
 		pass
 
 def remove_dir(dir):
+	"""
+		删除目录中的所有内容
+	"""
 	file_names,file_paths = Diskwalk(dir).walk();
 	for i in range(len(file_paths)):
 		os.remove(file_paths[i])

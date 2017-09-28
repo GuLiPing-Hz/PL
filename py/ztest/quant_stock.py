@@ -24,8 +24,11 @@ import datetime
 import time
 
 import math
+import os
+import sys
 
 import json
+import file_helper
 
 class QuantMatplot(object):
     """docstring for QuantMatplot"""
@@ -68,9 +71,7 @@ class QuantStockContext(object):
         print("self.user_data =",id(self.user_data))
 
         self.account = QuantAccountData()
-
         self.order = QuantOrder()
-
         self.account_initial = QuantAccountData()
         self.matplot = QuantMatplot() 
         self.matplot.date = []
@@ -132,7 +133,7 @@ def summarize(date,price):
 #数据类型，D=日k线 W=周 M=月 5=5分钟 15=15分钟 30=30分钟 60=60分钟，默认为D
 
 #159915  起始日期为 2011-12-09
-context = QuantStockContext("2017-09-08","","D") #2015-08-10
+context = QuantStockContext("2011-09-08","","D") #2015-08-10
 
 context.order.buy = stock_buy
 context.order.sell = stock_sell
@@ -184,13 +185,27 @@ def draw_figure(context):
 #海龟策略
 import quant_stock.haigui as quant_strategy
 
-def main():
+def main(fromFile=False):
     #初始化我的账户钱和股票数量
+    data = None
+    if fromFile:#如果读取来自文件的
+        try:
+            with open("haigui.temp","r") as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            pass
+
     context.account.money = context.account_initial.money
     context.account.stock = context.account_initial.stock
 
     print("tushare version =",tushare.__version__)
     print("*"*100)
+    # print("quant_stock 当前目录=",os.getcwd()) 
+    # print(sys.path[0])
+    #上面两种方式在脚本被其他脚本引入的时候的目录不准确,是引入他们的文件的目录
+    print(file_helper.get_curpy_dir(__file__)) 
+
+    return
 
     account_stock = {}
     try:
