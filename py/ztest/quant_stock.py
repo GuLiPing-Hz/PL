@@ -172,7 +172,7 @@ def draw_figure(context):
 300104  2010-08-31
 """
 #"2011-09-08","2014-09-08"
-context = QuantStockContext("2010-08-31","2017-09-28","D") #2015-08-10
+context = QuantStockContext("2017-08-15","","D") #2015-08-10
 context.security = "159915"
 
 context.order.buy = stock_buy
@@ -180,7 +180,7 @@ context.order.sell = stock_sell
 context.summarize = summarize
 #print("context.user_data =",id(context.user_data))
 
-context.account_initial.money = 10000 #起始持有RMB数量
+context.account_initial.money = 2000 #起始持有RMB数量
 context.account_initial.stock = 0   #起始持有股票数量
 context.account.commission = 0.00025 #万二点五佣金
 context.account.commission_base = 5  #佣金最低额
@@ -189,7 +189,7 @@ context.account.tax = 0.001          #印花税  交易上海的股票需要过�
 #海龟策略
 import quant.haigui as quant_strategy
 
-def main(fromFile=False):
+def main(fromFile=True):
     #初始化我的账户钱和股票数量
     data = None
     account_file = "account.temp"

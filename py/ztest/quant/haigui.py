@@ -4,7 +4,7 @@ import numpy as np
 def init_local_context(context,fromFile=False):
 
     # 限制最多买入的单元数
-    context.user_data.limit_unit = 8 #4(乐视)
+    context.user_data.limit_unit = 6 #4(乐视)
 
     context.user_data.HistoryHighPercent = 0.2 #0.5(乐视) #收市均价较历史最高价跌去10% 我们止盈 0.2
 
@@ -46,7 +46,7 @@ def init_local_context(context,fromFile=False):
 
 def quant_init(context,fromFile):
     # 设置ATR值回看窗口
-    context.user_data.T = 19 # 19 226.3723  2
+    context.user_data.T = 19 # 19 226.3723  2   
 
     #认为未来将上涨
     #设置买入atr倍数
@@ -70,7 +70,7 @@ def save_to_file(context):
 
 def quant_need_count(context):
 
-	return context.user_data.T+1
+	return context.user_data.T+2
 
 def handle_data(context,k_data):
     #print(context.account)
@@ -80,11 +80,11 @@ def handle_data(context,k_data):
     #     context.user_data.IsFirstInHandle = False
         
     # 获取历史数据
-    hist = k_data #DataFrame
+    hist = k_data[:len(k_data)-1] #DataFrame
     #print("hist.index=",hist.index)
 
     # 获取当前行情数据
-    hist_end_data = hist.iloc[len(hist)-1]
+    hist_end_data = k_data.iloc[len(hist)-1]
     #print("hist_end_data =\n",hist_end_data)
     #print("hist_end_data.open =",hist_end_data.open);
     price = hist_end_data.close
@@ -113,7 +113,7 @@ def handle_data(context,k_data):
 
         # 1 计算ATR
         atr = calc_atr(hist.iloc[:len(hist)-1])
-        print("art = ",atr)
+        print("atr = ",atr)
 
         # 2 判断加仓或止损
         if context.user_data.hold_flag and context.account.stock > 0:  # 先判断是否持仓
@@ -126,6 +126,9 @@ def handle_data(context,k_data):
                 temp = -1
             else:
                 print("没有背离,判断是加仓还是止损")
+                cash_amount = min(context.account.money, context.user_data.unit * price)
+                print("可能买入金额:",cash_amount)
+
                 temp = add_or_stop(price, context.user_data.last_buy_price, atr, context)
             
             if temp == 1:  # 判断加仓
@@ -151,17 +154,20 @@ def handle_data(context,k_data):
         # 3 判断入场离场
         else:
             print("判断是进场还是离场")
+            value = context.account.money * context.user_data.BuyUnit
+            unit_temp = calc_unit(value, atr)
+            cash_amount = min(context.account.money, unit_temp * price)
+            print("可能买入金额:",cash_amount)
+
             out = in_or_out(context, hist.iloc[:len(hist) - 1], price, context.user_data.T)
             if out == 1:  # 入场
                 if context.user_data.hold_flag is False:
                     print("账户余额money = "+str(context.account.money)+",art="+str(atr))
-                    value = context.account.money * context.user_data.BuyUnit
-                    context.user_data.unit = calc_unit(value, atr)
+                    context.user_data.unit = unit_temp
                     print("入场单元 context.user_data.unit="+str(context.user_data.unit)+"*"+str(price))
                     context.user_data.add_time = 1
                     context.user_data.hold_flag = True
                     context.user_data.last_buy_price = price
-                    cash_amount = min(context.account.money, context.user_data.unit * price)
                     save_to_file(context)
                     # 有买入信号，执行买入
                     print("产生入场信号;正在买入 " + context.security + " ;下单金额为 "+str(cash_amount)+" 元")
