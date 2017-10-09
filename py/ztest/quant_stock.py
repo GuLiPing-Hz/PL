@@ -224,12 +224,12 @@ def main(fromFile=False):
         return #再见
 
     # 测试实盘登陆账号 中信
-    # tushare.set_broker("csc",account_stock["account"],account_stock["pwd"])
-    # context.trader = tushare.trader.trader.TraderAPI("csc")
-    # context.trader.login()
-    # print(context.trader.baseinfo())
+    tushare.set_broker("csc",account_stock["account"],account_stock["pwd"])
+    context.trader = tushare.trader.trader.TraderAPI("csc")
+    context.trader.login()
+    print(context.trader.baseinfo())
 
-    # return
+    return
 
     k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
     print(k_data)

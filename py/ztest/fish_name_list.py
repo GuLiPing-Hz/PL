@@ -94,6 +94,11 @@ def optionJSRes4(path,file):
 
 		tree.write(newFilePath+"\\"+file);
 
+def optionCPP(path,file):
+	if file.find(".c") != -1 or file.find(".cpp") != -1:
+		print("../../../Classes/app/"+file)
+
+
 if __name__ == '__main__':
 
 	#print(file_helper)
@@ -103,8 +108,10 @@ if __name__ == '__main__':
 	# file = total[0]
 	# path = total[1]
 
+	#C++文件列表
+	file_helper.Diskwalk("D:\\glp\\GitHub\\LongConnectionTCP\\src\\Classes\\app",False).walk(optionCPP);
 	#平台 图片文件
-	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
 	#音频文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
