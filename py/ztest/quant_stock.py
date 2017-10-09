@@ -189,7 +189,7 @@ context.account.tax = 0.001          #印花税  交易上海的股票需要过�
 #海龟策略
 import quant.haigui as quant_strategy
 
-def main(fromFile=True):
+def main(fromFile=False):
     #初始化我的账户钱和股票数量
     data = None
     account_file = "account.temp"
@@ -203,6 +203,7 @@ def main(fromFile=True):
     if data :
         context.account.money = data['money']
         context.account.stock = data['stock']
+        #context.start_time = data['today']
     else:        
         context.account.money = context.account_initial.money
         context.account.stock = context.account_initial.stock
@@ -310,7 +311,8 @@ def main(fromFile=True):
     #先保存到文件
     save_to = {'money':context.account.money
         ,'stock':context.account.stock
-        ,"price_start":context.account_initial.price_start}
+        ,"price_start":context.account_initial.price_start
+        ,"today":str(datetime.date.today())}
     with open(account_file,"w") as file:
         json.dump(save_to,file)
 
