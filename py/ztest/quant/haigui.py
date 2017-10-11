@@ -84,7 +84,7 @@ def handle_data(context,k_data):
     #print("hist.index=",hist.index)
 
     # 获取当前行情数据
-    hist_end_data = k_data.iloc[len(hist)-1]
+    hist_end_data = k_data.iloc[len(hist)]
     #print("hist_end_data =\n",hist_end_data)
     #print("hist_end_data.open =",hist_end_data.open);
     price = hist_end_data.close
@@ -161,12 +161,13 @@ def handle_data(context,k_data):
 
             out = in_or_out(context, hist.iloc[:len(hist) - 1], price, context.user_data.T)
             if out == 1:  # 入场
-                if context.user_data.hold_flag is False:
+                if not context.user_data.hold_flag:
                     print("账户余额money = "+str(context.account.money)+",art="+str(atr))
                     context.user_data.unit = unit_temp
                     print("入场单元 context.user_data.unit="+str(context.user_data.unit)+"*"+str(price))
                     context.user_data.add_time = 1
                     context.user_data.hold_flag = True
+
                     context.user_data.last_buy_price = price
                     save_to_file(context)
                     # 有买入信号，执行买入
@@ -194,11 +195,11 @@ def in_or_out(context, data, price, T):
     down = np.min(data["low"].iloc[-int(T / 2):])
     print("当前价格为: %s, 唐奇安上轨为: %s, 唐奇安下轨为: %s" % (price, up, down))
     # 当前价格升破唐奇安上沿，产生入场信号
-    if price > up:
+    if price >= up:
         print("价格突破唐奇安上轨")
         return 1
     # 当前价格跌破唐奇安下沿，产生出场信号
-    elif price < down:
+    elif price <= down:
         print("价格跌破唐奇安下轨")
         return -1
     # 未产生有效信号

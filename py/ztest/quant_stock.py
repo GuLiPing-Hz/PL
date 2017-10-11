@@ -82,7 +82,7 @@ class QuantStockContext(object):
 STOCK_FLOAT = 0.0
 def stock_buy(name,price,cash):
     count = int(cash/price//100*100)
-    if(count > 100):
+    if(count >= 100):
         #直接认为买入成功 价格+误差
         buy_money = (price+STOCK_FLOAT)*count
         fee = context.account.commission*buy_money #佣金
@@ -94,8 +94,10 @@ def stock_buy(name,price,cash):
         context.account.stock += count;
         print("buy 买入["+name+"]成功 剩余现金 =",context.account.money,",持有股票 =",context.account.stock
             ,"成交额 =",buy_money,"总费用 =",fee,"印花税 =",0);
+        return True
     else:
         print("buy 买入["+name+"]失败 现金不足买入一手!!!")
+        return False
 
 def stock_sell(name,price,count):
     #直接认为买入成功 价格-误差
@@ -224,12 +226,12 @@ def main(fromFile=False):
         return #再见
 
     # 测试实盘登陆账号 中信
-    tushare.set_broker("csc",account_stock["account"],account_stock["pwd"])
-    context.trader = tushare.trader.trader.TraderAPI("csc")
-    context.trader.login()
-    print(context.trader.baseinfo())
+    # tushare.set_broker("csc",account_stock["account"],account_stock["pwd"])
+    # context.trader = tushare.trader.trader.TraderAPI("csc")
+    # context.trader.login()
+    # print(context.trader.baseinfo())
 
-    return
+    # return
 
     k_data = tushare.get_k_data(context.security,start=context.start_time, end=context.end_time,ktype=context.frequency)
     print(k_data)
