@@ -212,6 +212,7 @@ def in_or_out(context, data, price, T):
 def add_or_stop(price, lastprice, atr, context):
     buyArtPrice = lastprice + context.user_data.BuyAtr * atr
     sellArtPrice = lastprice - context.user_data.SellAtr * atr
+    print("当前价格为: %s, 加仓价格: %s, 止损价格: %s" % (price, buyArtPrice, sellArtPrice))
     if price >= buyArtPrice:
         print("当前价格比上一个购买价格上涨超过"+str(context.user_data.BuyAtr)+"个ATR("+str(buyArtPrice)+")")
         return 1
