@@ -109,7 +109,7 @@ if __name__ == '__main__':
 	# path = total[1]
 
 	#C++文件列表
-	file_helper.Diskwalk("D:\\glp\\GitHub\\LongConnectionTCP\\src\\Classes\\app",False).walk(optionCPP);
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\LongConnectionTCP\\src\\Classes\\app",False).walk(optionCPP);
 	#平台 图片文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
 	#音频文件
