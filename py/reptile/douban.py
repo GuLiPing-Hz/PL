@@ -27,6 +27,7 @@ class VisitUrl(object):
     def visit(self,url):
         soup = None
         if(url == None or url == "" or (url in self.had_visited)):
+            print("已经访问过了!!!",url)
             return soup
 
         self.had_visited.append(url)
@@ -101,7 +102,7 @@ class VisitUrl(object):
                     new_url = url
                     xiegang_split = url.split("/")
                     if(len(xiegang_split) > 3): # http://music.baidu.com 标准分出来应该是3个
-                        pos_end = url.rfind("/") #取出主域名
+                        pos_end = url.find("/",8) #取出主域名
                         if(pos_end != -1):
                             new_url = url[:pos_end]
                             print("新地址",new_url)
@@ -121,11 +122,11 @@ if __name__ == '__main__':
     get_douban()
     print("访问到此结束")
 
-    url = "http://music.baidu.com/mall?from=pcweb_music_qrcode"
-    xiegang_split = url.split("/")
-    print(xiegang_split)
-    pos_end = url.rfind("/") #取出主域名
-    new_url = url
-    if(pos_end != -1):
-        new_url = url[:pos_end]
-        print("新地址",new_url)
+    # url = "http://music.baidu.com/mall?from=pcweb_music_qrcode"
+    # xiegang_split = url.split("/")
+    # print(xiegang_split)
+    # pos_end = url.rfind("/") #取出主域名
+    # new_url = url
+    # if(pos_end != -1):
+    #     new_url = url[:pos_end]
+    #     print("新地址",new_url)
