@@ -84,8 +84,8 @@ class VisitUrl(object):
             print("和谐1 error :",url)
         except urllib.error.URLError as e:#由于目标计算机积极拒绝，无法连接。
             print("和谐2 error :",url)
-        except TimeoutError as e:
-            print("超时 error :",url) as e:#由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+        except TimeoutError as e:#由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
+            print("超时 error :",url)
         except http.client.RemoteDisconnected as e:#服务器关闭连接
             print("close error :",url)
         except Exception as e:
