@@ -100,9 +100,11 @@ print("字典",tab1)
 print(tab2["x"],tab2["z"]) # 访问字典table，索引不再是数字
 tab1["x"] = 3
 print("插入字典",tab1["x"])
+print("x in tab2 = ","x" in tab2)#判断tab中是否拥有x的key
 del tab2["x"] # 删除元素
 tab2[2] = 1
 print(tab2)
+print("x in tab2 = ","x" in tab2)
 # python中的键值必须是不可变的，可以是数字，字符串，元组
 
 print(dir(dict))

@@ -1,8 +1,15 @@
 #!python 3.4
 
 from xml.etree import ElementTree
-import file_helper
 import os
+
+#当我们脚本是主入口的时候,如果要引入上层目录的脚本,那么只能通过添加sys.path的方式
+#然后并不推荐这样写,这样是由于设计目录的时候原本就不规范导致
+#正确的方法应该是把我们自己写的脚本都放到一个目录，并且子目录的脚本不能引用上级目录的模块
+import sys
+sys.path.append("..")
+import file_helper
+
 
 def optionRename(path,file):
 	fullpath=os.path.join(path,file)
@@ -28,11 +35,27 @@ def optionRenameFishId(path,file):
 	file_helper.move_file(fullpath,new_path)
 
 def optionJSRes1(path,file):
+	if("ignore" in path):
+		return ;
+	path_new = path[path.find("res"):].replace("\\","/")+"/"
+	# print(path_new)
+
 	name = file.replace(".","_");
+	ext_file = file.replace(".png","");
+
+	is_png = False;
+	if("_png" in name):
+		is_png = True;
 
 	if("_webp" in name):
+		is_png = True;
 		name = name.replace("_webp","_png");
-	print(name+": 'res/platform/"+file+"',");#games/fish ; platform
+		ext_file = file.replace(".webp","");
+
+	if(is_png):
+		print(name+": '"+path_new+ext_file+"' + cfgImageExt,");#games/fish ; platform
+	else:
+		print(name+": '"+path_new+ext_file+"',");#games/fish ; platform
 
 def optionJSRes1_(path,file):
 	name = file.replace(".","_");
@@ -52,6 +75,28 @@ def optionJSRes3(path,file):
 	if("_webp" in name):
 		name = name.replace("_webp","_png");
 	print(name+": 'res/games/fish/"+file+"',");
+
+	if("ignore" in path):
+		return ;
+	path_new = path[path.find("res"):].replace("\\","/")+"/"
+	# print(path_new)
+
+	name = file.replace(".","_");
+	ext_file = file.replace(".png","");
+
+	is_png = False;
+	if("_png" in name):
+		is_png = True;
+
+	if("_webp" in name):
+		is_png = True;
+		name = name.replace("_webp","_png");
+		ext_file = file.replace(".webp","");
+
+	if(is_png):
+		print(name+": '"+path_new+ext_file+"' + cfgImageExt,");#games/fish ; platform
+	else:
+		print(name+": '"+path_new+ext_file+"',");#games/fish ; platform
 
 #修改plist文件的纹理为png->webp
 def optionJSRes4(path,file):
@@ -110,14 +155,14 @@ if __name__ == '__main__':
 
 	#C++文件列表
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\LongConnectionTCP\\src\\Classes\\app",False).walk(optionCPP);
-	#平台 图片文件
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\images",False).walk(optionJSRes1);
+	#平台 图片文件 
+	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\platform").walk(optionJSRes1);
 	#音频文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\enc\\games\\fish",False).walk(optionJSRes3);
+	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish",False).walk(optionJSRes1);
 
 	#游动plist文件 png->webp
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes4);
@@ -125,3 +170,8 @@ if __name__ == '__main__':
 	#鱼图片文件名字修改
 	#file_helper.Diskwalk("D:\\glp\\work\\UI\\20170919\\package\\fishs",False).walk(optionRenameFishId);
 
+	def water_name(path,file):
+		print(path,file);
+		os.rename(path+"\\"+file,path+"\\"+"water_"+file);
+
+	# file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\png",False).walk(water_name);	
