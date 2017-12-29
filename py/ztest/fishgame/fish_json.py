@@ -344,7 +344,85 @@ def ParseCCSParticle(json_content,str_parent):
         printSpace8("ret.push("+name+");");
         print(name+".stop();");
 
-    ParseCCSNodeProp(json_content,name,has_blend=True);
+    ParseCCSNodeProp(json_content,name,is_node=True,has_blend=True);
+
+"""
+    "ClipAble": true,
+    "BackColorAlpha": 0,
+    "ComboBoxIndex": 1,
+    "SingleColor": {
+      "R": 0,
+      "G": 0,
+      "B": 0
+    },
+    "FirstColor": {
+      "R": 150,
+      "G": 200
+    },
+    "EndColor": {},
+    "ColorVector": {
+      "ScaleY": 1.0
+    },
+    "Scale9Width": 1,
+    "Scale9Height": 1,
+    "TouchEnable": true,
+"""
+def ParseCCSPanel(json_content,str_parent):
+    name = json_content["Name"];
+    printSpace8("var "+name+" = new ccui.Layout();");
+    if(str_parent):
+        printSpace8(str_parent+".addChild("+name+");");
+    if(name.endswith("_use")):
+        global PUSHCNT;
+        printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
+        printSpace8("ret.push("+name+");");
+
+    #设定裁切
+    printSpace8(name+".setClippingEnabled("+("true" if json_content["ClipAble"] else "false")+");");
+    #设定点击
+    if("TouchEnable" in json_content):
+            printSpace8(name+".setTouchEnabled(true);");
+
+    #设定背景图片
+    bg_type = 0;
+    if("ComboBoxIndex" in json_content):
+        bg_type = json_content["ComboBoxIndex"];
+    if(bg_type == 0):#只有图片
+        if("FileData" in json_content):#检查纹理设置
+            printSpace8(name+".setBackGroundImage("+ParseCCSSpriteProp(json_content)+");");
+
+            #检查九宫格设置
+            if("Scale9Enable" in json_content):
+                scale9_x = 0 if("Scale9OriginX" not in json_content) else json_content["Scale9OriginX"];
+                scale9_y = 0 if("Scale9OriginY" not in json_content) else json_content["Scale9OriginY"];
+                printSpace8(name+".setBackGroundImageScale9Enabled(true);");
+                printSpace8(name+".setBackGroundImageCapInsets(cc.rect("+str(scale9_x)+", "+str(scale9_y)+", 1, 1));");
+    elif(bg_type == 1):#纯色
+
+        json_color = json_content["SingleColor"];#设置颜色值
+        r = 255
+        g = 255
+        b = 255
+        if("R" in json_color):
+            r = json_color["R"];
+        if("G" in json_color):
+            g = json_color["G"];
+        if("B" in json_color):
+            b = json_color["B"];
+
+        if(r == 255 and g == 255 and b == 255):
+            pass
+        else:
+            printSpace8(name+".setBackGroundColor(cc.color("+str(r)+", "+str(g)+", "+str(b)+"));");
+
+        if("BackColorAlpha" in json_content):
+            printSpace8(name+".setBackGroundColorOpacity("+str(json_content["BackColorAlpha"])+");");
+        printSpace8(name+".setBackGroundColorType(ccui.Layout.BG_COLOR_SOLID);");
+        
+    else:#渐变色 不支持
+        raise NotImplementedError();
+
+    ParseCCSNodeProp(json_content,name);
 
 def ParseCCSChildren(json_children,str_parent):
     for i in range(len(json_children)):
@@ -363,6 +441,8 @@ def ParseCCSChildren(json_children,str_parent):
             ParseCCSLoadingBar(json_content,str_parent)
         elif(json_content["ctype"] == "ParticleObjectData"):
             ParseCCSParticle(json_content,str_parent)
+        elif(json_content["ctype"] == "PanelObjectData"):
+            ParseCCSPanel(json_content,str_parent)
 
 
 def ParseCCSJson(json_file):
