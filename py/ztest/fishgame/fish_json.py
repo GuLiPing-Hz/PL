@@ -271,6 +271,7 @@ def ParseCCSText(json_content,str_parent):
         printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
         printSpace8("ret.push("+name+");");
 
+    printSpace8(name+".setFontName(res.default_font);");
     if("FontSize" in json_content):
         printSpace8(name+".setFontSize("+str(json_content["FontSize"])+");");
     if("LabelText" in json_content):
@@ -424,6 +425,51 @@ def ParseCCSPanel(json_content,str_parent):
 
     ParseCCSNodeProp(json_content,name);
 
+"""
+    "BackGroundData": {
+      "Type": "Normal",
+      "Path": "platform/B7.png",
+      "Plist": ""
+    },
+    "ProgressBarData": {
+      "Type": "Normal",
+      "Path": "platform/B6.png",
+      "Plist": ""
+    },
+    "BallNormalData": {
+      "Type": "Normal",
+      "Path": "platform/B5.png",
+      "Plist": ""
+    },
+"""
+def ParseCCSSlider(json_content,str_parent):
+    name = json_content["Name"];
+    printSpace8("var "+name+" = new ccui.Slider();");
+    if(str_parent):
+        printSpace8(str_parent+".addChild("+name+");");
+    if(name.endswith("_use")):
+        global PUSHCNT;
+        printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
+        printSpace8("ret.push("+name+");");
+
+    str_bar = json_content["BackGroundData"]["Path"];
+    str_bar = str_bar[str_bar.rfind("/")+1:];
+    str_bar = str_bar.replace(".","_");
+    printSpace8(name+".loadBarTexture("+RESOURCE+"."+str_bar+");");
+
+    str_progress = json_content["ProgressBarData"]["Path"];
+    str_progress = str_progress[str_progress.rfind("/")+1:];
+    str_progress = str_progress.replace(".","_");
+    printSpace8(name+".loadProgressBarTexture("+RESOURCE+"."+str_progress+");");
+
+    str_ball = json_content["BallNormalData"]["Path"];
+    str_ball = str_ball[str_ball.rfind("/")+1:];
+    str_ball = str_ball.replace(".","_");
+    printSpace8(name+".loadSlidBallTextures("+RESOURCE+"."+str_ball+");");
+    printSpace8(name+".setPercent(0);");
+
+    ParseCCSNodeProp(json_content,name);
+
 def ParseCCSChildren(json_children,str_parent):
     for i in range(len(json_children)):
         json_content = json_children[i];
@@ -443,6 +489,8 @@ def ParseCCSChildren(json_children,str_parent):
             ParseCCSParticle(json_content,str_parent)
         elif(json_content["ctype"] == "PanelObjectData"):
             ParseCCSPanel(json_content,str_parent)
+        elif(json_content["ctype"] == "SliderObjectData"):
+            ParseCCSSlider(json_content,str_parent)
 
 
 def ParseCCSJson(json_file):
