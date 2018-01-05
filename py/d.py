@@ -12,6 +12,7 @@ s1 = 'Hello World'
 s2 = '''Hello
 		World'''
 print(s,s1,s2)
+print("repr=",repr(s2))
 print("*"*30)
 
 # python 对字符串的访问支持正负索引

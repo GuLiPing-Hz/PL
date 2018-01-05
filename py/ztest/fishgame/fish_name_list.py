@@ -35,7 +35,7 @@ def optionRenameFishId(path,file):
 	file_helper.move_file(fullpath,new_path)
 
 def optionJSRes1(path,file):
-	if("ignore" in path):
+	if("ignore" in path or file.startswith("particle_") or file.startswith("Plist")):
 		return ;
 	path_new = path[path.find("res"):].replace("\\","/")+"/"
 	# print(path_new)
@@ -156,13 +156,13 @@ if __name__ == '__main__':
 	#C++文件列表
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\LongConnectionTCP\\src\\Classes\\app",False).walk(optionCPP);
 	#平台 图片文件 
-	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\platform").walk(optionJSRes1);
+	# file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\platform").walk(optionJSRes1);
 	#音频文件
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
 	# file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
-	# file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish",False).walk(optionJSRes1);
+	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish",False).walk(optionJSRes1);
 
 	#游动plist文件 png->webp
 	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes4);

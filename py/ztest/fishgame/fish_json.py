@@ -73,7 +73,7 @@ def printSpace8(msg):
         "ctype": "SingleNodeObjectData"
     }
 """
-def ParseCCSNodeProp(json_content,str_node,is_node = False,is_text=False,has_blend=False):
+def ParseCCSNodeProp(json_content,str_node,is_node = False,is_text=False,has_blend=False,no_color=False,no_size=False):
     #设置颜色混合
     if(has_blend and "BlendFunc" in json_content):
         json_blend = json_content["BlendFunc"];
@@ -116,7 +116,7 @@ def ParseCCSNodeProp(json_content,str_node,is_node = False,is_text=False,has_ble
         printSpace8(str_node+".setRotationX("+str(json_content["RotationSkewX"])+");");
         printSpace8(str_node+".setRotationY("+str(json_content["RotationSkewY"])+");");
 
-    if("CColor" in json_content):
+    if(not no_color and "CColor" in json_content):
         json_color = json_content["CColor"];#设置颜色值
         r = 255
         g = 255
@@ -142,7 +142,9 @@ def ParseCCSNodeProp(json_content,str_node,is_node = False,is_text=False,has_ble
     if("Alpha" in json_content):#设置alpha值
         printSpace8(str_node+".setOpacity("+str(json_content["Alpha"])+");");
 
-    if(not is_node and "Size" in json_content):#设置非节点的内容大小
+    if(is_node or is_text):
+        no_size = True;
+    if(not no_size and "Size" in json_content):#设置非节点的内容大小
         json_size = json_content["Size"];
         printSpace8(str_node+".setContentSize(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"));");
 
@@ -162,6 +164,8 @@ def ParseCCSNode(json_content,str_parent):
         global PUSHCNT;#申明是全局变量
         printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
         printSpace8("ret.push("+name+");");
+    if(name.startswith("box_")):
+        printSpace8(name+".setName('box');");
 
     ParseCCSNodeProp(json_content,name,True);
 
@@ -258,8 +262,11 @@ def ParseCCSImage(json_content,str_parent):
     ParseCCSNodeProp(json_content,name);
     
 """
+    "IsCustomSize": true,
     "FontSize": 30,
-    "LabelText": "服务费",
+    "LabelText": "2人",
+    "HorizontalAlignmentType": "HT_Center",
+    "VerticalAlignmentType": "VT_Center",
 """
 def ParseCCSText(json_content,str_parent):
     name = json_content["Name"]
@@ -272,10 +279,32 @@ def ParseCCSText(json_content,str_parent):
         printSpace8("ret.push("+name+");");
 
     printSpace8(name+".setFontName(res.default_font);");
+    if("IsCustomSize" in json_content):
+        printSpace8(name+".ignoreContentAdaptWithSize(false);");
+
+        json_size = json_content["Size"];
+        printSpace8(name+".setTextAreaSize(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"));");
     if("FontSize" in json_content):
         printSpace8(name+".setFontSize("+str(json_content["FontSize"])+");");
     if("LabelText" in json_content):
-        printSpace8(name+".setString('"+json_content["LabelText"]+"');");
+        printSpace8(name+".setString("+repr(json_content["LabelText"])+");");
+
+    if("HorizontalAlignmentType" in json_content):
+        horizontal_align = json_content["HorizontalAlignmentType"];
+        if(horizontal_align == "HT_Center"):
+            printSpace8(name+".setTextVerticalAlignment(cc.TEXT_ALIGNMENT_CENTER);");
+        elif(horizontal_align == "HT_Right"):
+            printSpace8(name+".setTextVerticalAlignment(cc.TEXT_ALIGNMENT_RIGHT);");
+
+    if("VerticalAlignmentType" in json_content):
+        vertical_align = json_content["VerticalAlignmentType"];
+        if(vertical_align == "VT_Center"):
+            printSpace8(name+".setTextHorizontalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);");
+        elif(vertical_align == "VT_Bottom"):
+            printSpace8(name+".setTextHorizontalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);");
+
+    if("TouchEnable" in json_content):
+        printSpace8(name+".setTouchEnabled(true);");
 
     ParseCCSNodeProp(json_content,name,is_text = True);
 
@@ -382,7 +411,7 @@ def ParseCCSPanel(json_content,str_parent):
     printSpace8(name+".setClippingEnabled("+("true" if json_content["ClipAble"] else "false")+");");
     #设定点击
     if("TouchEnable" in json_content):
-            printSpace8(name+".setTouchEnabled(true);");
+        printSpace8(name+".setTouchEnabled(true);");
 
     #设定背景图片
     bg_type = 0;
@@ -470,6 +499,148 @@ def ParseCCSSlider(json_content,str_parent):
 
     ParseCCSNodeProp(json_content,name);
 
+"""
+    "NormalBackFileData": {
+      "Type": "Normal",
+      "Path": "platform/checkbox_un.png",
+      "Plist": ""
+    },
+    "PressedBackFileData": {
+      "Type": "Normal",
+      "Path": "platform/checkbox_un.png",
+      "Plist": ""
+    },
+    "DisableBackFileData": {
+      "Type": "Normal",
+      "Path": "platform/checkbox_un.png",
+      "Plist": ""
+    },
+    "NodeNormalFileData": {
+      "Type": "Normal",
+      "Path": "platform/checkbox_select.png",
+      "Plist": ""
+    },
+    "NodeDisableFileData": {
+      "Type": "Normal",
+      "Path": "platform/checkbox_select.png",
+      "Plist": ""
+    },
+    "TouchEnable": true,
+"""
+def ParseCCSCheckBox(json_content,str_parent):
+    name = json_content["Name"];
+
+    str_bar = json_content["NormalBackFileData"]["Path"];
+    str_bar = str_bar[str_bar.rfind("/")+1:];
+    str_bar = str_bar.replace(".","_");
+
+    str_progress = json_content["NodeNormalFileData"]["Path"];
+    str_progress = str_progress[str_progress.rfind("/")+1:];
+    str_progress = str_progress.replace(".","_");
+
+    printSpace8("var "+name+" = new ccui.CheckBox("+RESOURCE+"."+str_bar+", "+RESOURCE+"."+str_progress+");");
+    if(str_parent):
+        printSpace8(str_parent+".addChild("+name+");");
+    if(name.endswith("_use")):
+        global PUSHCNT;
+        printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
+        printSpace8("ret.push("+name+");");
+
+    ParseCCSNodeProp(json_content,name,no_size=True);
+
+"""
+    "FontSize": 26,
+    "IsCustomSize": true,
+    "LabelText": "input_png",
+    "PlaceHolderText": "input_png",
+    "MaxLengthEnable": true,
+    "MaxLengthText": 10,
+    "TouchEnable": true,
+"""
+def ParseCCSTextInput(json_content,str_parent):
+    name = json_content["Name"];
+
+    json_size = json_content["Size"];
+    str_bg = json_content["PlaceHolderText"];
+    printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
+        +RESOURCE+"."+str_bg+");//label text的文字当作背景图片，不能为空，至少放个透明图片");
+    if(str_parent):
+        printSpace8(str_parent+".addChild("+name+");");
+    if(name.endswith("_use")):
+        global PUSHCNT;
+        printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
+        printSpace8("ret.push("+name+");");
+
+    printSpace8(name+".setFontName(res.default_font);");
+    printSpace8(name+".setFontSize("+str(json_content["FontSize"])+");");
+
+    json_color = json_content["CColor"];#设置颜色值
+    r = 255
+    g = 255
+    b = 255
+    if("R" in json_color):
+        r = json_color["R"];
+    if("G" in json_color):
+        g = json_color["G"];
+    if("B" in json_color):
+        b = json_color["B"];
+
+    if(r == 255 and g == 255 and b == 255):
+        pass
+    else:
+        printSpace8(name+".setFontColor(cc.color("+str(r)+", "+str(g)+", "+str(b)+"));");
+    printSpace8(name+".setPlaceholderFontColor(cc.color('#616161'));");
+
+    if("MaxLengthEnable" in json_content):
+        printSpace8(name+".setMaxLength("+str(json_content["MaxLengthText"])+");");
+    printSpace8(name+".setInputFlag(cc.EDITBOX_INPUT_FLAG_SENSITIVE);");
+    printSpace8(name+".setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE);//单行输入");
+    printSpace8(name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);//设置水平对齐");
+    printSpace8(name+".setString('')");
+
+    ParseCCSNodeProp(json_content,name,no_color=True);
+
+"""
+    "IsBounceEnabled": true,
+    "InnerNodeSize": {
+      "Width": 540,
+      "Height": 2000
+    },
+    "ScrollDirectionType": "Vertical",Vertical_Horizontal
+    "ClipAble": true,
+    "BackColorAlpha": 0,
+"""
+def ParseCCSScrollView(json_content,str_parent):
+    name = json_content["Name"];
+
+    printSpace8("var "+name+" = new ccui.ScrollView();");
+    if(str_parent):
+        printSpace8(str_parent+".addChild("+name+");");
+    if(name.endswith("_use")):
+        global PUSHCNT;
+        printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
+        printSpace8("ret.push("+name+");");
+
+    if("IsBounceEnabled" in json_content):
+        printSpace8(name+".setBounceEnabled(true);");
+
+    direction = json_content["ScrollDirectionType"];
+    if(direction == "Vertical"):
+        printSpace8(name+".setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL);");
+    elif(direction == "Horizontal"):
+        printSpace8(name+".setDirection(cc.SCROLLVIEW_DIRECTION_HORIZONTAL);");
+    else:
+        printSpace8(name+".setDirection(cc.SCROLLVIEW_DIRECTION_BOTH);");
+
+    #内部内容大小
+    inner_size = json_content["InnerNodeSize"];
+    printSpace8(name+".setInnerContainerSize(cc.size("+str(inner_size["Width"])+", "+str(inner_size["Height"])+"));");
+    #设定裁切
+    printSpace8(name+".setClippingEnabled("+("true" if json_content["ClipAble"] else "false")+");");
+
+    ParseCCSNodeProp(json_content,name);
+
+
 def ParseCCSChildren(json_children,str_parent):
     for i in range(len(json_children)):
         json_content = json_children[i];
@@ -491,6 +662,12 @@ def ParseCCSChildren(json_children,str_parent):
             ParseCCSPanel(json_content,str_parent)
         elif(json_content["ctype"] == "SliderObjectData"):
             ParseCCSSlider(json_content,str_parent)
+        elif(json_content["ctype"] == "CheckBoxObjectData"):
+            ParseCCSCheckBox(json_content,str_parent)
+        elif(json_content["ctype"] == "TextFieldObjectData"):
+            ParseCCSTextInput(json_content,str_parent)
+        elif(json_content["ctype"] == "ScrollViewObjectData"):
+            ParseCCSScrollView(json_content,str_parent)
 
 
 def ParseCCSJson(json_file):
