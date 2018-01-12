@@ -1,4 +1,4 @@
-﻿#!python3.4
+﻿#!python3.6
 #@ guliping
 
 '''
@@ -41,6 +41,8 @@ keyword.kwlist
 #  File "<stdin>", line 1, in <module> type(a) 
 #NameError: name 'a' is not defined
 '''
+
+print("中文")
 
 a = "123"
 print(type(a)) # 输出 <class 'str'>

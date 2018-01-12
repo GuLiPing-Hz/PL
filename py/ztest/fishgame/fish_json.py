@@ -176,13 +176,20 @@ def ParseCCSNode(json_content,str_parent):
       "Plist": ""
     },
 """
-def ParseCCSSpriteProp(json_content):
+def ParseCCSSpriteProp(json_content,name=None):
+    if(not name):
+        name = "FileData"
     #设置纹理
-    str_sprite = json_content["FileData"]["Path"];
+    str_sprite = json_content[name]["Path"];
+    resource = "res"
+    if(str_sprite.startswith("games")):
+        pos_start = str_sprite.find("/")+1
+        pos_end = str_sprite.find("/",pos_start)
+        resource = str_sprite[pos_start:pos_end]+"Res"
     str_sprite = str_sprite[str_sprite.rfind("/")+1:];
     str_sprite = str_sprite.replace(".","_");
 
-    return RESOURCE+"."+str_sprite;
+    return resource+"."+str_sprite;
 
 def ParseCCSBtn(json_content,str_parent,str_node):
     printSpace8("var "+str_node+" = new ccui.Button();");
@@ -194,18 +201,15 @@ def ParseCCSBtn(json_content,str_parent,str_node):
         printSpace8("ret.push("+str_node+");");
 
     #设置按钮属性
-    printSpace8(str_node+".setPressedActionEnabled(true);//--启用点击动作");
-    printSpace8(str_node+".setZoomScale(-0.1);//--点击缩小");
+    printSpace8(str_node+".setPressedActionEnabled(true);//--启用点击动作,只有当设置了按下的图片才有效果");
+    printSpace8(str_node+".setZoomScale(-0.1);//--点击缩小,有点击就缩小，不用则置为0");
     printSpace8(str_node+".setTitleFontName(res.default_font);");
     printSpace8(str_node+".setTitleFontSize(32);");
     printSpace8(str_node+".setTitleText('');");
     printSpace8(str_node+".setTitleColor(cc.color('#ffffff'));");
 
     #设置纹理
-    str_sprite = json_content["FileData"]["Path"]
-    str_sprite = str_sprite[str_sprite.rfind("/")+1:]
-    str_sprite = str_sprite.replace(".","_")
-    printSpace8(str_node+".loadTextureNormal("+RESOURCE+"."+str_sprite+", ccui.Widget.LOCAL_TEXTURE);");
+    printSpace8(str_node+".loadTextureNormal("+ParseCCSSpriteProp(json_content)+", ccui.Widget.LOCAL_TEXTURE);");
 
 def ParseCCSSprite(json_content,str_parent):
     name = json_content["Name"];
@@ -322,12 +326,8 @@ def ParseCCSText(json_content,str_parent):
 def ParseCCSTextAtlas(json_content,str_parent):
     name = json_content["Name"];
 
-    str_sprite = json_content["LabelAtlasFileImage_CNB"]["Path"];
-    str_sprite = str_sprite[str_sprite.rfind("/")+1:];
-    # printSpace8("ParseCCSTextAtlas 1",str_sprite);
-    str_sprite = str_sprite.replace(".","_");
-    # printSpace8("ParseCCSTextAtlas 2",str_sprite);
-    printSpace8("var "+name+" = new ccui.TextAtlas('"+json_content["LabelText"]+"', "+RESOURCE+"."+str_sprite
+    printSpace8("var "+name+" = new ccui.TextAtlas('"+json_content["LabelText"]+"', "
+        +ParseCCSSpriteProp(json_content,"LabelAtlasFileImage_CNB")
         +", "+str(json_content["CharWidth"])+", "+str(json_content["CharHeight"])
         +", '"+json_content["StartChar"]+"');");
     if(str_parent):
@@ -350,10 +350,7 @@ def ParseCCSTextAtlas(json_content,str_parent):
 def ParseCCSLoadingBar(json_content,str_parent):
     name = json_content["Name"];
 
-    str_sprite = json_content["ImageFileData"]["Path"];
-    str_sprite = str_sprite[str_sprite.rfind("/")+1:];
-    str_sprite = str_sprite.replace(".","_");
-    printSpace8("var "+name+" = new ccui.LoadingBar("+RESOURCE+"."+str_sprite+", 0);");
+    printSpace8("var "+name+" = new ccui.LoadingBar("+ParseCCSSpriteProp(json_content,"ImageFileData")+", 0);");
     if(str_parent):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
@@ -481,20 +478,9 @@ def ParseCCSSlider(json_content,str_parent):
         printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
         printSpace8("ret.push("+name+");");
 
-    str_bar = json_content["BackGroundData"]["Path"];
-    str_bar = str_bar[str_bar.rfind("/")+1:];
-    str_bar = str_bar.replace(".","_");
-    printSpace8(name+".loadBarTexture("+RESOURCE+"."+str_bar+");");
-
-    str_progress = json_content["ProgressBarData"]["Path"];
-    str_progress = str_progress[str_progress.rfind("/")+1:];
-    str_progress = str_progress.replace(".","_");
-    printSpace8(name+".loadProgressBarTexture("+RESOURCE+"."+str_progress+");");
-
-    str_ball = json_content["BallNormalData"]["Path"];
-    str_ball = str_ball[str_ball.rfind("/")+1:];
-    str_ball = str_ball.replace(".","_");
-    printSpace8(name+".loadSlidBallTextures("+RESOURCE+"."+str_ball+");");
+    printSpace8(name+".loadBarTexture("+ParseCCSSpriteProp(json_content,"BackGroundData")+");");
+    printSpace8(name+".loadProgressBarTexture("+ParseCCSSpriteProp(json_content,"ProgressBarData")+");");
+    printSpace8(name+".loadSlidBallTextures("+ParseCCSSpriteProp(json_content,"BallNormalData")+");");
     printSpace8(name+".setPercent(0);");
 
     ParseCCSNodeProp(json_content,name);
@@ -530,15 +516,8 @@ def ParseCCSSlider(json_content,str_parent):
 def ParseCCSCheckBox(json_content,str_parent):
     name = json_content["Name"];
 
-    str_bar = json_content["NormalBackFileData"]["Path"];
-    str_bar = str_bar[str_bar.rfind("/")+1:];
-    str_bar = str_bar.replace(".","_");
-
-    str_progress = json_content["NodeNormalFileData"]["Path"];
-    str_progress = str_progress[str_progress.rfind("/")+1:];
-    str_progress = str_progress.replace(".","_");
-
-    printSpace8("var "+name+" = new ccui.CheckBox("+RESOURCE+"."+str_bar+", "+RESOURCE+"."+str_progress+");");
+    printSpace8("var "+name+" = new ccui.CheckBox("+ParseCCSSpriteProp(json_content,"NormalBackFileData")+", "
+        +ParseCCSSpriteProp(json_content,"NodeNormalFileData")+");");
     if(str_parent):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
@@ -548,31 +527,16 @@ def ParseCCSCheckBox(json_content,str_parent):
 
     ParseCCSNodeProp(json_content,name,no_size=True);
 
-"""
-    "FontSize": 26,
-    "IsCustomSize": true,
-    "LabelText": "input_png",
-    "PlaceHolderText": "input_png",
-    "MaxLengthEnable": true,
-    "MaxLengthText": 10,
-    "TouchEnable": true,
-"""
-def ParseCCSTextInput(json_content,str_parent):
-    name = json_content["Name"];
-
-    json_size = json_content["Size"];
-    str_bg = json_content["PlaceHolderText"];
-    printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
-        +RESOURCE+"."+str_bg+");//label text的文字当作背景图片，不能为空，至少放个透明图片");
+def ParseCCSTextField(json_content,str_parent,str_node):
+    str_holder = json_content["PlaceHolderText"];
+    printSpace8("var "+str_node+" = new ccui.TextField("+repr(str_holder)+", res.default_font, "
+        +str(json_content["FontSize"])+");");
     if(str_parent):
-        printSpace8(str_parent+".addChild("+name+");");
-    if(name.endswith("_use")):
+        printSpace8(str_parent+".addChild("+str_node+");");
+    if(str_node.endswith("_use")):
         global PUSHCNT;
         printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
-        printSpace8("ret.push("+name+");");
-
-    printSpace8(name+".setFontName(res.default_font);");
-    printSpace8(name+".setFontSize("+str(json_content["FontSize"])+");");
+        printSpace8("ret.push("+str_node+");");
 
     json_color = json_content["CColor"];#设置颜色值
     r = 255
@@ -588,15 +552,77 @@ def ParseCCSTextInput(json_content,str_parent):
     if(r == 255 and g == 255 and b == 255):
         pass
     else:
-        printSpace8(name+".setFontColor(cc.color("+str(r)+", "+str(g)+", "+str(b)+"));");
-    printSpace8(name+".setPlaceholderFontColor(cc.color('#616161'));");
-
+        printSpace8(str_node+".setTextColor(cc.color("+str(r)+", "+str(g)+", "+str(b)+"));");
+    printSpace8(str_node+".setPlaceHolderColor(cc.color('#616161'));");
+    
+    printSpace8(str_node+".ignoreContentAdaptWithSize(false);");
+    json_size = json_content["Size"];
+    printSpace8(str_node+".setTextAreaSize(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"));");
+    
     if("MaxLengthEnable" in json_content):
-        printSpace8(name+".setMaxLength("+str(json_content["MaxLengthText"])+");");
-    printSpace8(name+".setInputFlag(cc.EDITBOX_INPUT_FLAG_SENSITIVE);");
-    printSpace8(name+".setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE);//单行输入");
+        printSpace8(str_node+".setMaxLengthEnabled(true);");
+        printSpace8(str_node+".setMaxLength("+str(json_content["MaxLengthText"])+");");
+
+    if("TouchEnable" in json_content):
+        printSpace8(str_node+".setTouchEnabled(true);");
+
+"""
+    "FontSize": 26,
+    "IsCustomSize": true,
+    "LabelText": "input_png",
+    "PlaceHolderText": "input_png",
+    "MaxLengthEnable": true,
+    "MaxLengthText": 10,
+    "TouchEnable": true,
+"""
+def ParseCCSTextInput(json_content,str_parent):
+    name = json_content["Name"];
+
+    if(name.startswith("tf")):
+        ParseCCSTextField(json_content,str_parent,name);
+
+    else:
+
+        json_size = json_content["Size"];
+        str_bg = json_content["PlaceHolderText"];
+        printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
+            +RESOURCE+"."+str_bg+");//label text的文字当作背景图片，不能为空，至少放个透明图片");
+        if(str_parent):
+            printSpace8(str_parent+".addChild("+name+");");
+        if(name.endswith("_use")):
+            global PUSHCNT;
+            printSpace8("/**push node "+str(PUSHCNT)+" */");PUSHCNT+=1;
+            printSpace8("ret.push("+name+");");
+
+        printSpace8(name+".setFontName(res.default_font);");
+        printSpace8(name+".setFontSize("+str(json_content["FontSize"])+");");
+
+        json_color = json_content["CColor"];#设置颜色值
+        r = 255
+        g = 255
+        b = 255
+        if("R" in json_color):
+            r = json_color["R"];
+        if("G" in json_color):
+            g = json_color["G"];
+        if("B" in json_color):
+            b = json_color["B"];
+
+        if(r == 255 and g == 255 and b == 255):
+            pass
+        else:
+            printSpace8(name+".setFontColor(cc.color("+str(r)+", "+str(g)+", "+str(b)+"));");
+        printSpace8(name+".setPlaceholderFontColor(cc.color('#616161'));");
+
+        printSpace8(name+".setInputFlag(cc.EDITBOX_INPUT_FLAG_SENSITIVE);");
+        printSpace8(name+".setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE);//单行输入");
+    
+        if("MaxLengthEnable" in json_content):
+            printSpace8(name+".setMaxLength("+str(json_content["MaxLengthText"])+");");
+
+
     printSpace8(name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);//设置水平对齐");
-    printSpace8(name+".setString('')");
+    printSpace8(name+".setString('');");
 
     ParseCCSNodeProp(json_content,name,no_color=True);
 
@@ -690,11 +716,7 @@ def JsonWalk(path,file):
     if(file.endswith(".json") and file.startswith("Node_")):
         ParseCCSJson(os.path.join(path,file))
 
-def AutoParseJsonDir(path):
-    #设置资源图片前缀
-    RESOURCE = "res"
-    JSVAR = "AutoUiForMain"
-
+def AutoParseJsonDirLobby(path):
     #解析节点json
     # ParseCCSJson("../../test/Node_yxjs.json")
 
@@ -713,7 +735,31 @@ def AutoParseJsonDir(path):
         
         """+" by yourself!")
     print("*/")
-    print("var "+JSVAR+" = {")
+    print("var AutoUiForMain = {")
+    file_helper.Diskwalk(path).walk(JsonWalk)
+    print("};")
+    print()
+
+def AutoParseJsonDirFish(path):
+    #解析节点json
+    # ParseCCSJson("../../test/Node_yxjs.json")
+
+    print("/**")
+    print("This file is auto maked by python reading ccs json file!")
+    print("Don't change it only the TEXT label")
+    print()
+    print("if you want a button, just rename the sprite/imageview name start with 'btn_'")
+    print()
+    print("if you want a node to be return, just rename the node name end with '_use'")
+    print()
+    print("if you want a loadingbar use scale9, just do :" + """
+        
+            ui.setScale9Enabled(true);
+            ui.setCapInsets(capInset);
+        
+        """+" by yourself!")
+    print("*/")
+    print("var AutoUiForFish = {")
     file_helper.Diskwalk(path).walk(JsonWalk)
     print("};")
     print()
@@ -725,6 +771,10 @@ if __name__ == '__main__':
     #ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json")
 
     #解析所有的node节点，转化成js函数
-    AutoParseJsonDir("D:\\glp\\GitHub\\fishjs\\res\\scene_ext_ignore\\vip");
 
+    #大厅
+    AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res\\scene_ext_ignore\\vip");
+
+    #游戏
+    # AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res\\scene_ext_ignore\\game")
 
