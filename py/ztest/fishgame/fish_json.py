@@ -578,7 +578,7 @@ def ParseCCSTextField(json_content,str_parent,str_node):
 def ParseCCSTextInput(json_content,str_parent):
     name = json_content["Name"];
 
-    if(name.startswith("tf")):
+    if(name.startswith("tf_")):
         ParseCCSTextField(json_content,str_parent,name);
 
     else:
@@ -716,10 +716,7 @@ def JsonWalk(path,file):
     if(file.endswith(".json") and file.startswith("Node_")):
         ParseCCSJson(os.path.join(path,file))
 
-def AutoParseJsonDirLobby(path):
-    #解析节点json
-    # ParseCCSJson("../../test/Node_yxjs.json")
-
+def PrintComments():
     print("/**")
     print("This file is auto maked by python reading ccs json file!")
     print("Don't change it only the TEXT label")
@@ -734,7 +731,15 @@ def AutoParseJsonDirLobby(path):
             ui.setCapInsets(capInset);
         
         """+" by yourself!")
+    print()
+    print("the default use of text input is EditBox,you can use TextField with name start with 'tf_'")
     print("*/")
+
+def AutoParseJsonDirLobby(path):
+    #解析节点json
+    # ParseCCSJson("../../test/Node_yxjs.json")
+
+    PrintComments()
     print("var AutoUiForMain = {")
     file_helper.Diskwalk(path).walk(JsonWalk)
     print("};")
@@ -744,21 +749,7 @@ def AutoParseJsonDirFish(path):
     #解析节点json
     # ParseCCSJson("../../test/Node_yxjs.json")
 
-    print("/**")
-    print("This file is auto maked by python reading ccs json file!")
-    print("Don't change it only the TEXT label")
-    print()
-    print("if you want a button, just rename the sprite/imageview name start with 'btn_'")
-    print()
-    print("if you want a node to be return, just rename the node name end with '_use'")
-    print()
-    print("if you want a loadingbar use scale9, just do :" + """
-        
-            ui.setScale9Enabled(true);
-            ui.setCapInsets(capInset);
-        
-        """+" by yourself!")
-    print("*/")
+    PrintComments()
     print("var AutoUiForFish = {")
     file_helper.Diskwalk(path).walk(JsonWalk)
     print("};")
