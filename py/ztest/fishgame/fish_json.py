@@ -264,7 +264,7 @@ def ParseCCSImage(json_content,str_parent):
             printSpace8(name+".setScale9Enabled(true);");
             printSpace8(name+".setCapInsets(cc.rect("+str(scale9_x)+", "+str(scale9_y)+", 1, 1));");
         else:
-            printSpace8(str_node+".ignoreContentAdaptWithSize(false);//图片这里需要做忽略大小设置");
+            printSpace8(name+".ignoreContentAdaptWithSize(false);//图片这里需要做忽略大小设置");
 
         if("TouchEnable" in json_content):
             printSpace8(name+".setTouchEnabled(true);");
@@ -765,7 +765,7 @@ if __name__ == '__main__':
     #TestJson()
 
     #转化路径偏移
-    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False)
+    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False)
 
     #解析所有的node节点，转化成js函数
 
@@ -773,5 +773,5 @@ if __name__ == '__main__':
     # AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\vip");
 
     #游戏
-    # AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\game")
+    AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\game")
 
