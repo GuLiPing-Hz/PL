@@ -60,10 +60,19 @@ def write_str_to_file(file,str):
 	return v_writed;
 
 def move_file(src_file,dst_file):
+	# print("move_file",src_file,dst_file)
 	try:
 		os.rename(src_file,dst_file)
 	except FileNotFoundError:
 		pass
+	except FileExistsError:
+		#文件已经存在
+		# print(dst_file)
+		os.remove(dst_file)#先移除文件
+		os.rename(src_file,dst_file)#再尝试移动
+
+		# raise RuntimeError();
+
 
 def copy_file(src_path,dst_path):
 	""" 拷贝文件 """

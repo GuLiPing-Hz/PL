@@ -9,7 +9,7 @@ import sys
 sys.path.append("..")
 import file_helper
 
-def ChangePosition(src_name,out_name):
+def ChangePosition(src_name,out_name,isReverse=False):
     try:
         with open(src_name,"r") as file:
             routes = json.load(file)
@@ -20,8 +20,12 @@ def ChangePosition(src_name,out_name):
             # print(route["points"])
             for route in routes:
                 for point in route["points"]:
-                    point["x"] -= 320
-                    point["y"] -= 180
+                    if(isReverse):
+                        point["x"] += 560
+                        point["y"] += 315
+                    else:
+                        point["x"] -= 560
+                        point["y"] -= 315
 
             # print(routes[0],type(routes[0]))
 
@@ -259,6 +263,8 @@ def ParseCCSImage(json_content,str_parent):
             scale9_y = 0 if("Scale9OriginY" not in json_content) else json_content["Scale9OriginY"];
             printSpace8(name+".setScale9Enabled(true);");
             printSpace8(name+".setCapInsets(cc.rect("+str(scale9_x)+", "+str(scale9_y)+", 1, 1));");
+        else:
+            printSpace8(str_node+".ignoreContentAdaptWithSize(false);//图片这里需要做忽略大小设置");
 
         if("TouchEnable" in json_content):
             printSpace8(name+".setTouchEnabled(true);");
@@ -759,13 +765,13 @@ if __name__ == '__main__':
     #TestJson()
 
     #转化路径偏移
-    #ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json")
+    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False)
 
     #解析所有的node节点，转化成js函数
 
     #大厅
-    AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res\\scene_ext_ignore\\vip");
+    # AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\vip");
 
     #游戏
-    # AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res\\scene_ext_ignore\\game")
+    # AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\game")
 
