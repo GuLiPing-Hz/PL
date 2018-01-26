@@ -770,8 +770,8 @@ if __name__ == '__main__':
     #解析所有的node节点，转化成js函数
 
     #大厅
-    # AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\vip");
+    AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\vip");
 
     #游戏
-    AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\game")
+    # AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\game")
 
