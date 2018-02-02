@@ -9,7 +9,7 @@ import sys
 sys.path.append("..")
 import file_helper
 
-def ChangePosition(src_name,out_name,isReverse=False):
+def ChangePosition(src_name,out_name,isIphoneX=False,isReverse=False):
     try:
         with open(src_name,"r") as file:
             routes = json.load(file)
@@ -22,9 +22,13 @@ def ChangePosition(src_name,out_name,isReverse=False):
                 for point in route["points"]:
                     if(isReverse):
                         point["x"] += 560
+                        if(isIphoneX):
+                            point["x"] -= 140
                         point["y"] += 315
                     else:
                         point["x"] -= 560
+                        if(isIphoneX):
+                            point["x"] += 140
                         point["y"] -= 315
 
             # print(routes[0],type(routes[0]))
@@ -765,12 +769,14 @@ if __name__ == '__main__':
     #TestJson()
 
     #转化路径偏移
-    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False)
+    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,True)
+    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,False)
+    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new_x.json",True,False)
 
     #解析所有的node节点，转化成js函数
 
     #大厅
-    AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\vip");
+    # AutoParseJsonDirLobby("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\vip");
 
     #游戏
     # AutoParseJsonDirFish("D:\\glp\\GitHub\\fishjs\\res1\\scene_ext_ignore\\game")
