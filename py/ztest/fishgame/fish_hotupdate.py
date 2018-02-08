@@ -27,7 +27,7 @@ B 代表当前的版本
 def main(src_dir,dst_dir):
 	newDir = src_dir+"_hotupdate"
 
-	print(">> 删除原来的目录")
+	print(">> 删除原来的热更新目录")
 	file_helper.remove_dir(newDir)
 	print(">> 创建新的目录")
 	file_helper.make_dir(newDir)
