@@ -7,12 +7,17 @@ sys.path.append("..")
 import file_helper
 
 """
-1.首先使用git 拉出上个版本的分支,放到指定目录,指定当前版本的目录,
-2.其次使用vs 编译项目工程,
-3.使用本脚本拉出需要热更新的文件,
-4.双击jscompile.bat编译jsc文件
-5.修改project_platform.manifest 注意json数组的逗号, forceUpdate 设置为false,自己先测试一下,如果没问题然后再上传
-6.上传文件,记得保存备份
+本文件是依赖python3
+
+1.首先使用git拉出上个版本的分支
+2.其次移出项目的编译目录[Debug.win32]中的[res,script,src]3个目录
+3.记得用git还原一些项目mp3等文件(windows版本需)
+4.使用vs编译项目工程,移动[res,script,src]目录和[main.js,project.json]文件至源目录src_dir
+5.拉出最新的版本，同样是vs编译项目
+6.使用本脚本拉出需要热更新的文件,
+7.双击jscompile.bat编译jsc文件
+8.修改project_platform.manifest 注意json数组的逗号, forceUpdate 设置为false,自己先测试一下,如果没问题然后再上传
+9.上传文件,记得保存备份
 
 遍历两个目录,获取到所有文件列表 数组A 和 数组B
 
@@ -30,15 +35,27 @@ def main(src_dir,dst_dir):
 	print(">> 删除原来的热更新目录")
 	file_helper.remove_dir(newDir)
 	print(">> 创建新的目录")
-	file_helper.make_dir(newDir)
+	file_helper.make_dirs(newDir)
 
-	arra_a1, arra_a2 = file_helper.Diskwalk(src_dir).walk()
-	arra_b1, arra_b2 = file_helper.Diskwalk(dst_dir).walk()
+	arra_a1 = []
+	arra_b1 = []
+	def src_func(dirpath,file):
+		arra_a1.append(os.path.join(dirpath[len(src_dir):],file))
+	def dst_func(dirpath,file):
+		arra_b1.append(os.path.join(dirpath[len(dst_dir):],file))
 
-	# print(arra_a1)
+	arra_temp_a1, arra_a2 = file_helper.Diskwalk(src_dir).walk(src_func)
+	arra_temp_b1, arra_b2 = file_helper.Diskwalk(dst_dir).walk(dst_func)
+
+	# print(arra_temp_a1)
+	# # print("*"*100)
+	# # print(arra_a1)
+	# # print("*"*100)
+	# # print(arra_a2)
+	# # return
 	# print("*"*100)
 	# print(arra_b1)
-	#return
+	# return
 
 	arra_c = []
 	for i,b1 in enumerate(arra_b1):
@@ -63,12 +80,13 @@ def main(src_dir,dst_dir):
 			
 			md5_a = file_helper.md5_file(file_a)
 			md5_b = file_helper.md5_file(file_b)
-			#print(file_a ," == " ,file_b)
-			#print(md5_a ," == " ,md5_b ,md5_a == md5_b)
+			# print(file_a ," == " ,file_b)
+			# print(md5_a ," == " ,md5_b ,md5_a == md5_b)
 
 			if md5_a != md5_b:
 				print(">> Modi append file ",file_b)
-				print(file_a ," <==> " ,file_b,md5_a ," == " ,md5_b ,md5_a == md5_b)
+				print(file_a ," <==> " ,file_b)
+				print(md5_a ," == " ,md5_b ,md5_a == md5_b)
 				arra_c.append(file_b)
 		else:
 			print(">> New  append file ",file_b)
@@ -88,7 +106,8 @@ def main(src_dir,dst_dir):
 
 	print(">> 移除game_2")
 	file_helper.remove_dir(newDir+"\\src\\game\\game_2_hide");
-
+	print(">> 移除jsc目录")
+	file_helper.remove_dir(newDir+"\\..\\jsc");
 	print(">> 写入JS加密脚本 需要python27")
 
 	text = """	
@@ -104,10 +123,14 @@ cocos jscompile -s . -d ../jsc
 		"""
 	jscompile_bat = os.path.join(newDir,"jscompile.bat")
 	file_helper.write_str_to_file(jscompile_bat,text)
-	print(">> 请手动双击",jscompile_bat)
+	print(">> 请手动改成python27,并双击",jscompile_bat)
 	#os.system(jscompile_bat) cocos 脚本需要python27环境
+	print(">> 脚本生成的 jsc 在上层目录中")
 
 
 if __name__ == '__main__':
-	main("D:\\glp\\work\\temp\\fishjs"
-		,"D:\\glp\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+	#公司电脑
+	# main("D:\\glp\\work\\temp\\fishjs","D:\\glp\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+
+	#家里
+	main("D:\\work\\temp\\fishjs","D:\\work\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
