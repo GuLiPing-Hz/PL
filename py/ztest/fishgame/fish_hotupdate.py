@@ -30,12 +30,13 @@ B 代表当前的版本
 """
 
 def main(src_dir,dst_dir):
-	newDir = src_dir+"_hotupdate"
+	new_dir = src_dir+"_hotupdate"
+	update_dir = src_dir+"\\..\\update"
 
 	print(">> 删除原来的热更新目录")
-	file_helper.remove_dir(newDir)
+	file_helper.remove_dir(new_dir)
 	print(">> 创建新的目录")
-	file_helper.make_dirs(newDir)
+	file_helper.make_dirs(new_dir)
 
 	arra_a1 = []
 	arra_b1 = []
@@ -95,7 +96,7 @@ def main(src_dir,dst_dir):
 	# print(">> 源文件展示")
 	# print(arra_c)
 
-	arra_c_to = [ x.replace(dst_dir,newDir) for x in arra_c ]
+	arra_c_to = [ x.replace(dst_dir,new_dir) for x in arra_c ]
 	# print(">> 目标文件展示")
 	# print(arra_c_to)
 
@@ -105,9 +106,25 @@ def main(src_dir,dst_dir):
 		file_helper.copy_file(v,arra_c_to[i])
 
 	print(">> 移除game_2")
-	file_helper.remove_dir(newDir+"\\src\\game\\game_2_hide");
-	print(">> 移除jsc目录")
-	file_helper.remove_dir(newDir+"\\..\\jsc");
+	file_helper.remove_dir(new_dir+"\\src\\game\\game_2_hide");
+	print(">> 移除update目录")
+	file_helper.remove_dir(new_dir+"\\..\\update");
+
+	print(">> 拷贝资源到热更新目录update")
+	def copy_res_no_js(dirpath,file):
+		# print("*"*100)
+		# print(dirpath,file)
+		if dirpath.startswith(new_dir+"\\src"):#js 不用拷贝
+			pass
+		elif dirpath.startswith(new_dir+"\\script"):#js 不用拷贝
+			pass
+		elif file == "jscompile.bat":
+			pass
+		else:#资源拷贝
+			dirpath_new = dirpath.replace(new_dir,update_dir)
+			# print(dirpath_new)
+			file_helper.copy_file(os.path.join(dirpath,file),os.path.join(dirpath_new,file))
+	file_helper.Diskwalk(new_dir).walk(copy_res_no_js)
 	print(">> 写入JS加密脚本 需要python27")
 
 	text = """	
@@ -119,18 +136,20 @@ echo 当前bat文件短路径：%~sdp0
 
 %~d0
 cd %~dp0
-cocos jscompile -s . -d ../jsc
+cocos jscompile -s . -d ../update
 		"""
-	jscompile_bat = os.path.join(newDir,"jscompile.bat")
+	jscompile_bat = os.path.join(new_dir,"jscompile.bat")
 	file_helper.write_str_to_file(jscompile_bat,text)
 	print(">> 请手动改成python27,并双击",jscompile_bat)
 	#os.system(jscompile_bat) cocos 脚本需要python27环境
-	print(">> 脚本生成的 jsc 在上层目录中")
+	print(">> 脚本生成的 update 在上层目录中")
 
 
 if __name__ == '__main__':
 	#公司电脑
-	# main("D:\\glp\\work\\temp\\fishjs","D:\\glp\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+	main("D:\\glp\\work\\temp\\fishjs","D:\\glp\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
 
 	#家里
-	main("D:\\work\\temp\\fishjs","D:\\work\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+	# main("D:\\work\\temp\\fishjs","D:\\work\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+	
+
