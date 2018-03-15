@@ -716,13 +716,13 @@ def ParseCCSChildren(json_children,str_parent,cur_cnt,single_file):
             json_file = json_content["FileData"]["Path"] #获取到json文件
 
             #只支持嵌套两层
-            ParseCCSJson(CURGAMERESDIR+"\\"+json_file,cur_cnt,False)
+            ParseCCSJson(CURGAMERESDIR+"\\"+json_file,str_parent,cur_cnt,False)
             cur_cnt += 1
 
     return cur_cnt
 
 
-def ParseCCSJson(json_file,cur_cnt=0,single_file=True):
+def ParseCCSJson(json_file,str_parent=None,cur_cnt=0,single_file=True):
     with open(json_file,"rb") as file:
         nodes = json.load(file);
         root = nodes["Content"]["Content"]["ObjectData"];
@@ -736,7 +736,7 @@ def ParseCCSJson(json_file,cur_cnt=0,single_file=True):
             printSpace4("{");
             printSpace8("var ret1 = [];");
         
-        ParseCCSNode(root,None,0,"ret" if single_file else "ret1");
+        ParseCCSNode(root,str_parent,0,"ret" if single_file else "ret1");
 
         if(single_file):
             printSpace8("return ret;");
@@ -774,8 +774,6 @@ def PrintComments():
 
 def AutoParseJsonDirLobby(path):
     #解析节点json
-    # ParseCCSJson("../../test/Node_yxjs.json")
-
     PrintComments()
     print("var AutoUiForMain = {")
     file_helper.Diskwalk(path).walk(JsonWalk)
@@ -784,8 +782,6 @@ def AutoParseJsonDirLobby(path):
 
 def AutoParseJsonDirFish(path):
     #解析节点json
-    # ParseCCSJson("../../test/Node_yxjs.json")
-
     PrintComments()
     print("var AutoUiForFish = {")
     file_helper.Diskwalk(path).walk(JsonWalk)

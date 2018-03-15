@@ -86,7 +86,7 @@ if __name__ == '__main__':
     IMAGE_KEY = "aaazhejiangfanyu2018"
 
     # main()
-    # temp()
+    temp()
 
-    encFile("D:\\glp\\work\\UI\\temp","yjjp_btn.png")
+    # encFile("D:\\glp\\work\\UI\\temp","jinbi5.png")
     
