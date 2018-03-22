@@ -193,5 +193,3 @@ print(not True);#不能使用!
 
 #通过内建变量 __file__ 来获取当前脚本真实目录
 print(__file__)
-
-#chang 1
