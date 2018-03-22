@@ -1,4 +1,6 @@
 #!python3.4
+#@ guliping
+
 '''
 python 数据类型详解
 '''
@@ -10,25 +12,27 @@ s1 = 'Hello World'
 s2 = '''Hello
 		World'''
 print(s,s1,s2)
+print("repr=",repr(s2))
 print("*"*30)
 
 # python 对字符串的访问支持正负索引
 print(s[:])
 print(s[1:]) # python 的所有索引起点都是0 区别于lua的从1开始的索引
-print(s[1:3]) # 前闭后开区间
+print(s[1:4]) # 前闭后开区间
 print(s[3:2]) # 无输出
 print(s[-5:-2]) # 前闭后开区间 ->Wor
 print("长度=",len(s)) # 查看字符串长度
 
 print("字符串复制","*"*30)
-print("字符串格式化","the first code is {}".format(s)) # 替代 %   -> "%s" % (s)
+# python 3 不同于 python2的%表示法 ，都用大括号表示占位，并且支持索引和关键字，跟c的printf相比只是多了{:},不用写%了
+print("字符串格式化","the first code is {0} {1:02d} {jack}".format(s,1,jack="jack son")) 
 print("字符串成员运算符in,Hello 是否存在","Hello" in s)
 print("字符串成员运算符not in,Hello 是否不存在","Hello" not in s)
 print("原始字符串",r"Hello\n",R"World\n")
 print("字符串全部转为大写字母",s.upper())
 print("字符串全部转为小写字母",s.lower())
-print("字符串查找",s.find("ll",1)) # 返回在字符串中的开始位置 找不到返回-1
-#相比于find ，index方法找不到时会报错 还有从右边找的rfind rindex
+print("字符串查找",s.find("l",4)) # 4指定起始位置 返回在字符串中的开始位置 找不到返回-1
+#相比于find ，index方法找不到时会报错 还有从右边找的 rfind rindex
 #print("字符串查找",s.index("lle"))
 print("字符串查找替换",s.replace("l","L",2)) # 最后一个参数是要替换的次数，不填，默认全部替换
 print("字符串查找替换2",s.replace("l","L"))
@@ -97,9 +101,11 @@ print("字典",tab1)
 print(tab2["x"],tab2["z"]) # 访问字典table，索引不再是数字
 tab1["x"] = 3
 print("插入字典",tab1["x"])
+print("x in tab2 = ","x" in tab2)#判断tab中是否拥有x的key
 del tab2["x"] # 删除元素
 tab2[2] = 1
 print(tab2)
+print("x in tab2 = ","x" in tab2)
 # python中的键值必须是不可变的，可以是数字，字符串，元组
 
 print(dir(dict))
@@ -150,3 +156,17 @@ print({x:x**2 for x in vec1})
 vec2 = ["a","b","c"]
 print({x:y for x in vec2 for y in vec1}) # 似乎字典并不能这么用
 print({x:x**3 for x in vec1 if x != 1})
+
+print('*'*100)
+#日期类型
+import datetime
+today = datetime.date.today() #日期类
+print('今天是',today,type(today))
+today_time = datetime.datetime.today() #精确到毫秒
+print('今天是',today_time,type(today_time))
+print("格式化日期",today_time.strftime('%Y-%m-%d %H:%M:%S %f'))
+
+import time
+t = time.time() #utc
+print("时间",t,type(t))
+

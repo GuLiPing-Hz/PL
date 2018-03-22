@@ -1,4 +1,6 @@
-﻿#!python3.4
+﻿#!python3.6
+#@ guliping
+
 '''
 查询python环境
 import builtins
@@ -14,7 +16,7 @@ python 安装第三方包库 参见http://blog.csdn.net/glp3329/article/details/
 基础篇， 初识python
 print 和 type都是 python内建的函数。
 初识python类型和运算符
-
+	
 help函数可以给我们提供帮助文档
 
 http://blog.csdn.net/glp3329/article/details/52511855
@@ -40,6 +42,8 @@ keyword.kwlist
 #NameError: name 'a' is not defined
 '''
 
+print("中文")
+
 a = "123"
 print(type(a)) # 输出 <class 'str'>
 print(id(a)) # 输出 35672112 - 每个人的结果不一样
@@ -49,7 +53,9 @@ print(id(a)) # 输出 1488898480 - 每个人的结果不一样
 a = 12.3
 print(type(a)) # 输出 <class 'float'>
 print(id(a)) # 输出 5734688 - 每个人的结果不一样
-
+	
+print(bytes)#不可编辑的二进制
+print(bytearray(10))#可编辑的二进制数组
 '''
 Python3 中有六个标准的数据类型:
 
@@ -178,3 +184,12 @@ print("123"+"abc")
 需要说明的是 python不支持字符串和数字相加，lua可以让是数字的字符串跟数字相加
 '''
 #print("1"+2) # 报错
+
+#字符串数字转换
+print("字符串->数字",type(int("1")))
+print("数字->字符串",type(str(1)))
+
+print(not True);#不能使用!
+
+#通过内建变量 __file__ 来获取当前脚本真实目录
+print(__file__)

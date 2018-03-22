@@ -1,4 +1,6 @@
-#!python3.4
+#!python3.6
+#@ guliping
+
 '''
 python 变量
 python 默认都是局部变量
@@ -33,7 +35,7 @@ print(a,b,c)
 a,b,c = 1,"a",2
 print(a,b,c)
 
-#多重赋值机制跟lua一样
+#多重赋值机制跟lua一样,变量可以下面这样交换值
 
 x = 1
 y = 2
@@ -60,6 +62,12 @@ elif a == 1 :
 else:
 	print("a~=0")
 print("*"*30)
+
+# ? python
+b = 5 if a!=1 else 6
+print("? b =",b)
+print("*"*30)
+
 
 '''循环'''
 n = 5

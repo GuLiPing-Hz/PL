@@ -1,5 +1,5 @@
 #!python3.4
-
+#@ guliping
 
 ''' 函数
 http://blog.csdn.net/glp3329/article/details/52538511
@@ -49,7 +49,7 @@ def testmap(*vartuple,**varmap): # ‘**’ 接受所有的关键字参数
 		print(key,":",varmap[key],end=",")
 	print()
 
-testmap(4,5,5,a=1,b=2) #关键字参数调用
+testmap(4,5,5,a=1,b=2) #关键字参数调用,需要注意的是位置参数必须放在关键字参数前面
 
 print("*"*30)
 # * 也可以解包队列

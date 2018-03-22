@@ -1,4 +1,5 @@
 #!lua 5.3.2
+--@guliping
 --[[
 lua 数据类型详解
 --]]
@@ -18,7 +19,7 @@ print(string.sub(s,1)) -- lua 的所有索引起点都是1 区别于其他的从
 print(string.sub(s,1,3)) -- 前后闭区间
 print(string.sub(s,3,2)) -- 无输出
 print(string.sub(s,-5,-2)) -- 前后闭区间 ->Worl
-print("长度=",#s,string.len(s)) -- 查看字符串长度
+print("长度=",#s,string.len(s)) -- 查看字符串长度 2种方法
 
 print("字符串复制",string.rep("*",30))
 print("字符串格式化",string.format("the first code is %s",s)) -- 格式等价于C语言
