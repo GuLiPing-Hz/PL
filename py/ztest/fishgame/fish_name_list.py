@@ -170,7 +170,7 @@ if __name__ == '__main__':
 	#file_helper.Diskwalk("D:\\glp\\work\\UI\\20170919\\package\\fishs",False).walk(optionRenameFishId);
 
 	def water_name(path,file):#change
-		print(path,file);
+		print(path,file)
 		os.rename(path+"\\"+file,path+"\\"+"water_"+file);
 
 	# file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\png",False).walk(water_name);	
