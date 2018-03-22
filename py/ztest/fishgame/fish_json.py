@@ -163,8 +163,11 @@ def ParseCCSNodeProp(json_content,str_node,cur_cnt,single_file,is_node = False,i
         cur_cnt = ParseCCSChildren(json_content["Children"],str_node,cur_cnt,single_file);
     return cur_cnt
 
-def ParseCCSNode(json_content,str_parent,cur_cnt,single_file):
+def ParseCCSNode(json_content,str_parent,cur_cnt,single_file,str_node=None):
     name = json_content["Name"]
+    if(str_node):
+        name = str_node
+    
     printSpace8("var "+name+" = new cc.Node();");
     if(str_parent):
         printSpace8(str_parent+".addChild("+name+");");
@@ -715,14 +718,17 @@ def ParseCCSChildren(json_children,str_parent,cur_cnt,single_file):
         elif(json_content["ctype"] == "ProjectNodeObjectData"):
             json_file = json_content["FileData"]["Path"] #获取到json文件
 
+            name = json_content["Name"];
             #只支持嵌套两层
-            ParseCCSJson(CURGAMERESDIR+"\\"+json_file,str_parent,cur_cnt,False)
+            ParseCCSJson(CURGAMERESDIR+"\\"+json_file,name,str_parent,cur_cnt,False)
             cur_cnt += 1
+            cur_cnt =  ParseCCSNodeProp(json_content,name,cur_cnt,single_file,True);
+            printSpace4("}")
 
     return cur_cnt
 
 
-def ParseCCSJson(json_file,str_parent=None,cur_cnt=0,single_file=True):
+def ParseCCSJson(json_file,str_node=None,str_parent=None,cur_cnt=0,single_file=True):
     with open(json_file,"rb") as file:
         nodes = json.load(file);
         root = nodes["Content"]["Content"]["ObjectData"];
@@ -736,7 +742,7 @@ def ParseCCSJson(json_file,str_parent=None,cur_cnt=0,single_file=True):
             printSpace4("{");
             printSpace8("var ret1 = [];");
         
-        ParseCCSNode(root,str_parent,0,"ret" if single_file else "ret1");
+        ParseCCSNode(root,str_parent,0,"ret" if single_file else "ret1",str_node);
 
         if(single_file):
             printSpace8("return ret;");
@@ -744,7 +750,6 @@ def ParseCCSJson(json_file,str_parent=None,cur_cnt=0,single_file=True):
         else:
             printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
             printSpace8("ret.push(ret1);");
-            printSpace4("}")
         
     return cur_cnt
 
@@ -770,6 +775,7 @@ def PrintComments():
         """+" by yourself!")
     print()
     print("the default use of text input is EditBox,you can use TextField with name start with 'tf_'")
+    print()
     print("*/")
 
 def AutoParseJsonDirLobby(path):
