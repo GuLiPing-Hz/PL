@@ -101,9 +101,10 @@ def copy_file(src_path,dst_path):
 
 def copy_dir(src_path,dst_path):
 	"""拷贝目录"""
-	#dirname1 = tempfile.mktemp (".dir")
-	os.mkdir (dst_path)
-	dst_path = src_path + ".copy"
+	# if(not os.path.exists(dst_path)):
+	# 	raise RuntimeError(dst_path+" not exists");
+
+	# dst_path = src_path + ".copy"
 	print(src_path, "=>", dst_path)
 
 	shutil.copytree (src_path, dst_path)
@@ -115,6 +116,12 @@ def file_size(file):
 		f.seek(0,2);
 		return f.tell()
 	return 0
+
+def is_file_exits(file):
+	return os.path.exists(file) and os.path.isfile(file)
+
+def is_dir_exits(path):
+	return os.path.exists(path) and os.path.isdir(path)
 
 class Diskwalk(object):
 	def __init__(self,path,recursive=True):
@@ -191,6 +198,9 @@ def make_dirs(dir):
 		os.makedirs(dir)
 	except FileExistsError: #异常捕获
 		pass
+
+def remove_file(file):
+	os.remove(file) #删除文件
 
 def remove_dir(dir):
 	"""

@@ -5,6 +5,7 @@ import os
 import sys
 sys.path.append("..")
 import file_helper
+import json
 
 """
 本文件是依赖python3
@@ -144,97 +145,59 @@ def main(src_dir,dst_dir):
 	#os.system(jscompile_bat) cocos 脚本需要python27环境
 	print(">> 脚本生成的 update 在上层目录中")
 
-def creatManifest(version,url,src,dest):
+def creatManifest(ver_pre,version,url,src,dest,force=False):
 	manifest = {
 	    "packageUrl": url,
 	    "remoteManifestUrl": url+"project.manifest",
 	    "remoteVersionUrl": url+"version.manifest",
-	    "version": version,
+	    "version": ver_pre,
 	    "assets": {},
-	    "searchPaths": []
+	    "searchPaths": []#"update"
 	};
 
 	def walk_dir(path,file):
-		# print(path,file);
 		full_path_file = path+"/"+file
-		new_path_file = path[len(src):]+"/"+file;
+
+		if(file.endswith(".js.map")):
+			file_helper.remove_file(full_path_file)
+			return
+
+		# print(path,file);
+		new_path_file = path[len(src)+1:]+"/"+file;
 		print(new_path_file)
 
 		# {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
-		asset = {"size":file_helper.file_size(full_path_file)
-			,"md5":file_helper.md5_file(full_path_file)}
+		asset = {
+			"path": "update/"+new_path_file,
+			"size": file_helper.file_size(full_path_file),
+			"md5": file_helper.md5_file(full_path_file),
+			"compressed" : file.endswith(".zip")}
 		print(asset)
-		# manifest["assets"][new_path_file] = 
+
+		manifest["assets"][new_path_file] = asset
 
 	#遍历脚本目录
-	file_helper.Diskwalk(src+"/src").walk(walk_dir);
+	file_helper.Diskwalk(src+"/src").walk(walk_dir)
 	#遍历资源目录
-	file_helper.Diskwalk(src+"/res").walk(walk_dir);
+	file_helper.Diskwalk(src+"/res").walk(walk_dir)
 
-# function readDir (dir, obj) {
-#     var stat = fs.statSync(dir);
-#     if (!stat.isDirectory()) {
-#         return;
-#     }
-#     var subpaths = fs.readdirSync(dir), subpath, size, md5, compressed, relative;
-#     for (var i = 0; i < subpaths.length; ++i) {
-#         if (subpaths[i][0] === '.') {
-#             continue;
-#         }
-#         subpath = path.join(dir, subpaths[i]);
-#         stat = fs.statSync(subpath);
-#         if (stat.isDirectory()) {
-#             readDir(subpath, obj);
-#         }
-#         else if (stat.isFile()) {
-#             // Size in Bytes
-#             size = stat['size'];
-#             md5 = crypto.createHash('md5').update(fs.readFileSync(subpath, 'binary')).digest('hex');
-#             compressed = path.extname(subpath).toLowerCase() === '.zip';
+	cur_manifest_file = dest+"/assets/project.manifest"
+	if(force or not file_helper.is_file_exits(cur_manifest_file)):
+		file_helper.write_str_to_file(cur_manifest_file,json.dumps(manifest,indent=0,sort_keys=False));
 
-#             relative = path.relative(src, subpath);
-#             relative = relative.replace(/\\/g, '/');
-#             relative = encodeURI(relative);
-#             obj[relative] = {
-#                 'size' : size,
-#                 'md5' : md5
-#             };
-#             if (compressed) {
-#                 obj[relative].compressed = true;
-#             }
-#         }
-#     }
-# }
+	manifest["version"] = version #改成新版本
+	dest_dir = dest+"/remote-assets"
+	print(dest_dir);
 
-# var mkdirSync = function (path) {
-#     try {
-#         fs.mkdirSync(path);
-#     } catch(e) {
-#         if ( e.code != 'EEXIST' ) throw e;
-#     }
-# }
+	file_helper.remove_dir(dest_dir)
+	file_helper.copy_dir(src+"/src",dest_dir+"/src")
+	file_helper.copy_dir(src+"/res",dest_dir+"/res")
 
-# // Iterate res and src folder
-# readDir(path.join(src, 'src'), manifest.assets);
-# readDir(path.join(src, 'res'), manifest.assets);
+	file_helper.write_str_to_file(dest_dir+"/project.manifest",json.dumps(manifest,indent=0,sort_keys=False));
 
-# var destManifest = path.join(dest, 'project.manifest');
-# var destVersion = path.join(dest, 'version.manifest');
-
-# mkdirSync(dest);
-
-# fs.writeFile(destManifest, JSON.stringify(manifest), (err) => {
-#   if (err) throw err;
-#   console.log('Manifest successfully generated');
-# });
-
-# delete manifest.assets;
-# delete manifest.searchPaths;
-# fs.writeFile(destVersion, JSON.stringify(manifest), (err) => {
-#   if (err) throw err;
-#   console.log('Version successfully generated');
-# });
-
+	del manifest["assets"]
+	del manifest["searchPaths"]
+	file_helper.write_str_to_file(dest_dir+"/version.manifest",json.dumps(manifest,indent=0,sort_keys=False));
 
 
 if __name__ == '__main__':
@@ -244,6 +207,19 @@ if __name__ == '__main__':
 	#家里
 	# main("D:\\work\\temp\\fishjs","D:\\work\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
 	
-	creatManifest("1.0.1","http://192.168.0.18:8080/tutorial-hot-update/remote-assets/"
-		,"D:/glp/Github/CreatorTest/build/jsb-default",".");
+	"""
+		额。。。有点繁琐，先这样吧。。
+
+		1 creator构建 把修改的资源发布到目录
+		2 运行脚本 读取修改的资源，修改project.manifest
+		3 creator构建 把修改的project.manifest发布到目录
+		4 运行脚本 修改project.manifest文件中的大小
+		5 creator 最终构建
+	"""
+	creatManifest(
+		"1.0.0",
+		"1.0.1",
+		"http://192.168.0.18:8080/CreatorTest/remote-assets/",
+		"D:/glp/Github/CreatorTest/build/jsb-default",
+		"D:/glp/Github/CreatorTest",True);
 

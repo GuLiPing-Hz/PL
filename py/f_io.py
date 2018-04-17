@@ -144,6 +144,11 @@ try:
 	os.makedirs("dir_test/a/a.txt") #只能创建目录
 except FileExistsError:
 	pass
+
+#查看文件是否存在，是否是文件或是目录
+print("zzz_io_test 存在吗？ "+str(os.path.exists("zzz_io_test"))+","+str(os.path.isfile("zzz_io_test")))
+print(os.path.isdir("zzz_io_test"))
+
 '''
 删除文件，如果是目录会报错
 os.remove(path, *, dir_fd=None) 
@@ -238,13 +243,13 @@ def copyDir(src_path,dst_path):
 	#拷贝目录
 	#dirname1 = tempfile.mktemp (".dir")
 	os.mkdir (dst_path)
-	dst_path = src_path + ".copy"
+	# dst_path = src_path + ".copy"
 	print(src_path, "=>", dst_path)
 
 	shutil.copytree (src_path, dst_path)
 	if os.path.isdir (dst_path): print(dst_path,"Copy Success")
 
-copyFile("test/testCopy","test/testCopy_")
+# copyFile("test/testCopy","test/testCopy_")
 
 print("**************************遍历目录结构")
 #遍历所有目录结构
