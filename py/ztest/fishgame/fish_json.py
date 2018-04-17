@@ -314,16 +314,16 @@ def ParseCCSText(json_content,str_parent,cur_cnt,single_file):
     if("HorizontalAlignmentType" in json_content):
         horizontal_align = json_content["HorizontalAlignmentType"];
         if(horizontal_align == "HT_Center"):
-            printSpace8(name+".setTextVerticalAlignment(cc.TEXT_ALIGNMENT_CENTER);");
+            printSpace8(name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);");
         elif(horizontal_align == "HT_Right"):
-            printSpace8(name+".setTextVerticalAlignment(cc.TEXT_ALIGNMENT_RIGHT);");
+            printSpace8(name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_RIGHT);");
 
     if("VerticalAlignmentType" in json_content):
         vertical_align = json_content["VerticalAlignmentType"];
         if(vertical_align == "VT_Center"):
-            printSpace8(name+".setTextHorizontalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);");
+            printSpace8(name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);");
         elif(vertical_align == "VT_Bottom"):
-            printSpace8(name+".setTextHorizontalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);");
+            printSpace8(name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);");
 
     if("TouchEnable" in json_content):
         printSpace8(name+".setTouchEnabled(true);");
@@ -331,7 +331,7 @@ def ParseCCSText(json_content,str_parent,cur_cnt,single_file):
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file,is_text = True);
 
 """
-    "CharWidth": 18,
+    "CharWidth": 18,setTouchEnabled
     "CharHeight": 22,
     "LabelText": "/123456",
     "StartChar": "/",
@@ -608,6 +608,8 @@ def ParseCCSTextInput(json_content,str_parent,cur_cnt,single_file):
         str_bg = json_content["PlaceHolderText"];
         printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
             +RESOURCE+"."+str_bg+");//label text的文字当作背景图片，不能为空，至少放个透明图片");
+        #input_key_use.setPlaceHolder("兑换码");
+        printSpace8(name+".setPlaceHolder(Tips.pleaseType);//这里必须在addChild之前写入，否则位置不对");
         if(str_parent):
             printSpace8(str_parent+".addChild("+name+");");
         if(name.endswith("_use")):
@@ -633,7 +635,7 @@ def ParseCCSTextInput(json_content,str_parent,cur_cnt,single_file):
             pass
         else:
             printSpace8(name+".setFontColor(cc.color("+str(r)+", "+str(g)+", "+str(b)+"));");
-        printSpace8(name+".setPlaceholderFontColor(cc.color('#616161'));");
+        printSpace8(name+".setPlaceholderFontColor(cc.color('#333333'));");
 
         printSpace8(name+".setInputFlag(cc.EDITBOX_INPUT_FLAG_SENSITIVE);");
         printSpace8(name+".setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE);//单行输入");

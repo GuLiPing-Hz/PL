@@ -51,33 +51,33 @@ def encFile(path,file):
         fp.write(newData)
         fp.flush()
 
-def temp():
+def temp(path):
     #图片处理的一些列操作 后缀.webp改成.png
 
     #遍历目录，取出智图软件处理后的webp图片，放到原来的位置，并重命名为png
-    file_helper.Diskwalk("D:\\glp\\work\\UI\\temp",True).walk(optionJSRes5);
+    file_helper.Diskwalk(path,True).walk(optionJSRes5);
     #移除智图留下的残余文件
-    file_helper.remove_dir("D:\\glp\\work\\UI\\temp\\zhitu-des");
+    file_helper.remove_dir(path+"\\zhitu-des");
     #加密图片
     print("开始加密图片文件...")
     #临时文件加密
-    file_helper.Diskwalk("D:\\glp\\work\\UI\\temp",False).walk(encFile);
+    file_helper.Diskwalk(path,False).walk(encFile);
     print("加密图片文件完成")
 
-def main():
+def main(path):
     #图片处理的一些列操作 后缀.webp改成.png
 
     #移除默认图片
-    file_helper.remove_dir("D:\\glp\\GitHub\\fishjs\\res1\\Default");
+    file_helper.remove_dir(path+"\\res1\\Default");
     #遍历目录，取出智图软件处理后的webp图片，放到原来的位置，并重命名为png
-    file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res1",True).walk(optionJSRes5);
+    file_helper.Diskwalk(path+"\\res1",True).walk(optionJSRes5);
     #移除智图留下的残余文件
     # file_helper.remove_dir("D:\\glp\\GitHub\\fishjs\\res1\\platform\\zhitu-des");
     # file_helper.remove_dir("D:\\glp\\GitHub\\fishjs\\res1\\games\\fish\\zhitu-des");
     # file_helper.remove_dir("D:\\glp\\GitHub\\fishjs\\res1\\games\\fish\\fishs\\zhitu-des");
     #加密图片
     print("开始加密图片文件...")
-    file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res",True).walk(encFile);
+    file_helper.Diskwalk(path+"\\res",True).walk(encFile);
     print("加密图片文件完成")
     
 
@@ -85,8 +85,8 @@ if __name__ == '__main__':
     #运行一次是加密，运行第二次是解密
     IMAGE_KEY = "aaazhejiangfanyu2018"
 
-    # main()
-    temp()
+    # main("D:\\glp\\GitHub\\fishjs")
+    temp("D:\\glp\\work\\UI\\temp")
 
     # encFile("D:\\glp\\work\\UI\\temp","jinbi5.png")
     

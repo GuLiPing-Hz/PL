@@ -66,7 +66,7 @@ def main(src_dir,dst_dir):
 		# 	continue
 
 		filter = False
-		for x in [".lib",".exp",".gitignore",".pdb",".exe",".dll",".zip","main.js",".mp3",".bat",".jsc"]:
+		for x in [".lib",".exp",".gitignore",".pdb",".exe",".dll",".zip","main.js",".mp3",".bat",".jsc",".manifest"]:
 			if b1.endswith(x):
 				filter = True;
 				break;
@@ -128,21 +128,23 @@ def main(src_dir,dst_dir):
 	print(">> 写入JS加密脚本 需要python27")
 
 	text = """	
-echo 当前盘符：%~d0
-echo 当前路径：%cd%
-echo 当前执行命令行：%0
-echo 当前bat文件路径：%~dp0
-echo 当前bat文件短路径：%~sdp0
+	echo 当前盘符：%~d0
+	echo 当前路径：%cd%
+	echo 当前执行命令行：%0
+	echo 当前bat文件路径：%~dp0
+	echo 当前bat文件短路径：%~sdp0
 
-%~d0
-cd %~dp0
-cocos jscompile -s . -d ../update
-		"""
+	%~d0
+	cd %~dp0
+	cocos jscompile -s . -d ../update
+			"""
 	jscompile_bat = os.path.join(new_dir,"jscompile.bat")
 	file_helper.write_str_to_file(jscompile_bat,text)
 	print(">> 请手动改成python27,并双击",jscompile_bat)
 	#os.system(jscompile_bat) cocos 脚本需要python27环境
 	print(">> 脚本生成的 update 在上层目录中")
+
+def creatManifest(version):
 
 
 if __name__ == '__main__':
