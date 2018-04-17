@@ -56,7 +56,6 @@ def write_str_to_file(file,str):
 		v_writed = f.write(str)
 		f.flush()
 		#print("写入字节数:",v_writed)
-		f.close()
 	return v_writed;
 
 def move_file(src_file,dst_file):
@@ -72,7 +71,6 @@ def move_file(src_file,dst_file):
 		os.rename(src_file,dst_file)#再尝试移动
 
 		# raise RuntimeError();
-
 
 def copy_file(src_path,dst_path):
 	""" 拷贝文件 """
@@ -101,7 +99,6 @@ def copy_file(src_path,dst_path):
 	else:
 		print("Copy Fail")
 
-
 def copy_dir(src_path,dst_path):
 	"""拷贝目录"""
 	#dirname1 = tempfile.mktemp (".dir")
@@ -112,6 +109,12 @@ def copy_dir(src_path,dst_path):
 	shutil.copytree (src_path, dst_path)
 	if os.path.isdir (dst_path): 
 		print(dst_path,"Copy Dir Success")
+
+def file_size(file):
+	with open(file,"r") as f:# r rb r+ rb+ w wb w+ wb+ a ab a+ ab+
+		f.seek(0,2);
+		return f.tell()
+	return 0
 
 class Diskwalk(object):
 	def __init__(self,path,recursive=True):
@@ -139,11 +142,13 @@ class Diskwalk(object):
 			#print("filenames=",filenames)
 
 			for file in filenames:
+				dirpath = dirpath.replace("\\","/")
 				if(func and callable(func)):
 					func(dirpath,file)
 
 				files.append(file)
-				fullpath=os.path.join(dirpath,file)
+				# fullpath=os.path.join(dirpath,file)
+				fullpath=dirpath+"/"+file
 				path_collection.append(fullpath)
 
 			if(not self.recursive):
@@ -176,7 +181,6 @@ class Diskwalk(object):
 				break
 
 		return path_collection
-
 
 def make_dirs(dir):
 	"""
@@ -218,16 +222,16 @@ def main():
 	remove_dir(testDir)
 
 	text = """	
-echo 当前盘符：%~d0
-echo 当前路径：%cd%
-echo 当前执行命令行：%0
-echo 当前bat文件路径：%~dp0
-echo 当前bat文件短路径：%~sdp0
+	echo 当前盘符：%~d0
+	echo 当前路径：%cd%
+	echo 当前执行命令行：%0
+	echo 当前bat文件路径：%~dp0
+	echo 当前bat文件短路径：%~sdp0
 
-%~d0
-cd %~dp0
-cocos jscompile -s update -d update_jsc
-		"""
+	%~d0
+	cd %~dp0
+	cocos jscompile -s update -d update_jsc
+			"""
 	write_str_to_file(os.path.join(testDir,"jscompile.bat"),text)
 
 if __name__ == '__main__':

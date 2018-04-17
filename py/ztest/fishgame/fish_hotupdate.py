@@ -144,14 +144,106 @@ def main(src_dir,dst_dir):
 	#os.system(jscompile_bat) cocos 脚本需要python27环境
 	print(">> 脚本生成的 update 在上层目录中")
 
-def creatManifest(version):
+def creatManifest(version,url,src,dest):
+	manifest = {
+	    "packageUrl": url,
+	    "remoteManifestUrl": url+"project.manifest",
+	    "remoteVersionUrl": url+"version.manifest",
+	    "version": version,
+	    "assets": {},
+	    "searchPaths": []
+	};
+
+	def walk_dir(path,file):
+		# print(path,file);
+		full_path_file = path+"/"+file
+		new_path_file = path[len(src):]+"/"+file;
+		print(new_path_file)
+
+		# {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
+		asset = {"size":file_helper.file_size(full_path_file)
+			,"md5":file_helper.md5_file(full_path_file)}
+		print(asset)
+		# manifest["assets"][new_path_file] = 
+
+	#遍历脚本目录
+	file_helper.Diskwalk(src+"/src").walk(walk_dir);
+	#遍历资源目录
+	file_helper.Diskwalk(src+"/res").walk(walk_dir);
+
+# function readDir (dir, obj) {
+#     var stat = fs.statSync(dir);
+#     if (!stat.isDirectory()) {
+#         return;
+#     }
+#     var subpaths = fs.readdirSync(dir), subpath, size, md5, compressed, relative;
+#     for (var i = 0; i < subpaths.length; ++i) {
+#         if (subpaths[i][0] === '.') {
+#             continue;
+#         }
+#         subpath = path.join(dir, subpaths[i]);
+#         stat = fs.statSync(subpath);
+#         if (stat.isDirectory()) {
+#             readDir(subpath, obj);
+#         }
+#         else if (stat.isFile()) {
+#             // Size in Bytes
+#             size = stat['size'];
+#             md5 = crypto.createHash('md5').update(fs.readFileSync(subpath, 'binary')).digest('hex');
+#             compressed = path.extname(subpath).toLowerCase() === '.zip';
+
+#             relative = path.relative(src, subpath);
+#             relative = relative.replace(/\\/g, '/');
+#             relative = encodeURI(relative);
+#             obj[relative] = {
+#                 'size' : size,
+#                 'md5' : md5
+#             };
+#             if (compressed) {
+#                 obj[relative].compressed = true;
+#             }
+#         }
+#     }
+# }
+
+# var mkdirSync = function (path) {
+#     try {
+#         fs.mkdirSync(path);
+#     } catch(e) {
+#         if ( e.code != 'EEXIST' ) throw e;
+#     }
+# }
+
+# // Iterate res and src folder
+# readDir(path.join(src, 'src'), manifest.assets);
+# readDir(path.join(src, 'res'), manifest.assets);
+
+# var destManifest = path.join(dest, 'project.manifest');
+# var destVersion = path.join(dest, 'version.manifest');
+
+# mkdirSync(dest);
+
+# fs.writeFile(destManifest, JSON.stringify(manifest), (err) => {
+#   if (err) throw err;
+#   console.log('Manifest successfully generated');
+# });
+
+# delete manifest.assets;
+# delete manifest.searchPaths;
+# fs.writeFile(destVersion, JSON.stringify(manifest), (err) => {
+#   if (err) throw err;
+#   console.log('Version successfully generated');
+# });
+
 
 
 if __name__ == '__main__':
 	#公司电脑
-	main("D:\\glp\\work\\temp\\fishjs","D:\\glp\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+	# main("D:\\glp\\work\\temp\\fishjs","D:\\glp\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
 
 	#家里
 	# main("D:\\work\\temp\\fishjs","D:\\work\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
 	
+	creatManifest("1.0.1","http://192.168.0.18:8080/tutorial-hot-update/remote-assets/"
+		,"D:/glp/Github/CreatorTest/build/jsb-default",".");
 

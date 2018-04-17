@@ -99,8 +99,9 @@ tab2 = {"x":1,"y":2,"z":"a",100:100} #-- 申明字典
 print("字典",tab1)
 #print(tab1["x"]) # tab1 中没有x，所以会报错
 print(tab2["x"],tab2["z"]) # 访问字典table，索引不再是数字
-tab1["x"] = 3
-print("插入字典",tab1["x"])
+key = "x"
+tab1[key] = 3
+print("插入字典",tab1[key])
 print("x in tab2 = ","x" in tab2)#判断tab中是否拥有x的key
 del tab2["x"] # 删除元素
 tab2[2] = 1
