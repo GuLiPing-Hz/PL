@@ -145,11 +145,12 @@ def main(src_dir,dst_dir):
 	#os.system(jscompile_bat) cocos 脚本需要python27环境
 	print(">> 脚本生成的 update 在上层目录中")
 
-def creatManifest(ver_pre,version,url,src,dest,force=False):
+def creatManifest(ver_pre,version,url,src,dest,next=False):
+	url_pre = url+ver_pre+"/remote-assets/"
 	manifest = {
-	    "packageUrl": url,
-	    "remoteManifestUrl": url+"project.manifest",
-	    "remoteVersionUrl": url+"version.manifest",
+	    "packageUrl": url_pre,
+	    "remoteManifestUrl": url_pre+"project.manifest",
+	    "remoteVersionUrl": url_pre+"version.manifest",
 	    "version": ver_pre,
 	    "assets": {},
 	    "searchPaths": []#"update"
@@ -158,9 +159,11 @@ def creatManifest(ver_pre,version,url,src,dest,force=False):
 	def walk_dir(path,file):
 		full_path_file = path+"/"+file
 
-		if(file.endswith(".js.map")):
+		if(file.endswith(".js.map")):#解释文件不记录
 			file_helper.remove_file(full_path_file)
 			return
+		if(file.endswith(".manifest")):#配置文件不记录
+			return;
 
 		# print(path,file);
 		new_path_file = path[len(src)+1:]+"/"+file;
@@ -168,7 +171,7 @@ def creatManifest(ver_pre,version,url,src,dest,force=False):
 
 		# {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
 		asset = {
-			"path": "update/"+new_path_file,
+			"path": new_path_file,
 			"size": file_helper.file_size(full_path_file),
 			"md5": file_helper.md5_file(full_path_file),
 			"compressed" : file.endswith(".zip")}
@@ -181,23 +184,37 @@ def creatManifest(ver_pre,version,url,src,dest,force=False):
 	#遍历资源目录
 	file_helper.Diskwalk(src+"/res").walk(walk_dir)
 
-	cur_manifest_file = dest+"/assets/project.manifest"
-	if(force or not file_helper.is_file_exits(cur_manifest_file)):
-		file_helper.write_str_to_file(cur_manifest_file,json.dumps(manifest,indent=0,sort_keys=False));
+	cur_manifest_file_src = dest+"/assets/resources/project.manifest"
+	cur_manifest_file_dest = src+"/res/raw-assets/resources/project.manifest"
+	# if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
+	# creator 工程目录
+	file_helper.write_str_to_file(cur_manifest_file_src,json.dumps(manifest,indent=0,sort_keys=False));
+	# creator jsb 导出目录
+	file_helper.write_str_to_file(cur_manifest_file_dest,json.dumps(manifest,indent=0,sort_keys=False));
 
-	manifest["version"] = version #改成新版本
-	dest_dir = dest+"/remote-assets"
-	print(dest_dir);
+	print("当前项目资源生成完毕："+ver_pre);
 
-	file_helper.remove_dir(dest_dir)
-	file_helper.copy_dir(src+"/src",dest_dir+"/src")
-	file_helper.copy_dir(src+"/res",dest_dir+"/res")
+	if(next):#是否生成下个版本的资源
+		url_next = url+version+"/remote-assets/"
 
-	file_helper.write_str_to_file(dest_dir+"/project.manifest",json.dumps(manifest,indent=0,sort_keys=False));
+		# manifest["packageUrl"] = url_next
+		manifest["remoteManifestUrl"] = url_next+"project.manifest"  #,这里增加逗号，会表示这是一个数组
+		manifest["remoteVersionUrl"] = url_next+"version.manifest"
+		manifest["version"] = version #改成新版本
+		dest_dir = dest+"/server-assets/"+ver_pre+"/remote-assets"
+		print(dest_dir);
 
-	del manifest["assets"]
-	del manifest["searchPaths"]
-	file_helper.write_str_to_file(dest_dir+"/version.manifest",json.dumps(manifest,indent=0,sort_keys=False));
+		file_helper.remove_dir(dest_dir)
+		file_helper.copy_dir(src+"/src",dest_dir+"/src")
+		file_helper.copy_dir(src+"/res",dest_dir+"/res")
+
+		file_helper.write_str_to_file(dest_dir+"/project.manifest",json.dumps(manifest,indent=0,sort_keys=False));
+
+		del manifest["assets"]
+		del manifest["searchPaths"]
+		file_helper.write_str_to_file(dest_dir+"/version.manifest",json.dumps(manifest,indent=0,sort_keys=False));
+
+		print("热更新版更新资源生成完毕："+version);
 
 
 if __name__ == '__main__':
@@ -210,16 +227,19 @@ if __name__ == '__main__':
 	"""
 		额。。。有点繁琐，先这样吧。。
 
+		首次运行需要自己创建一个简单的manifest放到工程中
+
 		1 creator构建 把修改的资源发布到目录
-		2 运行脚本 读取修改的资源，修改project.manifest
-		3 creator构建 把修改的project.manifest发布到目录
-		4 运行脚本 修改project.manifest文件中的大小
-		5 creator 最终构建
+		2 运行脚本 读取修改的资源，修改project.manifest的内容
 	"""
+
+	ver_pre = "1.0.0" #生成之前版本的更新包，所以我们创建的更新目录是之前版本的
+	ver_cur = "1.0.1"
+
 	creatManifest(
-		"1.0.0",
-		"1.0.1",
-		"http://192.168.0.18:8080/CreatorTest/remote-assets/",
+		ver_pre,
+		ver_cur,
+		"http://192.168.0.18:8080/CreatorTest/",
 		"D:/glp/Github/CreatorTest/build/jsb-default",
-		"D:/glp/Github/CreatorTest",True);
+		"D:/glp/Github/CreatorTest",False);
 
