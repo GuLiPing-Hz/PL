@@ -22,7 +22,7 @@ def optionJSRes5(path,file):
 
 def encFile(path,file):
 
-    if file[-4:] != ".png" and file[-5:] != ".webp":
+    if file[-4:] != ".png" and file[-5:] != ".webp" and file[-4:] != ".jsc":
         return
 
     fullpath=os.path.join(path,file)
@@ -80,6 +80,10 @@ def main(path):
     file_helper.Diskwalk(path+"\\res",True).walk(encFile);
     print("加密图片文件完成")
     
+def enc_jss(path):
+    print("开始加密jsc文件...")
+    file_helper.Diskwalk(path,True).walk(encFile);
+    print("完成加密jsc文件...")
 
 if __name__ == '__main__':
     #运行一次是加密，运行第二次是解密
@@ -87,6 +91,9 @@ if __name__ == '__main__':
 
     # main("D:\\glp\\GitHub\\fishjs")
     temp("D:\\glp\\work\\UI\\temp")
+
+    #最后一步，加密jsc，跟苹果斗智斗勇
+    enc_jss("D:\\glp\\Github\\fishjs\\third_part\\jsc\\src")
 
     # encFile("D:\\glp\\work\\UI\\temp","jinbi5.png")
     
