@@ -47,7 +47,7 @@ def md5_file(file_path):
     md5_obj.update(d)
   hash_code = md5_obj.hexdigest()
   f.close()
-  md5 = str(hash_code)#.lower()
+  md5 = str(hash_code).upper()
   return md5
 
 def write_str_to_file(file,str):
@@ -101,8 +101,8 @@ def copy_file(src_path,dst_path):
 
 def copy_dir(src_path,dst_path):
 	"""拷贝目录"""
-	# if(not os.path.exists(dst_path)):
-	# 	raise RuntimeError(dst_path+" not exists");
+	if(os.path.exists(dst_path)):
+		raise RuntimeError(dst_path+" is exists");
 
 	# dst_path = src_path + ".copy"
 	print(src_path, "=>", dst_path)

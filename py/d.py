@@ -31,6 +31,8 @@ print("字符串成员运算符not in,Hello 是否不存在","Hello" not in s)
 print("原始字符串",r"Hello\n",R"World\n")
 print("字符串全部转为大写字母",s.upper())
 print("字符串全部转为小写字母",s.lower())
+print(s.capitalize())     # 把第一个字母转化为大写字母，其余小写
+print(s.title())          # 把每个单词的第一个字母转化为大写，其余小写 
 print("字符串查找",s.find("l",4)) # 4指定起始位置 返回在字符串中的开始位置 找不到返回-1
 #相比于find ，index方法找不到时会报错 还有从右边找的 rfind rindex
 #print("字符串查找",s.index("lle"))

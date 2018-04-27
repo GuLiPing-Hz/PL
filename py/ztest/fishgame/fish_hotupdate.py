@@ -12,7 +12,7 @@ import json
 
 1.首先使用git拉出上个版本的分支
 2.其次移出项目的编译目录[Debug.win32]中的[res,script,src]3个目录
-3.记得用git还原一些项目mp3等文件(windows版本需)
+3.记得用git还原一些项目mp3等文件(windows版本需) （这一步废弃了，，不需要还原了）
 4.使用vs编译项目工程,移动[res,script,src]目录和[main.js,project.json]文件至源目录src_dir
 5.拉出最新的版本，同样是vs编译项目
 6.使用本脚本拉出需要热更新的文件,
@@ -32,7 +32,7 @@ B 代表当前的版本
 
 def main(src_dir,dst_dir):
 	new_dir = src_dir+"_hotupdate"
-	update_dir = src_dir+"\\..\\update"
+	update_dir = src_dir+"/../update"
 
 	print(">> 删除原来的热更新目录")
 	file_helper.remove_dir(new_dir)
@@ -101,23 +101,24 @@ def main(src_dir,dst_dir):
 	# print(">> 目标文件展示")
 	# print(arra_c_to)
 
+	# return
 	print(">> 开始拷贝文件")
 	for i,v in enumerate(arra_c):
-		#print(">>",i,v);
+		print(">>",i,v,arra_c_to[i]);
 		file_helper.copy_file(v,arra_c_to[i])
 
 	print(">> 移除game_2")
-	file_helper.remove_dir(new_dir+"\\src\\game\\game_2_hide");
+	file_helper.remove_dir(new_dir+"/src/game/game_2_hide");
 	print(">> 移除update目录")
-	file_helper.remove_dir(new_dir+"\\..\\update");
+	file_helper.remove_dir(new_dir+"/../update");
 
 	print(">> 拷贝资源到热更新目录update")
 	def copy_res_no_js(dirpath,file):
 		# print("*"*100)
 		# print(dirpath,file)
-		if dirpath.startswith(new_dir+"\\src"):#js 不用拷贝
+		if dirpath.startswith(new_dir+"/src"):#js 不用拷贝
 			pass
-		elif dirpath.startswith(new_dir+"\\script"):#js 不用拷贝
+		elif dirpath.startswith(new_dir+"/script"):#js 不用拷贝
 			pass
 		elif file == "jscompile.bat":
 			pass
@@ -142,11 +143,81 @@ def main(src_dir,dst_dir):
 	jscompile_bat = os.path.join(new_dir,"jscompile.bat")
 	file_helper.write_str_to_file(jscompile_bat,text)
 	print(">> 请手动改成python27,并双击",jscompile_bat)
-	#os.system(jscompile_bat) cocos 脚本需要python27环境
-	print(">> 脚本生成的 update 在上层目录中")
 
-def creatManifest(ver_pre,version,url,src,dest,next=False):
-	url_pre = url+ver_pre+"/remote-assets/"
+	# js_compile_cmd = "cocos jscompile -s "+new_dir+"/src -d "+new_dir+"/../update"
+	# os.system(js_compile_cmd) #cocos 脚本需要python27环境
+
+	print(">> 脚本生成的 update 在上层目录中")
+	print(">> 对jsc进行加密")
+	print(">> 待脚本执行后，前往update目录，打包成zip,这就是我们的更新包了,移除src和res目录")
+	print(">> 执行本脚本中的createManifestEx函数，project.mainifest和version.manifest就生成了")
+
+curAssetCnt = 0
+def createManifestEx(manifest_file_pre,path,ver,ver_pre):
+	try:
+		with open(manifest_file_pre,"r") as file:
+			manifest = json.load(file)
+			print(manifest,type(manifest))
+
+			project_manifest = "project_platform.manifest"
+			version_manifest = "version_platform.manifest"
+
+			url = manifest["packageUrl"]
+			manifest["remoteManifestUrl"] = url+ver+"/"+project_manifest
+			manifest["remoteVersionUrl"] = url+ver+"/"+version_manifest
+			manifest["version"]=ver
+
+			global curAssetCnt
+			curAssetCnt = len(manifest["assets"])
+			def walk_dir(path,file):
+				full_path_file = path+"/"+file
+
+				if(file.endswith(".js.map")):#解释文件不记录
+					file_helper.remove_file(full_path_file)
+					return
+				if(file.endswith(".manifest")):#配置文件不记录
+					return
+
+				if(not file.endswith(".zip")):
+					return
+
+				global curAssetCnt
+				print(curAssetCnt)
+				# print(path,file);
+				new_path_file = "update/"+file;
+				print(new_path_file)
+
+				# {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
+				asset = {
+					"path": new_path_file,
+					"md5": file_helper.md5_file(full_path_file),
+					"compressed" : file.endswith(".zip"),
+					"size": file_helper.file_size(full_path_file)}
+				print(asset)
+
+				curAssetCnt+=1
+				update_asset_name = "update"+str(curAssetCnt)
+				manifest["assets"][update_asset_name] = asset
+
+			file_helper.Diskwalk(path).walk(walk_dir)
+
+			path_update = path+"/../"+ver_pre
+			file_helper.make_dirs(path_update)
+			file_helper.write_str_to_file(path_update+"/"+project_manifest,json.dumps(manifest,indent=0,sort_keys=False));
+
+			del manifest["assets"]
+			del manifest["searchPaths"]
+			file_helper.write_str_to_file(path_update+"/"+version_manifest,json.dumps(manifest,indent=0,sort_keys=False));
+
+			path_cur = path+"/../"+ver
+			file_helper.remove_dir(path_cur)
+			file_helper.copy_dir(path_update,path_cur)
+
+	except FileNotFoundError:
+		pass
+
+def creatLobbyManifest(ver_pre,version,url,src,dest,next=False):
+	url_pre = url+ver_pre+"/"
 	manifest = {
 	    "packageUrl": url_pre,
 	    "remoteManifestUrl": url_pre+"project.manifest",
@@ -195,13 +266,13 @@ def creatManifest(ver_pre,version,url,src,dest,next=False):
 	print("当前项目资源生成完毕："+ver_pre);
 
 	if(next):#是否生成下个版本的资源
-		url_next = url+version+"/remote-assets/"
+		url_next = url+ver_pre+"/"
 
-		# manifest["packageUrl"] = url_next
+		# manifest["packageUrl"] = url_next #资源下载地址在上个版本的目录
 		manifest["remoteManifestUrl"] = url_next+"project.manifest"  #,这里增加逗号，会表示这是一个数组
 		manifest["remoteVersionUrl"] = url_next+"version.manifest"
 		manifest["version"] = version #改成新版本
-		dest_dir = dest+"/server-assets/"+ver_pre+"/remote-assets"
+		dest_dir = dest+"/remote-assets/"+ver_pre
 		print(dest_dir);
 
 		file_helper.remove_dir(dest_dir)
@@ -216,14 +287,86 @@ def creatManifest(ver_pre,version,url,src,dest,next=False):
 
 		print("热更新版更新资源生成完毕："+version);
 
+def createGameManifest(game_id,url,ver,game_dir,src,dest,need_first=True):
+
+	manifest = {
+	    "packageUrl": url,
+	    "remoteManifestUrl": url+"project.manifest",
+	    "remoteVersionUrl": url+"version.manifest",
+	    "version": "1.0.0",
+	    "assets": {},
+	    "searchPaths": []#"update"
+	};
+
+	game_pro_manifest_name = "project_game_"+str(game_id)+".manifest"
+	game_ver_manifest_name = "version_game_"+str(game_id)+".manifest"
+	if(need_first):	
+		cur_manifest_file_src = dest+"/assets/resources/"+game_pro_manifest_name
+		cur_manifest_file_dest = src+"/res/raw-assets/resources/"+game_pro_manifest_name
+		# if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
+		# creator 工程目录
+		file_helper.write_str_to_file(cur_manifest_file_src,json.dumps(manifest,indent=0,sort_keys=False));
+		# creator jsb 导出目录
+		file_helper.write_str_to_file(cur_manifest_file_dest,json.dumps(manifest,indent=0,sort_keys=False));
+
+	def walk_dir(path,file):
+		full_path_file = path+"/"+file
+
+		if(file.endswith(".js.map")):#解释文件不记录
+			file_helper.remove_file(full_path_file)
+			return
+		if(file.endswith(".manifest")):#配置文件不记录
+			return;
+
+		# print(path,file);
+		new_path_file = ""
+		if(path == game_dir):
+			new_path_file = file;
+		else:
+			new_path_file = path[len(game_dir)+1:]+"/"+file;
+		print(new_path_file)
+
+		# {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
+		asset = {
+			"path": new_path_file,
+			"size": file_helper.file_size(full_path_file),
+			"md5": file_helper.md5_file(full_path_file),
+			"compressed" : file.endswith(".zip")}
+		print(asset)
+
+		manifest["assets"][new_path_file] = asset
+
+	#遍历脚本目录
+	file_helper.Diskwalk(game_dir).walk(walk_dir)
+
+	manifest["version"] = ver #改成新版本
+
+	file_helper.write_str_to_file(game_dir+"/"+game_pro_manifest_name,json.dumps(manifest,indent=0,sort_keys=False));
+
+	del manifest["assets"]
+	del manifest["searchPaths"]
+	file_helper.write_str_to_file(game_dir+"/"+game_ver_manifest_name,json.dumps(manifest,indent=0,sort_keys=False));
+
+	print("游戏热更新资源生成完毕："+ver);
+
+	if(need_first):
+		print("第一版游戏资源生成完毕")
+
 
 if __name__ == '__main__':
+	#以后路径统一使用 '/ 请勿使用 '\\'
+
 	#公司电脑
-	# main("D:\\glp\\work\\temp\\fishjs","D:\\glp\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+	# main("D:/glp/work/temp/fishjs","D:/glp/GitHub/fishjs/frameworks/runtime-src/proj.win32/Debug.win32")
 
 	#家里
-	# main("D:\\work\\temp\\fishjs","D:\\work\\GitHub\\fishjs\\frameworks\\runtime-src\\proj.win32\\Debug.win32")
+	# main("D:/work/temp/fishjs","D:/work/GitHub/fishjs/frameworks/runtime-src/proj.win32/Debug.win32")
 	
+	#生成捕鱼更新包 manifest
+	manifest_file_pre = "D:/glp/Github/fishjs/third_part/update/v1.0.2/1.0.2/project_platform.manifest"
+	# createManifestEx(manifest_file_pre,"D:/glp/work/temp/update","1.0.5","1.0.4")
+	
+
 	"""
 		额。。。有点繁琐，先这样吧。。
 
@@ -233,13 +376,17 @@ if __name__ == '__main__':
 		2 运行脚本 读取修改的资源，修改project.manifest的内容
 	"""
 
+	package_url = "http://192.168.0.18:8080/CreatorTest/"
 	ver_pre = "1.0.0" #生成之前版本的更新包，所以我们创建的更新目录是之前版本的
 	ver_cur = "1.0.1"
+	is_creat_update_package = True
+	dir_src = "D:/glp/Github/CreatorTest/build/jsb-default"
+	dir_dest = "D:/glp/Github/CreatorTest"
+	#创建大厅更新包
+	# creatLobbyManifest(ver_pre,ver_cur,package_url+"remote-assets/",dir_src,dir_dest,is_creat_update_package);
 
-	creatManifest(
-		ver_pre,
-		ver_cur,
-		"http://192.168.0.18:8080/CreatorTest/",
-		"D:/glp/Github/CreatorTest/build/jsb-default",
-		"D:/glp/Github/CreatorTest",False);
-
+	game_id = 1
+	game_ver = "1.0.1"
+	#创建子游戏更新包
+	createGameManifest(1,package_url+"Game"+str(game_id)+"/",game_ver,"C:/Users/Administrator/AppData/Local/hello_world/Game1"
+		,dir_src,dir_dest,True)
