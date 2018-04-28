@@ -123,6 +123,9 @@ def is_file_exits(file):
 def is_dir_exits(path):
 	return os.path.exists(path) and os.path.isdir(path)
 
+def join(path,new_file):
+	return path+"/"+new_file
+
 class Diskwalk(object):
 	def __init__(self,path,recursive=True):
 		""" 
@@ -155,7 +158,7 @@ class Diskwalk(object):
 
 				files.append(file)
 				# fullpath=os.path.join(dirpath,file)
-				fullpath=dirpath+"/"+file
+				fullpath = join(dirpath,file)
 				path_collection.append(fullpath)
 
 			if(not self.recursive):
@@ -181,7 +184,7 @@ class Diskwalk(object):
 				if(func and callable(func)):
 					func(dirpath,dirname)
 
-				fullpath=os.path.join(dirpath,dirname)
+				fullpath=join(dirpath,dirname)
 				path_collection.append(fullpath)
 
 			if(not self.recursive):
@@ -242,7 +245,7 @@ def main():
 	cd %~dp0
 	cocos jscompile -s update -d update_jsc
 			"""
-	write_str_to_file(os.path.join(testDir,"jscompile.bat"),text)
+	write_str_to_file(join(testDir,"jscompile.bat"),text)
 
 if __name__ == '__main__':
 	main()

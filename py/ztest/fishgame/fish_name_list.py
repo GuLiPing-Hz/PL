@@ -12,7 +12,7 @@ import file_helper
 
 
 def optionRename(path,file):
-	fullpath=os.path.join(path,file)
+	fullpath=file_helper.join(path,file)
 
 	pos_end = file.find(".png");
 	number = int(file[pos_end-2:pos_end])
@@ -22,22 +22,22 @@ def optionRename(path,file):
 
 	new_path = file[0:pos_end-2]+str_number+".png"
 	print(file,">>",new_path);
-	new_full_path = os.path.join(path,"new/"+new_path)
+	new_full_path = file_helper.join(path,"new/"+new_path)
 	# print("new_full_path=",new_full_path)
 	file_helper.copy_file(fullpath,new_full_path)
 
 def optionRenameFishId(path,file):
-	fullpath=os.path.join(path,file)
+	fullpath=file_helper.join(path,file)
 
 	new_file = file.replace("fish_27","fish_32");
-	new_path = os.path.join(path,new_file);
+	new_path = file_helper.join(path,new_file);
 	print(fullpath,">>",new_path);
 	file_helper.move_file(fullpath,new_path)
 
 def optionJSRes1(path,file):
 	if("ignore" in path or file.startswith("particle_") or file.startswith("Plist")):
 		return ;
-	path_new = path[path.find("res"):].replace("\\","/")+"/"
+	path_new = path[path.find("res"):].replace("/","/")+"/"
 	# print(path_new)
 
 	name = file.replace(".","_");
@@ -78,7 +78,7 @@ def optionJSRes3(path,file):
 
 	if("ignore" in path):
 		return ;
-	path_new = path[path.find("res"):].replace("\\","/")+"/"
+	path_new = path[path.find("res"):].replace("/","/")+"/"
 	# print(path_new)
 
 	name = file.replace(".","_");
@@ -100,7 +100,7 @@ def optionJSRes3(path,file):
 
 #修改plist文件的纹理为png->webp
 def optionJSRes4(path,file):
-	plist_filename = path+"\\"+file;
+	plist_filename = path+"/"+file;
 	print(plist_filename);
 
 	if("webp" in path):
@@ -134,43 +134,44 @@ def optionJSRes4(path,file):
 		realTextureFileName.text = realTextureFileName.text.replace(".png",".webp");
 		#print("realTextureFileName:",realTextureFileName.tag, realTextureFileName.attrib,"text=",realTextureFileName.text);
 
-		newFilePath = path+"\\webp";
+		newFilePath = path+"/webp";
 		try:
 			os.mkdir(newFilePath)
 		except FileExistsError: #异常捕获
 			pass
 
-		tree.write(newFilePath+"\\"+file);
+		tree.write(newFilePath+"/"+file);
 
 def optionCPP(path,file):
 	if file.find(".c") != -1 or file.find(".cpp") != -1:
 		print("../../../Classes/app/"+file)
 
 if __name__ == '__main__':
+	#以后路径统一使用 '/ 请勿使用 '\\'
 
 	#print(file_helper)
 	#遍历目录改文件名
 	#C:\Users\JJ\Desktop\LF_boss_fish_PList.Dir
-	#total = file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\LF_boss_fish_PList.Dir").walk(optionRename);
+	#total = file_helper.Diskwalk("C:/Users/JJ/Desktop/LF_boss_fish_PList.Dir").walk(optionRename);
 	# file = total[0]
 	# path = total[1]
 
 	#C++文件列表
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\LongConnectionTCP\\src\\Classes\\app",False).walk(optionCPP);
+	#file_helper.Diskwalk("D:/glp/GitHub/LongConnectionTCP/src/Classes/app",False).walk(optionCPP);
 	#平台 图片文件 
-	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\platform").walk(optionJSRes1);
+	file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/platform").walk(optionJSRes1);
 	#音频文件
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
+	#file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
-	# file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes2);
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/studio/res/games/fish/fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
-	# file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish",False).walk(optionJSRes1);	
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish",False).walk(optionJSRes1);	
 
 	#鱼图片文件名字修改
-	# file_helper.Diskwalk("D:\\glp\\work\\UI\\20170919\\package\\fishs",False).walk(optionRenameFishId);
+	# file_helper.Diskwalk("D:/glp/work/UI/20170919/package/fishs",False).walk(optionRenameFishId);
 
 	def water_name(path,file):
 		print(path,file);
-		os.rename(path+"\\"+file,path+"\\"+"water_"+file);
+		os.rename(path+"/"+file,path+"/"+"water_"+file);
 
-	# file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\png",False).walk(water_name);	
+	# file_helper.Diskwalk("C:/Users/JJ/Desktop/png",False).walk(water_name);	

@@ -722,7 +722,7 @@ def ParseCCSChildren(json_children,str_parent,cur_cnt,single_file):
 
             name = json_content["Name"];
             #只支持嵌套两层
-            ParseCCSJson(CURGAMERESDIR+"\\"+json_file,name,str_parent,cur_cnt,False)
+            ParseCCSJson(CURGAMERESDIR+"/"+json_file,name,str_parent,cur_cnt,False)
             cur_cnt += 1
             cur_cnt =  ParseCCSNodeProp(json_content,name,cur_cnt,single_file,True);
             printSpace4("}")
@@ -758,7 +758,7 @@ def ParseCCSJson(json_file,str_node=None,str_parent=None,cur_cnt=0,single_file=T
 
 def JsonWalk(path,file):
     if(file.endswith(".json") and file.startswith("Node_")):
-        ParseCCSJson(os.path.join(path,file))
+        ParseCCSJson(file_helper.join(path,file))
 
 def PrintComments():
     print("/**")
@@ -797,6 +797,8 @@ def AutoParseJsonDirFish(path):
     print()
 
 if __name__ == '__main__':
+    #以后路径统一使用 '/ 请勿使用 '\\'
+    
     #TestJson()
 
     #转化路径偏移
@@ -806,10 +808,10 @@ if __name__ == '__main__':
 
     #解析所有的node节点，转化成js函数
 
-    CURGAMERESDIR = "D:\\glp\\GitHub\\fishjs\\res1"
+    CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     #大厅
-    AutoParseJsonDirLobby(CURGAMERESDIR+"\\scene_ext_ignore\\vip")
+    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     #游戏
-    # AutoParseJsonDirFish(CURGAMERESDIR+"\\scene_ext_ignore\\game")
+    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
 

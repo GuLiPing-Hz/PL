@@ -42,9 +42,9 @@ def main(src_dir,dst_dir):
 	arra_a1 = []
 	arra_b1 = []
 	def src_func(dirpath,file):
-		arra_a1.append(os.path.join(dirpath[len(src_dir):],file))
+		arra_a1.append(file_helper.join(dirpath[len(src_dir):],file))
 	def dst_func(dirpath,file):
-		arra_b1.append(os.path.join(dirpath[len(dst_dir):],file))
+		arra_b1.append(file_helper.join(dirpath[len(dst_dir):],file))
 
 	arra_temp_a1, arra_a2 = file_helper.Diskwalk(src_dir).walk(src_func)
 	arra_temp_b1, arra_b2 = file_helper.Diskwalk(dst_dir).walk(dst_func)
@@ -125,7 +125,7 @@ def main(src_dir,dst_dir):
 		else:#资源拷贝
 			dirpath_new = dirpath.replace(new_dir,update_dir)
 			# print(dirpath_new)
-			file_helper.copy_file(os.path.join(dirpath,file),os.path.join(dirpath_new,file))
+			file_helper.copy_file(file_helper.join(dirpath,file),file_helper.join(dirpath_new,file))
 	file_helper.Diskwalk(new_dir).walk(copy_res_no_js)
 	print(">> 写入JS加密脚本 需要python27")
 
@@ -140,7 +140,7 @@ def main(src_dir,dst_dir):
 	cd %~dp0
 	cocos jscompile -s . -d ../update
 			"""
-	jscompile_bat = os.path.join(new_dir,"jscompile.bat")
+	jscompile_bat = file_helper.join(new_dir,"jscompile.bat")
 	file_helper.write_str_to_file(jscompile_bat,text)
 	print(">> 请手动改成python27,并双击",jscompile_bat)
 
@@ -266,14 +266,15 @@ def creatLobbyManifest(ver_pre,version,url,src,dest,next=False):
 	print("当前项目资源生成完毕："+ver_pre);
 
 	if(next):#是否生成下个版本的资源
-		url_next = url+ver_pre+"/"
+		url_next = url+version+"/"
+		print("url_next = "+url_next)
 
 		# manifest["packageUrl"] = url_next #资源下载地址在上个版本的目录
 		manifest["remoteManifestUrl"] = url_next+"project.manifest"  #,这里增加逗号，会表示这是一个数组
 		manifest["remoteVersionUrl"] = url_next+"version.manifest"
 		manifest["version"] = version #改成新版本
 		dest_dir = dest+"/remote-assets/"+ver_pre
-		print(dest_dir);
+		print("dest_dir = "+dest_dir);
 
 		file_helper.remove_dir(dest_dir)
 		file_helper.copy_dir(src+"/src",dest_dir+"/src")
@@ -289,22 +290,24 @@ def creatLobbyManifest(ver_pre,version,url,src,dest,next=False):
 
 def createGameManifest(game_id,url,ver,game_dir,src,dest,need_first=True):
 
+	game_pro_manifest_name = "project_game_"+str(game_id)+".manifest"
+	game_ver_manifest_name = "version_game_"+str(game_id)+".manifest"
+
 	manifest = {
 	    "packageUrl": url,
-	    "remoteManifestUrl": url+"project.manifest",
-	    "remoteVersionUrl": url+"version.manifest",
+	    "remoteManifestUrl": url+game_pro_manifest_name,
+	    "remoteVersionUrl": url+game_ver_manifest_name,
 	    "version": "1.0.0",
 	    "assets": {},
 	    "searchPaths": []#"update"
 	};
 
-	game_pro_manifest_name = "project_game_"+str(game_id)+".manifest"
-	game_ver_manifest_name = "version_game_"+str(game_id)+".manifest"
 	if(need_first):	
 		cur_manifest_file_src = dest+"/assets/resources/"+game_pro_manifest_name
 		cur_manifest_file_dest = src+"/res/raw-assets/resources/"+game_pro_manifest_name
 		# if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
 		# creator 工程目录
+		print("cur_manifest_file_src ="+cur_manifest_file_src)
 		file_helper.write_str_to_file(cur_manifest_file_src,json.dumps(manifest,indent=0,sort_keys=False));
 		# creator jsb 导出目录
 		file_helper.write_str_to_file(cur_manifest_file_dest,json.dumps(manifest,indent=0,sort_keys=False));
@@ -341,21 +344,21 @@ def createGameManifest(game_id,url,ver,game_dir,src,dest,need_first=True):
 
 	manifest["version"] = ver #改成新版本
 
-	file_helper.write_str_to_file(game_dir+"/"+game_pro_manifest_name,json.dumps(manifest,indent=0,sort_keys=False));
+	game_manifest_dir = game_dir#[0:game_dir.rfind("/")]
+	print("game_manifest_dir = "+game_manifest_dir)
+	# return 
+	file_helper.write_str_to_file(game_manifest_dir+"/"+game_pro_manifest_name,json.dumps(manifest,indent=0,sort_keys=False));
 
 	del manifest["assets"]
 	del manifest["searchPaths"]
-	file_helper.write_str_to_file(game_dir+"/"+game_ver_manifest_name,json.dumps(manifest,indent=0,sort_keys=False));
+	file_helper.write_str_to_file(game_manifest_dir+"/"+game_ver_manifest_name,json.dumps(manifest,indent=0,sort_keys=False));
 
 	print("游戏热更新资源生成完毕："+ver);
 
 	if(need_first):
 		print("第一版游戏资源生成完毕")
 
-
-if __name__ == '__main__':
-	#以后路径统一使用 '/ 请勿使用 '\\'
-
+def lailaifish_manifest_gen():
 	#公司电脑
 	# main("D:/glp/work/temp/fishjs","D:/glp/GitHub/fishjs/frameworks/runtime-src/proj.win32/Debug.win32")
 
@@ -364,8 +367,13 @@ if __name__ == '__main__':
 	
 	#生成捕鱼更新包 manifest
 	manifest_file_pre = "D:/glp/Github/fishjs/third_part/update/v1.0.2/1.0.2/project_platform.manifest"
-	# createManifestEx(manifest_file_pre,"D:/glp/work/temp/update","1.0.5","1.0.4")
-	
+	createManifestEx(manifest_file_pre,"D:/glp/work/temp/update","1.0.5","1.0.4")
+
+if __name__ == '__main__':
+	#以后路径统一使用 '/ 请勿使用 '\\'
+
+	#来来捕鱼更新包配置文件
+	# lailaifish_manifest_gen();
 
 	"""
 		额。。。有点繁琐，先这样吧。。
@@ -375,18 +383,19 @@ if __name__ == '__main__':
 		1 creator构建 把修改的资源发布到目录
 		2 运行脚本 读取修改的资源，修改project.manifest的内容
 	"""
-
-	package_url = "http://192.168.0.18:8080/CreatorTest/"
-	ver_pre = "1.0.0" #生成之前版本的更新包，所以我们创建的更新目录是之前版本的
-	ver_cur = "1.0.1"
-	is_creat_update_package = True
 	dir_src = "D:/glp/Github/CreatorTest/build/jsb-default"
 	dir_dest = "D:/glp/Github/CreatorTest"
-	#创建大厅更新包
-	# creatLobbyManifest(ver_pre,ver_cur,package_url+"remote-assets/",dir_src,dir_dest,is_creat_update_package);
+	package_url = "http://192.168.0.18:8080/CreatorTest/"
 
+	ver_pre = "1.0.0" #生成之前版本的更新包，所以我们创建的更新目录是之前版本的
+	ver_cur = "1.0.2"
+	is_creat_update_package = False
+	#创建大厅更新包
+	creatLobbyManifest(ver_pre,ver_cur,package_url+"remote-assets/",dir_src,dir_dest,is_creat_update_package);
+
+	game_dir = "D:/glp/Github/CreatorTest/CreatorGame/Game1/build/jsb-default/child-game"
 	game_id = 1
 	game_ver = "1.0.1"
+	childgame_package_url = package_url+"child-game/"
 	#创建子游戏更新包
-	createGameManifest(1,package_url+"Game"+str(game_id)+"/",game_ver,"C:/Users/Administrator/AppData/Local/hello_world/Game1"
-		,dir_src,dir_dest,True)
+	# createGameManifest(game_id,childgame_package_url,game_ver,game_dir,dir_src,dir_dest,True)
