@@ -95,7 +95,7 @@ if __name__ == '__main__':
     temp("D:/glp/work/UI/temp")
 
     #编译工程 最后一步，加密jsc，跟苹果斗智斗勇
-    enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
+    # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
 
     #热更新 jsc加密一下
     # enc_jss("D:/glp/work/temp/update/src")
