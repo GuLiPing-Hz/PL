@@ -59,10 +59,10 @@ def optionJSRes1(path,file):
 
 def optionJSRes1_(path,file):
 	name = file.replace(".","_");
+	name = name.replace("m4a","ogg");
 
-	if("_webp" in name):
-		name = name.replace("_webp","_png");
-	print("music_"+name+": 'res/games/fish/ogg/"+file+"',");#games/fish ; platform
+	ext_file = file.replace(".m4a","");
+	print("music_"+name+": 'res/games/fish/ogg/"+ext_file+"' + cfgAudioExt,");#games/fish ; platform
 
 def optionJSRes2(path,file):
 	name = file.replace(".","_");
@@ -161,7 +161,7 @@ if __name__ == '__main__':
 	#平台 图片文件 
 	file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/platform").walk(optionJSRes1);
 	#音频文件
-	#file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
 	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/studio/res/games/fish/fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
