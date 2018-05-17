@@ -189,7 +189,7 @@ print("123"+"abc")
 print("字符串->数字",type(int("1")))
 print("数字->字符串",type(str(1)))
 
-print(not True);#不能使用!
+print(not True);#不能使用 ‘!’
 
 #通过内建变量 __file__ 来获取当前脚本真实目录
 print(__file__)
