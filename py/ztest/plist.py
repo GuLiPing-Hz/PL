@@ -13,7 +13,7 @@ def simple_make_dirs(outfile,is_file=True):
             pos1 = outfile.rfind("/")
             pos2 = outfile.rfind("\\")
             pos = max(pos1,pos2)
-            os.makedirs(outfile[0:outfile.rfind("/")]) #只能创建目录
+            os.makedirs(outfile[0:pos]) #只能创建目录
         else:
             os.makedirs(outfile)
     except FileExistsError:

@@ -19,11 +19,11 @@ joke()
 
 v = 1
 while(v >= 1):
-    a = 3     	# 全局变量
-    b = 3       # 全局变量
-    c = 3		# 全局变量
-    print(a,b,c)     
-    v-=1
+	a = 3     	# 全局变量
+	b = 3       # 全局变量
+	c = 3		# 全局变量
+	print(a,b,c)     
+	v-=1
 
 print(a,b,c)
 print("*"*30)    

@@ -803,8 +803,8 @@ if __name__ == '__main__':
 
     #转化路径偏移
     ### ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,True)
-    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,False)
-    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new_x.json",True,False)
+    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,False)
+    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new_x.json",True,False)
 
     #解析所有的node节点，转化成js函数
 
