@@ -176,7 +176,9 @@ def ParseCCSNode(json_content,str_parent,cur_cnt,single_file,str_node=None):
         printSpace8(name+".setPosition(pos);");
     if(name.endswith("_use")):
         # global PUSHCNT;#申明是全局变量
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
     if(name.startswith("box_")):
         printSpace8(name+".setName('box');");
@@ -211,7 +213,9 @@ def ParseCCSBtn(json_content,str_parent,str_node,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+str_node+");");
     if(str_node.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(str_node+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+str_node+");");
 
     #设置按钮属性
@@ -239,7 +243,9 @@ def ParseCCSSprite(json_content,str_parent,cur_cnt,single_file):
             printSpace8(str_parent+".addChild("+name+");");
         if(name.endswith("_use")):
             # global PUSHCNT;
-            printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+            printSpace8("/**push node "+str(cur_cnt)+" */");
+            printSpace8(name+".setName('"+str(cur_cnt)+"');");
+            cur_cnt+=1;
             printSpace8(single_file+".push("+name+");");
 
         #设置纹理
@@ -266,7 +272,9 @@ def ParseCCSImage(json_content,str_parent,cur_cnt,single_file):
             printSpace8(str_parent+".addChild("+name+");");
         if(name.endswith("_use")):
             # global PUSHCNT;
-            printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+            printSpace8("/**push node "+str(cur_cnt)+" */");
+            printSpace8(name+".setName('"+str(cur_cnt)+"');");
+            cur_cnt+=1;
             printSpace8(single_file+".push("+name+");");
 
         #设置九宫格
@@ -297,7 +305,9 @@ def ParseCCSText(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     printSpace8(name+".setFontName(res.default_font);");
@@ -353,7 +363,9 @@ def ParseCCSTextAtlas(json_content,str_parent,cur_cnt,single_file):
     if(name.endswith("_use")):
         # global PUSHCNT;
         # print("ParseCCSTextAtlas 1",cur_cnt)
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         # print("ParseCCSTextAtlas 2",cur_cnt)
         printSpace8(single_file+".push("+name+");");
 
@@ -375,7 +387,9 @@ def ParseCCSLoadingBar(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file);
@@ -387,7 +401,9 @@ def ParseCCSParticle(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
         print(name+".stop();");
 
@@ -421,7 +437,9 @@ def ParseCCSPanel(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     #设定裁切
@@ -495,7 +513,9 @@ def ParseCCSSlider(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     printSpace8(name+".loadBarTexture("+ParseCCSSpriteProp(json_content,"BackGroundData")+");");
@@ -542,7 +562,9 @@ def ParseCCSCheckBox(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file,no_size=True);
@@ -555,7 +577,9 @@ def ParseCCSTextField(json_content,str_parent,str_node,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+str_node+");");
     if(str_node.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(str_node+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+str_node+");");
 
     json_color = json_content["CColor"];#设置颜色值
@@ -614,7 +638,9 @@ def ParseCCSTextInput(json_content,str_parent,cur_cnt,single_file):
             printSpace8(str_parent+".addChild("+name+");");
         if(name.endswith("_use")):
             # global PUSHCNT;
-            printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+            printSpace8("/**push node "+str(cur_cnt)+" */");
+            printSpace8(name+".setName('"+str(cur_cnt)+"');");
+            cur_cnt+=1;
             printSpace8(single_file+".push("+name+");");
 
         printSpace8(name+".setFontName(res.default_font);");
@@ -667,7 +693,9 @@ def ParseCCSScrollView(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     if("IsBounceEnabled" in json_content):
@@ -810,7 +838,7 @@ if __name__ == '__main__':
 
     CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     #大厅
-    # AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
+    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     #游戏
     # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")

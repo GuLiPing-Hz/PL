@@ -182,7 +182,7 @@ def parseAtlasPath(dir):
 if __name__ == '__main__':
 	# for i in range(1,3):
 	# 	print(i)
-	parseElements("D:/glp/Github/PL/py/ztest/unity/iimg","shz_shiqian.atlas")
+	# parseElements("D:/glp/Github/PL/py/ztest/unity/iimg","shz_shiqian.atlas")
 
-	# parseAtlasPath("D:/glp/Github/PL/py/ztest/unity/img")
+	parseAtlasPath("D:/glp/Github/PL/py/ztest/unity/img")
 
