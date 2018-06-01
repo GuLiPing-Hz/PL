@@ -97,13 +97,15 @@ print("元组",(1,2,3,"a",'b'))
 
 # 字典
 tab1 = {} # 申明一个空的字典跟列表一致
+key = "a"
+tab1[key] = 3
+print("插入字典 tab1[key] =",tab1[key])
 tab2 = {"x":1,"y":2,"z":"a",100:100} #-- 申明字典
-print("字典",tab1)
+print("字典 tab1=",tab1)
+tab1.update(tab2)#一个字典插入另一个字典
+print("字典 tab1=",tab1)
 #print(tab1["x"]) # tab1 中没有x，所以会报错
 print(tab2["x"],tab2["z"]) # 访问字典table，索引不再是数字
-key = "x"
-tab1[key] = 3
-print("插入字典",tab1[key])
 print("x in tab2 = ","x" in tab2)#判断tab中是否拥有x的key
 del tab2["x"] # 删除元素
 tab2[2] = 1
