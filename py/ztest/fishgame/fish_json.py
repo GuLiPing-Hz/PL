@@ -11,6 +11,8 @@ import file_helper
 
 def ChangePosition(src_name,out_name,isIphoneX=False,isReverse=False):
     try:
+        print(src_name)
+
         with open(src_name,"r") as file:
             routes = json.load(file)
             #print(routes,type(routes))
@@ -831,14 +833,14 @@ if __name__ == '__main__':
 
     #转化路径偏移
     ### ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,True)
-    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,False)
-    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new_x.json",True,False)
+    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,False)
+    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new_x.json",True,False)
 
     #解析所有的node节点，转化成js函数
 
     CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     #大厅
-    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
+    # AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     #游戏
     # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
