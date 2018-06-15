@@ -146,6 +146,42 @@ def optionCPP(path,file):
 	if file.find(".c") != -1 or file.find(".cpp") != -1:
 		print("../../../Classes/app/"+file)
 
+def tree_to_dict(tree):
+	d = {}
+	for index, item in enumerate(tree):
+		if item.tag == 'key':
+			if tree[index+1].tag == 'string':
+				d[item.text] = tree[index + 1].text
+			elif tree[index + 1].tag == 'true':
+				d[item.text] = True
+			elif tree[index + 1].tag == 'false':
+				d[item.text] = False
+			elif tree[index+1].tag == 'dict':
+				d[item.text] = tree_to_dict(tree[index+1])
+	return d
+
+
+def parsePlistImage(path,file):
+	fullpath = path+"/"+file
+
+	with open(fullpath,"rb") as plist_file:
+		content = plist_file.read()
+		root = ElementTree.fromstring(content.decode("utf-8"))
+
+		# print(root)
+		plist_dict = tree_to_dict(root[0])
+		# print(plist_dict)
+
+		for k,v in plist_dict['frames'].items():
+			# print("key = ",k,type(k))
+			pos = k.rfind("/")
+			name = k[pos+1:]
+			name = name.replace(".","_")
+			print(name+": '"+k+"',")
+			# YZ3_png: 'res/games/fish/YZ3' + cfgImageExt
+
+
+
 if __name__ == '__main__':
 	#以后路径统一使用 '/ 请勿使用 '\\'
 
@@ -159,7 +195,7 @@ if __name__ == '__main__':
 	#C++文件列表
 	#file_helper.Diskwalk("D:/glp/GitHub/LongConnectionTCP/src/Classes/app",False).walk(optionCPP);
 	#平台 图片文件 
-	file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/platform").walk(optionJSRes1);
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/res1/platform").walk(optionJSRes1);
 	#音频文件
 	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
@@ -169,6 +205,12 @@ if __name__ == '__main__':
 
 	#鱼图片文件名字修改
 	# file_helper.Diskwalk("D:/glp/work/UI/20170919/package/fishs",False).walk(optionRenameFishId);
+
+	#捕鱼合图
+	# parsePlistImage("D:/glp/Github/fishjs/res1/games/fish","PlistFish01.plist")
+	#大厅合图
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform01.plist")
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform02.plist")
 
 	def water_name(path,file):
 		print(path,file);

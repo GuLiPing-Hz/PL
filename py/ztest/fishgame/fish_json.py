@@ -194,20 +194,27 @@ def ParseCCSNode(json_content,str_parent,cur_cnt,single_file,str_node=None):
       "Plist": ""
     },
 """
-def ParseCCSSpriteProp(json_content,name=None):
+def ParseCCSSpriteProp(json_content,name=None,singleFile=False):
     if(not name):
         name = "FileData"
     #设置纹理
     str_sprite = json_content[name]["Path"];
+    # print(str_sprite)
     resource = "res"
+    # print(str_sprite)
     if(str_sprite.startswith("games")):
         pos_start = str_sprite.find("/")+1
         pos_end = str_sprite.find("/",pos_start)
-        resource = str_sprite[pos_start:pos_end]+"Res"
-    str_sprite = str_sprite[str_sprite.rfind("/")+1:];
-    str_sprite = str_sprite.replace(".","_");
+        resource += "_"+str_sprite[pos_start:pos_end]
 
-    return resource+"."+str_sprite;
+    str_sprite_name = str_sprite[str_sprite.rfind("/")+1:];
+    
+    if not (singleFile or str_sprite_name.startswith("num_") or str_sprite_name.startswith("scene_")):
+        resource += "_frames"
+
+    str_sprite_name = str_sprite_name.replace(".","_");
+
+    return resource+"."+str_sprite_name;
 
 def ParseCCSBtn(json_content,str_parent,str_node,cur_cnt,single_file):
     printSpace8("var "+str_node+" = new ccui.Button();");
@@ -372,7 +379,7 @@ def ParseCCSTextAtlas(json_content,str_parent,cur_cnt,single_file):
     name = json_content["Name"];
 
     printSpace8("var "+name+" = new ccui.TextAtlas('"+json_content["LabelText"]+"', "
-        +ParseCCSSpriteProp(json_content,"LabelAtlasFileImage_CNB")
+        +ParseCCSSpriteProp(json_content,"LabelAtlasFileImage_CNB",True)
         +", "+str(json_content["CharWidth"])+", "+str(json_content["CharHeight"])
         +", '"+json_content["StartChar"]+"');");
     if(str_parent):
@@ -410,9 +417,9 @@ def ParseCCSLoadingBar(json_content,str_parent,cur_cnt,single_file):
         printSpace8(single_file+".push("+name+");");
 
     if USERIMAGEPLIST:
-        printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content)+", ccui.Widget.PLIST_TEXTURE);");
+        printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content,"ImageFileData")+", ccui.Widget.PLIST_TEXTURE);");
     else:    
-        printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content)+", ccui.Widget.LOCAL_TEXTURE);");
+        printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content,"ImageFileData")+", ccui.Widget.LOCAL_TEXTURE);");
     
     printSpace8(name+".setPercent(0);");
 
@@ -420,7 +427,7 @@ def ParseCCSLoadingBar(json_content,str_parent,cur_cnt,single_file):
 
 def ParseCCSParticle(json_content,str_parent,cur_cnt,single_file):
     name = json_content["Name"]
-    printSpace8("var "+name+" = cc.ParticleSystem.create("+ParseCCSSpriteProp(json_content)+");");
+    printSpace8("var "+name+" = cc.ParticleSystem.create("+ParseCCSSpriteProp(json_content,None,True)+");");
     if(str_parent):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
@@ -890,8 +897,8 @@ if __name__ == '__main__':
     USERIMAGEPLIST = True
     CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     #大厅
-    # AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
+    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     #游戏
-    AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
+    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
 
