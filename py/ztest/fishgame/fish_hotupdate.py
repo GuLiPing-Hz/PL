@@ -149,7 +149,7 @@ def main(src_dir,dst_dir):
 
 	print(">> 脚本生成的 update 在上层目录中")
 	print(">> 对jsc进行加密")
-	print(">> 待脚本执行后，前往update目录，打包成zip,这就是我们的更新包了,移除src和res目录")
+	print(">> 待脚本执行后，前往update目录，打包成最新版本的zip(当前版本是1.0.7,就是'1.0.7.zip'),这就是我们的更新包了,移除src和res目录")
 	print(">> 执行本脚本中的createManifestEx函数，project.mainifest和version.manifest就生成了")
 
 curAssetCnt = 0
@@ -214,6 +214,7 @@ def createManifestEx(manifest_file_pre,path,ver,ver_pre):
 			file_helper.copy_dir(path_update,path_cur)
 
 	except FileNotFoundError:
+		print(manifest_file_pre+" FileNotFoundError")
 		pass
 
 def creatLobbyManifest(ver_pre,version,url,src,dest,next=False):
@@ -366,14 +367,14 @@ def lailaifish_manifest_gen():
 	# main("D:/work/temp/fishjs","D:/work/GitHub/fishjs/frameworks/runtime-src/proj.win32/Debug.win32")
 	
 	#生成捕鱼更新包 manifest
-	manifest_file_pre = "D:/glp/Github/fishjs/third_part/update/v1.0.2/1.0.2/project_platform.manifest"
-	createManifestEx(manifest_file_pre,"D:/glp/work/temp/update","1.0.5","1.0.4")
+	manifest_file_pre = "D:/glp/Github/fishjs/third_part/update/v1.0.7/1.0.6/project_platform.manifest"
+	createManifestEx(manifest_file_pre,"D:/glp/work/temp/update","1.0.7","1.0.6")
 
 if __name__ == '__main__':
 	#以后路径统一使用 '/ 请勿使用 '\\'
 
 	#来来捕鱼更新包配置文件
-	# lailaifish_manifest_gen();
+	lailaifish_manifest_gen();
 
 	"""
 		额。。。有点繁琐，先这样吧。。
@@ -383,19 +384,19 @@ if __name__ == '__main__':
 		1 creator构建 把修改的资源发布到目录
 		2 运行脚本 读取修改的资源，修改project.manifest的内容
 	"""
-	dir_src = "D:/glp/Github/CreatorTest/build/jsb-default"
-	dir_dest = "D:/glp/Github/CreatorTest"
-	package_url = "http://192.168.0.18:8080/CreatorTest/"
+	# dir_src = "D:/glp/Github/CreatorTest/build/jsb-default"
+	# dir_dest = "D:/glp/Github/CreatorTest"
+	# package_url = "http://192.168.0.18:8080/CreatorTest/"
 
-	ver_pre = "1.0.0" #生成之前版本的更新包，所以我们创建的更新目录是之前版本的
-	ver_cur = "1.0.2"
-	is_creat_update_package = False
-	#创建大厅更新包
-	creatLobbyManifest(ver_pre,ver_cur,package_url+"remote-assets/",dir_src,dir_dest,is_creat_update_package);
+	# ver_pre = "1.0.0" #生成之前版本的更新包，所以我们创建的更新目录是之前版本的
+	# ver_cur = "1.0.2"
+	# is_creat_update_package = False
+	# #创建大厅更新包
+	# creatLobbyManifest(ver_pre,ver_cur,package_url+"remote-assets/",dir_src,dir_dest,is_creat_update_package);
 
-	game_dir = "D:/glp/Github/CreatorTest/CreatorGame/Game1/build/jsb-default/child-game"
-	game_id = 1
-	game_ver = "1.0.1"
-	childgame_package_url = package_url+"child-game/"
+	# game_dir = "D:/glp/Github/CreatorTest/CreatorGame/Game1/build/jsb-default/child-game"
+	# game_id = 1
+	# game_ver = "1.0.1"
+	# childgame_package_url = package_url+"child-game/"
 	#创建子游戏更新包
 	# createGameManifest(game_id,childgame_package_url,game_ver,game_dir,dir_src,dir_dest,True)
