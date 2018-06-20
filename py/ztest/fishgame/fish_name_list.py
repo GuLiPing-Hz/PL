@@ -12,7 +12,7 @@ import file_helper
 
 
 def optionRename(path,file):
-	fullpath=os.path.join(path,file)
+	fullpath=file_helper.join(path,file)
 
 	pos_end = file.find(".png");
 	number = int(file[pos_end-2:pos_end])
@@ -22,22 +22,22 @@ def optionRename(path,file):
 
 	new_path = file[0:pos_end-2]+str_number+".png"
 	print(file,">>",new_path);
-	new_full_path = os.path.join(path,"new/"+new_path)
+	new_full_path = file_helper.join(path,"new/"+new_path)
 	# print("new_full_path=",new_full_path)
 	file_helper.copy_file(fullpath,new_full_path)
 
 def optionRenameFishId(path,file):
-	fullpath=os.path.join(path,file)
+	fullpath=file_helper.join(path,file)
 
 	new_file = file.replace("fish_27","fish_32");
-	new_path = os.path.join(path,new_file);
+	new_path = file_helper.join(path,new_file);
 	print(fullpath,">>",new_path);
 	file_helper.move_file(fullpath,new_path)
 
 def optionJSRes1(path,file):
 	if("ignore" in path or file.startswith("particle_") or file.startswith("Plist")):
 		return ;
-	path_new = path[path.find("res"):].replace("\\","/")+"/"
+	path_new = path[path.find("res"):].replace("/","/")+"/"
 	# print(path_new)
 
 	name = file.replace(".","_");
@@ -59,10 +59,10 @@ def optionJSRes1(path,file):
 
 def optionJSRes1_(path,file):
 	name = file.replace(".","_");
+	name = name.replace("m4a","ogg");
 
-	if("_webp" in name):
-		name = name.replace("_webp","_png");
-	print("music_"+name+": 'res/games/fish/ogg/"+file+"',");#games/fish ; platform
+	ext_file = file.replace(".m4a","");
+	print("music_"+name+": 'res/games/fish/ogg/"+ext_file+"' + cfgAudioExt,");#games/fish ; platform
 
 def optionJSRes2(path,file):
 	name = file.replace(".","_");
@@ -78,7 +78,7 @@ def optionJSRes3(path,file):
 
 	if("ignore" in path):
 		return ;
-	path_new = path[path.find("res"):].replace("\\","/")+"/"
+	path_new = path[path.find("res"):].replace("/","/")+"/"
 	# print(path_new)
 
 	name = file.replace(".","_");
@@ -100,7 +100,7 @@ def optionJSRes3(path,file):
 
 #修改plist文件的纹理为png->webp
 def optionJSRes4(path,file):
-	plist_filename = path+"\\"+file;
+	plist_filename = path+"/"+file;
 	print(plist_filename);
 
 	if("webp" in path):
@@ -134,43 +134,86 @@ def optionJSRes4(path,file):
 		realTextureFileName.text = realTextureFileName.text.replace(".png",".webp");
 		#print("realTextureFileName:",realTextureFileName.tag, realTextureFileName.attrib,"text=",realTextureFileName.text);
 
-		newFilePath = path+"\\webp";
+		newFilePath = path+"/webp";
 		try:
 			os.mkdir(newFilePath)
 		except FileExistsError: #异常捕获
 			pass
 
-		tree.write(newFilePath+"\\"+file);
+		tree.write(newFilePath+"/"+file);
 
 def optionCPP(path,file):
 	if file.find(".c") != -1 or file.find(".cpp") != -1:
 		print("../../../Classes/app/"+file)
 
+def tree_to_dict(tree):
+	d = {}
+	for index, item in enumerate(tree):
+		if item.tag == 'key':
+			if tree[index+1].tag == 'string':
+				d[item.text] = tree[index + 1].text
+			elif tree[index + 1].tag == 'true':
+				d[item.text] = True
+			elif tree[index + 1].tag == 'false':
+				d[item.text] = False
+			elif tree[index+1].tag == 'dict':
+				d[item.text] = tree_to_dict(tree[index+1])
+	return d
+
+
+def parsePlistImage(path,file):
+	fullpath = path+"/"+file
+
+	with open(fullpath,"rb") as plist_file:
+		content = plist_file.read()
+		root = ElementTree.fromstring(content.decode("utf-8"))
+
+		# print(root)
+		plist_dict = tree_to_dict(root[0])
+		# print(plist_dict)
+
+		for k,v in plist_dict['frames'].items():
+			# print("key = ",k,type(k))
+			pos = k.rfind("/")
+			name = k[pos+1:]
+			name = name.replace(".","_")
+			print(name+": '"+k+"',")
+			# YZ3_png: 'res/games/fish/YZ3' + cfgImageExt
+
+
+
 if __name__ == '__main__':
+	#以后路径统一使用 '/ 请勿使用 '\\'
 
 	#print(file_helper)
 	#遍历目录改文件名
 	#C:\Users\JJ\Desktop\LF_boss_fish_PList.Dir
-	#total = file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\LF_boss_fish_PList.Dir").walk(optionRename);
+	#total = file_helper.Diskwalk("C:/Users/JJ/Desktop/LF_boss_fish_PList.Dir").walk(optionRename);
 	# file = total[0]
 	# path = total[1]
 
 	#C++文件列表
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\LongConnectionTCP\\src\\Classes\\app",False).walk(optionCPP);
+	#file_helper.Diskwalk("D:/glp/GitHub/LongConnectionTCP/src/Classes/app",False).walk(optionCPP);
 	#平台 图片文件 
-	file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\platform").walk(optionJSRes1);
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/res1/platform").walk(optionJSRes1);
 	#音频文件
-	#file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish\\ogg",False).walk(optionJSRes1_);
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
 	#捕鱼 游动plist文件
-	# file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\studio\\res\\games\\fish\\fishs",False).walk(optionJSRes2);
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/studio/res/games/fish/fishs",False).walk(optionJSRes2);
 	#捕鱼图片文件
-	# file_helper.Diskwalk("D:\\glp\\GitHub\\fishjs\\res\\games\\fish",False).walk(optionJSRes1);	
+	# file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish",False).walk(optionJSRes1);	
 
 	#鱼图片文件名字修改
-	#file_helper.Diskwalk("D:\\glp\\work\\UI\\20170919\\package\\fishs",False).walk(optionRenameFishId);
+	# file_helper.Diskwalk("D:/glp/work/UI/20170919/package/fishs",False).walk(optionRenameFishId);
 
-	def water_name(path,file):#change
-		print(path,file)
-		os.rename(path+"\\"+file,path+"\\"+"water_"+file);
+	#捕鱼合图
+	# parsePlistImage("D:/glp/Github/fishjs/res1/games/fish","PlistFish01.plist")
+	#大厅合图
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform01.plist")
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform02.plist")
 
-	# file_helper.Diskwalk("C:\\Users\\JJ\\Desktop\\png",False).walk(water_name);	
+	def water_name(path,file):
+		print(path,file);
+		os.rename(path+"/"+file,path+"/"+"water_"+file);
+
+	# file_helper.Diskwalk("C:/Users/JJ/Desktop/png",False).walk(water_name);	

@@ -11,6 +11,8 @@ import file_helper
 
 def ChangePosition(src_name,out_name,isIphoneX=False,isReverse=False):
     try:
+        print(src_name)
+
         with open(src_name,"r") as file:
             routes = json.load(file)
             #print(routes,type(routes))
@@ -44,7 +46,7 @@ def ChangePosition(src_name,out_name,isIphoneX=False,isReverse=False):
 RESOURCE = "res"
 PUSHCNT = 0
 CURGAMERESDIR = ""
-
+USERIMAGEPLIST = True
 
 def printSpace4(msg):
     print("    "+msg);
@@ -176,7 +178,9 @@ def ParseCCSNode(json_content,str_parent,cur_cnt,single_file,str_node=None):
         printSpace8(name+".setPosition(pos);");
     if(name.endswith("_use")):
         # global PUSHCNT;#申明是全局变量
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
     if(name.startswith("box_")):
         printSpace8(name+".setName('box');");
@@ -190,20 +194,27 @@ def ParseCCSNode(json_content,str_parent,cur_cnt,single_file,str_node=None):
       "Plist": ""
     },
 """
-def ParseCCSSpriteProp(json_content,name=None):
+def ParseCCSSpriteProp(json_content,name=None,singleFile=False):
     if(not name):
         name = "FileData"
     #设置纹理
     str_sprite = json_content[name]["Path"];
+    # print(str_sprite)
     resource = "res"
+    # print(str_sprite)
     if(str_sprite.startswith("games")):
         pos_start = str_sprite.find("/")+1
         pos_end = str_sprite.find("/",pos_start)
-        resource = str_sprite[pos_start:pos_end]+"Res"
-    str_sprite = str_sprite[str_sprite.rfind("/")+1:];
-    str_sprite = str_sprite.replace(".","_");
+        resource += "_"+str_sprite[pos_start:pos_end]
 
-    return resource+"."+str_sprite;
+    str_sprite_name = str_sprite[str_sprite.rfind("/")+1:];
+    
+    if not (singleFile or str_sprite_name.startswith("num_") or str_sprite_name.startswith("scene_")):
+        resource += "_frames"
+
+    str_sprite_name = str_sprite_name.replace(".","_");
+
+    return resource+"."+str_sprite_name;
 
 def ParseCCSBtn(json_content,str_parent,str_node,cur_cnt,single_file):
     printSpace8("var "+str_node+" = new ccui.Button();");
@@ -211,7 +222,9 @@ def ParseCCSBtn(json_content,str_parent,str_node,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+str_node+");");
     if(str_node.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(str_node+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+str_node+");");
 
     #设置按钮属性
@@ -223,7 +236,10 @@ def ParseCCSBtn(json_content,str_parent,str_node,cur_cnt,single_file):
     printSpace8(str_node+".setTitleColor(cc.color('#ffffff'));");
 
     #设置纹理
-    printSpace8(str_node+".loadTextureNormal("+ParseCCSSpriteProp(json_content)+", ccui.Widget.LOCAL_TEXTURE);");
+    if USERIMAGEPLIST:
+        printSpace8(str_node+".loadTextureNormal("+ParseCCSSpriteProp(json_content)+", ccui.Widget.PLIST_TEXTURE);");
+    else:    
+        printSpace8(str_node+".loadTextureNormal("+ParseCCSSpriteProp(json_content)+", ccui.Widget.LOCAL_TEXTURE);");
 
     return cur_cnt
 
@@ -239,11 +255,20 @@ def ParseCCSSprite(json_content,str_parent,cur_cnt,single_file):
             printSpace8(str_parent+".addChild("+name+");");
         if(name.endswith("_use")):
             # global PUSHCNT;
-            printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+            printSpace8("/**push node "+str(cur_cnt)+" */");
+            printSpace8(name+".setName('"+str(cur_cnt)+"');");
+            cur_cnt+=1;
             printSpace8(single_file+".push("+name+");");
 
         #设置纹理
-        printSpace8(name+".initWithFile("+ParseCCSSpriteProp(json_content)+");");
+        if USERIMAGEPLIST:
+            printSpace8(name+".initWithFile("+ParseCCSSpriteProp(json_content)+");");
+        else:
+            printSpace8("{");
+            printSpace8("    var spriteFrame = cc.spriteFrameCache.getSpriteFrame("+ParseCCSSpriteProp(json_content)+");");
+            printSpace8("    if(spriteFrame)");
+            printSpace8("        "+name+".setSpriteFrame(spriteFrame);");
+            printSpace8("}");
     
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file,has_blend=not is_btn);
 
@@ -261,13 +286,20 @@ def ParseCCSImage(json_content,str_parent,cur_cnt,single_file):
     if(name.startswith("btn_")):
         cur_cnt = ParseCCSBtn(json_content,str_parent,name,cur_cnt,single_file);
     else:
-        printSpace8("var "+name+" = new ccui.ImageView("+ParseCCSSpriteProp(json_content)+");");
+        printSpace8("var "+name+" = new ccui.ImageView();");
         if(str_parent):
             printSpace8(str_parent+".addChild("+name+");");
         if(name.endswith("_use")):
             # global PUSHCNT;
-            printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+            printSpace8("/**push node "+str(cur_cnt)+" */");
+            printSpace8(name+".setName('"+str(cur_cnt)+"');");
+            cur_cnt+=1;
             printSpace8(single_file+".push("+name+");");
+
+        if USERIMAGEPLIST:
+            printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content)+", ccui.Widget.PLIST_TEXTURE);");
+        else:    
+            printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content)+", ccui.Widget.LOCAL_TEXTURE);");
 
         #设置九宫格
         if("Scale9Enable" in json_content):
@@ -297,7 +329,9 @@ def ParseCCSText(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     printSpace8(name+".setFontName(res.default_font);");
@@ -314,16 +348,16 @@ def ParseCCSText(json_content,str_parent,cur_cnt,single_file):
     if("HorizontalAlignmentType" in json_content):
         horizontal_align = json_content["HorizontalAlignmentType"];
         if(horizontal_align == "HT_Center"):
-            printSpace8(name+".setTextVerticalAlignment(cc.TEXT_ALIGNMENT_CENTER);");
+            printSpace8(name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);");
         elif(horizontal_align == "HT_Right"):
-            printSpace8(name+".setTextVerticalAlignment(cc.TEXT_ALIGNMENT_RIGHT);");
+            printSpace8(name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_RIGHT);");
 
     if("VerticalAlignmentType" in json_content):
         vertical_align = json_content["VerticalAlignmentType"];
         if(vertical_align == "VT_Center"):
-            printSpace8(name+".setTextHorizontalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);");
+            printSpace8(name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);");
         elif(vertical_align == "VT_Bottom"):
-            printSpace8(name+".setTextHorizontalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);");
+            printSpace8(name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);");
 
     if("TouchEnable" in json_content):
         printSpace8(name+".setTouchEnabled(true);");
@@ -331,7 +365,7 @@ def ParseCCSText(json_content,str_parent,cur_cnt,single_file):
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file,is_text = True);
 
 """
-    "CharWidth": 18,
+    "CharWidth": 18,setTouchEnabled
     "CharHeight": 22,
     "LabelText": "/123456",
     "StartChar": "/",
@@ -345,7 +379,7 @@ def ParseCCSTextAtlas(json_content,str_parent,cur_cnt,single_file):
     name = json_content["Name"];
 
     printSpace8("var "+name+" = new ccui.TextAtlas('"+json_content["LabelText"]+"', "
-        +ParseCCSSpriteProp(json_content,"LabelAtlasFileImage_CNB")
+        +ParseCCSSpriteProp(json_content,"LabelAtlasFileImage_CNB",True)
         +", "+str(json_content["CharWidth"])+", "+str(json_content["CharHeight"])
         +", '"+json_content["StartChar"]+"');");
     if(str_parent):
@@ -353,7 +387,9 @@ def ParseCCSTextAtlas(json_content,str_parent,cur_cnt,single_file):
     if(name.endswith("_use")):
         # global PUSHCNT;
         # print("ParseCCSTextAtlas 1",cur_cnt)
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         # print("ParseCCSTextAtlas 2",cur_cnt)
         printSpace8(single_file+".push("+name+");");
 
@@ -370,24 +406,35 @@ def ParseCCSTextAtlas(json_content,str_parent,cur_cnt,single_file):
 def ParseCCSLoadingBar(json_content,str_parent,cur_cnt,single_file):
     name = json_content["Name"];
 
-    printSpace8("var "+name+" = new ccui.LoadingBar("+ParseCCSSpriteProp(json_content,"ImageFileData")+", 0);");
+    printSpace8("var "+name+" = new ccui.LoadingBar();");
     if(str_parent):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
+
+    if USERIMAGEPLIST:
+        printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content,"ImageFileData")+", ccui.Widget.PLIST_TEXTURE);");
+    else:    
+        printSpace8(name+".loadTexture("+ParseCCSSpriteProp(json_content,"ImageFileData")+", ccui.Widget.LOCAL_TEXTURE);");
+    
+    printSpace8(name+".setPercent(0);");
 
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file);
 
 def ParseCCSParticle(json_content,str_parent,cur_cnt,single_file):
     name = json_content["Name"]
-    printSpace8("var "+name+" = cc.ParticleSystem.create("+ParseCCSSpriteProp(json_content)+");");
+    printSpace8("var "+name+" = cc.ParticleSystem.create("+ParseCCSSpriteProp(json_content,None,True)+");");
     if(str_parent):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
         print(name+".stop();");
 
@@ -421,7 +468,9 @@ def ParseCCSPanel(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     #设定裁切
@@ -436,7 +485,11 @@ def ParseCCSPanel(json_content,str_parent,cur_cnt,single_file):
         bg_type = json_content["ComboBoxIndex"];
     if(bg_type == 0):#只有图片
         if("FileData" in json_content):#检查纹理设置
-            printSpace8(name+".setBackGroundImage("+ParseCCSSpriteProp(json_content)+");");
+            
+            if USERIMAGEPLIST:
+                printSpace8(name+".setBackGroundImage("+ParseCCSSpriteProp(json_content)+", ccui.Widget.PLIST_TEXTURE);");
+            else:    
+                printSpace8(name+".setBackGroundImage("+ParseCCSSpriteProp(json_content)+", ccui.Widget.LOCAL_TEXTURE);");
 
             #检查九宫格设置
             if("Scale9Enable" in json_content):
@@ -495,12 +548,25 @@ def ParseCCSSlider(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
-    printSpace8(name+".loadBarTexture("+ParseCCSSpriteProp(json_content,"BackGroundData")+");");
-    printSpace8(name+".loadProgressBarTexture("+ParseCCSSpriteProp(json_content,"ProgressBarData")+");");
-    printSpace8(name+".loadSlidBallTextures("+ParseCCSSpriteProp(json_content,"BallNormalData")+");");
+    if USERIMAGEPLIST:
+        printSpace8(name+".loadBarTexture("+ParseCCSSpriteProp(json_content,"BackGroundData")+", ccui.Widget.PLIST_TEXTURE);");
+    else:    
+        printSpace8(name+".loadBarTexture("+ParseCCSSpriteProp(json_content,"BackGroundData")+", ccui.Widget.LOCAL_TEXTURE);");
+
+    if USERIMAGEPLIST:
+        printSpace8(name+".loadProgressBarTexture("+ParseCCSSpriteProp(json_content,"ProgressBarData")+", ccui.Widget.PLIST_TEXTURE);");
+    else:
+        printSpace8(name+".loadProgressBarTexture("+ParseCCSSpriteProp(json_content,"ProgressBarData")+", ccui.Widget.LOCAL_TEXTURE);");
+
+    if USERIMAGEPLIST:
+        printSpace8(name+".loadSlidBallTextures("+ParseCCSSpriteProp(json_content,"BallNormalData")+", ccui.Widget.PLIST_TEXTURE);");
+    else:
+        printSpace8(name+".loadSlidBallTextures("+ParseCCSSpriteProp(json_content,"BallNormalData")+", ccui.Widget.LOCAL_TEXTURE);");
     printSpace8(name+".setPercent(0);");
 
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file);
@@ -536,14 +602,25 @@ def ParseCCSSlider(json_content,str_parent,cur_cnt,single_file):
 def ParseCCSCheckBox(json_content,str_parent,cur_cnt,single_file):
     name = json_content["Name"];
 
-    printSpace8("var "+name+" = new ccui.CheckBox("+ParseCCSSpriteProp(json_content,"NormalBackFileData")+", "
-        +ParseCCSSpriteProp(json_content,"NodeNormalFileData")+");");
+    printSpace8("var "+name+" = new ccui.CheckBox();");
     if(str_parent):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
+
+    if USERIMAGEPLIST:
+        printSpace8(name+".loadTextureBackGround("+ParseCCSSpriteProp(json_content,"NormalBackFileData")+", ccui.Widget.PLIST_TEXTURE);");
+    else:    
+        printSpace8(name+".loadTextureBackGround("+ParseCCSSpriteProp(json_content,"NormalBackFileData")+", ccui.Widget.LOCAL_TEXTURE);");
+
+    if USERIMAGEPLIST:
+        printSpace8(name+".loadTextureFrontCross("+ParseCCSSpriteProp(json_content,"NodeNormalFileData")+", ccui.Widget.PLIST_TEXTURE);");
+    else:    
+        printSpace8(name+".loadTextureFrontCross("+ParseCCSSpriteProp(json_content,"NodeNormalFileData")+", ccui.Widget.LOCAL_TEXTURE);");
 
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file,no_size=True);
 
@@ -555,7 +632,9 @@ def ParseCCSTextField(json_content,str_parent,str_node,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+str_node+");");
     if(str_node.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(str_node+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+str_node+");");
 
     json_color = json_content["CColor"];#设置颜色值
@@ -603,16 +682,23 @@ def ParseCCSTextInput(json_content,str_parent,cur_cnt,single_file):
     if(name.startswith("tf_")):
         cur_cnt = ParseCCSTextField(json_content,str_parent,name,cur_cnt,single_file);
     else:
-
         json_size = json_content["Size"];
         str_bg = json_content["PlaceHolderText"];
-        printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
-            +RESOURCE+"."+str_bg+");//label text的文字当作背景图片，不能为空，至少放个透明图片");
+        if USERIMAGEPLIST:
+            printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
+                +RESOURCE+"."+str_bg+", ccui.Widget.PLIST_TEXTURE);//label text的文字当作背景图片，不能为空，至少放个透明图片");
+        else:
+            printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
+                +RESOURCE+"."+str_bg+", ccui.Widget.LOCAL_TEXTURE);//label text的文字当作背景图片，不能为空，至少放个透明图片");
+        #input_key_use.setPlaceHolder("兑换码");
+        printSpace8(name+".setPlaceHolder(Tips.pleaseType);//这里必须在addChild之前写入，否则位置不对");
         if(str_parent):
             printSpace8(str_parent+".addChild("+name+");");
         if(name.endswith("_use")):
             # global PUSHCNT;
-            printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+            printSpace8("/**push node "+str(cur_cnt)+" */");
+            printSpace8(name+".setName('"+str(cur_cnt)+"');");
+            cur_cnt+=1;
             printSpace8(single_file+".push("+name+");");
 
         printSpace8(name+".setFontName(res.default_font);");
@@ -633,7 +719,7 @@ def ParseCCSTextInput(json_content,str_parent,cur_cnt,single_file):
             pass
         else:
             printSpace8(name+".setFontColor(cc.color("+str(r)+", "+str(g)+", "+str(b)+"));");
-        printSpace8(name+".setPlaceholderFontColor(cc.color('#616161'));");
+        printSpace8(name+".setPlaceholderFontColor(cc.color('#333333'));");
 
         printSpace8(name+".setInputFlag(cc.EDITBOX_INPUT_FLAG_SENSITIVE);");
         printSpace8(name+".setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE);//单行输入");
@@ -665,7 +751,9 @@ def ParseCCSScrollView(json_content,str_parent,cur_cnt,single_file):
         printSpace8(str_parent+".addChild("+name+");");
     if(name.endswith("_use")):
         # global PUSHCNT;
-        printSpace8("/**push node "+str(cur_cnt)+" */");cur_cnt+=1;
+        printSpace8("/**push node "+str(cur_cnt)+" */");
+        printSpace8(name+".setName('"+str(cur_cnt)+"');");
+        cur_cnt+=1;
         printSpace8(single_file+".push("+name+");");
 
     if("IsBounceEnabled" in json_content):
@@ -720,7 +808,7 @@ def ParseCCSChildren(json_children,str_parent,cur_cnt,single_file):
 
             name = json_content["Name"];
             #只支持嵌套两层
-            ParseCCSJson(CURGAMERESDIR+"\\"+json_file,name,str_parent,cur_cnt,False)
+            ParseCCSJson(CURGAMERESDIR+"/"+json_file,name,str_parent,cur_cnt,False)
             cur_cnt += 1
             cur_cnt =  ParseCCSNodeProp(json_content,name,cur_cnt,single_file,True);
             printSpace4("}")
@@ -756,7 +844,7 @@ def ParseCCSJson(json_file,str_node=None,str_parent=None,cur_cnt=0,single_file=T
 
 def JsonWalk(path,file):
     if(file.endswith(".json") and file.startswith("Node_")):
-        ParseCCSJson(os.path.join(path,file))
+        ParseCCSJson(file_helper.join(path,file))
 
 def PrintComments():
     print("/**")
@@ -795,6 +883,8 @@ def AutoParseJsonDirFish(path):
     print()
 
 if __name__ == '__main__':
+    #以后路径统一使用 '/ 请勿使用 '\\'
+    
     #TestJson()
 
     #转化路径偏移
@@ -804,10 +894,11 @@ if __name__ == '__main__':
 
     #解析所有的node节点，转化成js函数
 
-    CURGAMERESDIR = "D:\\glp\\GitHub\\fishjs\\res1"
+    USERIMAGEPLIST = True
+    CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     #大厅
-    AutoParseJsonDirLobby(CURGAMERESDIR+"\\scene_ext_ignore\\vip")
+    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     #游戏
-    # AutoParseJsonDirFish(CURGAMERESDIR+"\\scene_ext_ignore\\game")
+    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
 

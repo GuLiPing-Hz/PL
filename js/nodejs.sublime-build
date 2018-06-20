@@ -1,0 +1,32 @@
+{
+//安装node 重新启动sublime即可
+
+"cmd": ["node", "$file"],
+
+"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+
+"selector": "source.js",
+
+"encoding":"utf-8",
+
+// "encoding": "cp936",根据自己需要编码格式，防止乱码。
+
+"shell":true,
+
+"windows":
+
+{
+
+"cmd": ["taskkill","/F", "/IM", "node.exe","&","node", "$file"]
+
+},
+
+"linux":
+
+{
+
+"cmd": ["killall node; node", "$file"]
+
+}
+
+}

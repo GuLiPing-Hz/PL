@@ -31,6 +31,8 @@ print("字符串成员运算符not in,Hello 是否不存在","Hello" not in s)
 print("原始字符串",r"Hello\n",R"World\n")
 print("字符串全部转为大写字母",s.upper())
 print("字符串全部转为小写字母",s.lower())
+print(s.capitalize())     # 把第一个字母转化为大写字母，其余小写
+print(s.title())          # 把每个单词的第一个字母转化为大写，其余小写 
 print("字符串查找",s.find("l",4)) # 4指定起始位置 返回在字符串中的开始位置 找不到返回-1
 #相比于find ，index方法找不到时会报错 还有从右边找的 rfind rindex
 #print("字符串查找",s.index("lle"))
@@ -95,12 +97,15 @@ print("元组",(1,2,3,"a",'b'))
 
 # 字典
 tab1 = {} # 申明一个空的字典跟列表一致
+key = "a"
+tab1[key] = 3
+print("插入字典 tab1[key] =",tab1[key])
 tab2 = {"x":1,"y":2,"z":"a",100:100} #-- 申明字典
-print("字典",tab1)
+print("字典 tab1=",tab1)
+tab1.update(tab2)#一个字典插入另一个字典
+print("字典 tab1=",tab1)
 #print(tab1["x"]) # tab1 中没有x，所以会报错
 print(tab2["x"],tab2["z"]) # 访问字典table，索引不再是数字
-tab1["x"] = 3
-print("插入字典",tab1["x"])
 print("x in tab2 = ","x" in tab2)#判断tab中是否拥有x的key
 del tab2["x"] # 删除元素
 tab2[2] = 1
@@ -121,22 +126,22 @@ print(next(itr)) #访问第二个值
 # python生成器 ，生成器只能用于迭代，否则没必要这样写
 import sys
 def fibonacci(n): # 生成器函数 - 斐波那契
-    a, b, counter = 0, 1, 0
-    while True:
-        if (counter > n): 
-            return
-        yield a # 函数每次执行到这里,返回yield的值,下次调用next的时候直接这里继续运行
-        a, b = b, a + b
-        counter += 1
+	a, b, counter = 0, 1, 0
+	while True:
+		if (counter > n):
+			return
+		yield a # 函数每次执行到这里,返回yield的值,下次调用next的时候直接这里继续运行
+		a, b = b, a + b
+		counter += 1
 f = fibonacci(10) # f 是一个迭代器，由生成器返回生成
 
 while True:
-    try:
-        print (next(f), end=" ")
-    except StopIteration: # 结束循环
-        print()
-        #sys.exit()
-        break
+	try:
+		print (next(f), end=" ")
+	except StopIteration: # 结束循环
+		print()
+		#sys.exit()
+		break
 
 
 # python特有的列表推导式

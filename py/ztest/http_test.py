@@ -11,10 +11,28 @@ import time as _time
 import random
 #md5 sh1 加密模块
 import hashlib
+#json
+import json
 
 IS_TEST = False
 #必须要增加这个headers，否则会提示参数错误
 HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"} 
+
+#'Content-type': 'application/x-www-form-urlencoded',
+#'Connection':'keep-alive',
+#'Cache-Control':'max-age=0',
+#'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'
+
+# HEADERS = {
+# 		'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+# 		'Accept-Language':'zh-CN,zh;q=0.9',
+# 		'Connection':'keep-alive',
+# 		'Upgrade-Insecure-Requests':'1',
+# 		'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'
+# 	}
+
+
+
 HTTP_HEADER_TOKEN = "Dddi23*DOO#LKD3"
 
 def get_sign(rand,time):
@@ -148,6 +166,77 @@ def join_in_number(conn,num,code):
 def login():
 	pass
 
+#关闭
+def http_common_get(conn,url,dict_params=None):
+	# print(conn)
+
+	# dictParams = {'live_id': uid, 'code': code, "os": 1,"from_tid":"14786427"} # 1 android
+	# authHead = add_head(dictParams)
+	#print("authHead = ",authHead);
+
+	tempHead = dict(HEADERS) #{}
+	# tempHead.update(authHead)
+	# print("tempHead = ",tempHead);
+
+	params = ""
+	if dict_params:
+		params =  urllib.parse.urlencode(dict_params)
+	# print(params)
+
+	data = ""
+	ok = True
+	try:
+		conn.request(method="GET",url= url+"?"+params, body=None,headers= tempHead)
+		response = conn.getresponse()
+		data = response.read()
+		print(response.status, response.reason,sep=';') #指定分隔符
+	except Exception as e:
+		print(str(e))
+		ok = False
+	else:
+		pass
+	finally:
+		return data,ok
+
+def http_common_post(conn,url,dict_params=None):
+	# print(conn)
+
+	# dictParams = {'live_id': uid, 'code': code, "os": 1,"from_tid":"14786427"} # 1 android
+	# authHead = add_head(dictParams)
+	#print("authHead = ",authHead);
+
+	tempHead = dict(HEADERS) #{}
+	# tempHead.update(authHead)
+	print("tempHead = ",tempHead);
+
+	params = ""
+	if dict_params:
+		params =  urllib.parse.urlencode(dict_params)
+	print(params)
+
+	data = ""
+	ok = True
+	try:
+		conn.request(method="POST",url= url, body=params,headers=tempHead)
+		response = conn.getresponse()
+		data = response.read()
+		print(response.status, response.reason,sep=';') #指定分隔符
+	except Exception as e:
+		print(str(e))
+		ok = False
+	else:
+		pass
+	finally:
+		return data,ok
+
+import urllib.request
+import urllib.parse
+
+def http_test1(url):
+	# url = 'http://122.152.211.208:9720/close?live_uid=2016255'
+	f = urllib.request.urlopen(url)
+	print(f.read().decode('utf-8'))
+
 if __name__ == '__main__':
 
 	import sys
@@ -174,10 +263,36 @@ if __name__ == '__main__':
 
 	#比赛报名
 	#批量报名
-	check_in_number(conn,10,613654)
+	# check_in_number(conn,10,613654)
 	#单独报名
-	#check_in(conn,20000,115656)
+	# check_in(conn,20000,115656)
 
 	#普通加入
 	#join_in_number(conn,10,819798100023);
+
+	# print(http_common("www.baidu.com","",{}).decode("utf_8"))
+	# return
+	#关闭所有房间
+	conn = http.client.HTTPConnection("122.152.211.208:9720")
+	jonStr,ok = http_common_get(conn,"/get_list")#.decode("utf_8")
+	if ok :
+		# print(jonStr)
+		jsonObj = json.loads(jonStr)
+		jsonList = jsonObj["list"]
+
+		for i in range(len(jsonList)):#len(jsonList)
+			# print(i,jsonList[i])
+			user = jsonList[i]
+			# print(user)
+			dictParams = {'live_uid': user["uid"]}
+			
+			# print(dictParams)
+			# http:// python前面不用加http://
+			print(http_common_get(conn,"/close",dictParams))
+
+	# dictParams = {"live_uid":'1000'}
+	# print(http_common_get(conn,"/close",dictParams))
+
+	# http_test1()
+
 
