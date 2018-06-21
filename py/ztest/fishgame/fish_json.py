@@ -44,6 +44,7 @@ def ChangePosition(src_name,out_name,isIphoneX=False,isReverse=False):
 
 
 RESOURCE = "res"
+RESOURCEFRAMES = "res_frames"
 PUSHCNT = 0
 CURGAMERESDIR = ""
 USERIMAGEPLIST = True
@@ -262,13 +263,13 @@ def ParseCCSSprite(json_content,str_parent,cur_cnt,single_file):
 
         #设置纹理
         if USERIMAGEPLIST:
-            printSpace8(name+".initWithFile("+ParseCCSSpriteProp(json_content)+");");
-        else:
             printSpace8("{");
             printSpace8("    var spriteFrame = cc.spriteFrameCache.getSpriteFrame("+ParseCCSSpriteProp(json_content)+");");
             printSpace8("    if(spriteFrame)");
             printSpace8("        "+name+".setSpriteFrame(spriteFrame);");
             printSpace8("}");
+        else:
+            printSpace8(name+".initWithFile("+ParseCCSSpriteProp(json_content)+");");
     
     return ParseCCSNodeProp(json_content,name,cur_cnt,single_file,has_blend=not is_btn);
 
@@ -685,10 +686,10 @@ def ParseCCSTextInput(json_content,str_parent,cur_cnt,single_file):
         json_size = json_content["Size"];
         str_bg = json_content["PlaceHolderText"];
         if USERIMAGEPLIST:
-            printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
-                +RESOURCE+"."+str_bg+", ccui.Widget.PLIST_TEXTURE);//label text的文字当作背景图片，不能为空，至少放个透明图片");
+            printSpace8("var "+name+" = cc.EditBox.create(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
+                +RESOURCEFRAMES+"."+str_bg+", ccui.Widget.PLIST_TEXTURE);//label text的文字当作背景图片，不能为空，至少放个透明图片");
         else:
-            printSpace8("var "+name+" = new cc.EditBox(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
+            printSpace8("var "+name+" = cc.EditBox.create(cc.size("+str(json_size["X"])+", "+str(json_size["Y"])+"), "
                 +RESOURCE+"."+str_bg+", ccui.Widget.LOCAL_TEXTURE);//label text的文字当作背景图片，不能为空，至少放个透明图片");
         #input_key_use.setPlaceHolder("兑换码");
         printSpace8(name+".setPlaceHolder(Tips.pleaseType);//这里必须在addChild之前写入，否则位置不对");
