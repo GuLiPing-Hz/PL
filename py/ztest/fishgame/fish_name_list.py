@@ -177,6 +177,7 @@ def parsePlistImage(path,file):
 			pos = k.rfind("/")
 			name = k[pos+1:]
 			name = name.replace(".","_")
+			name = name.replace("res1","res")
 			print(name+": '"+k+"',")
 			# YZ3_png: 'res/games/fish/YZ3' + cfgImageExt
 
@@ -211,6 +212,10 @@ if __name__ == '__main__':
 	#大厅合图
 	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform01.plist")
 	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform02.plist")
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform03.plist")
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform04.plist")
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform05.plist")
+	parsePlistImage("D:/glp/Github/fishjs/res1/platform","PlistPlatform06.plist")
 
 	def water_name(path,file):
 		print(path,file);
