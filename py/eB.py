@@ -1,9 +1,11 @@
 
 def a():
-	print("call a - B")
+    print("call a - B")
+
 
 def b():
-	print("call b - B")
+    print("call b - B")
+
 
 c = 10
 

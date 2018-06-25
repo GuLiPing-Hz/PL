@@ -1,41 +1,42 @@
 #!python3.4
-#@ guliping
+# @ guliping
 
 """
 IO，标准IO，文件IO
 """
 
 # 格式化字符串输出  str.format()
-#str()： 函数返回一个用户易读的表达形式。
-#repr()： 产生一个解释器易读的表达形式。
+# str()： 函数返回一个用户易读的表达形式。
+# repr()： 产生一个解释器易读的表达形式。
 s1 = "Hello World\n"
-print(str(s1),repr(s1))
+print(str(s1), repr(s1))
 
 for x in range(1, 3):
-	print('{0:2d} {1:4d} {2:4d}'.format(x, x*x, x*x*x))
+    print('{0:2d} {1:4d} {2:4d}'.format(x, x*x, x*x*x))
 print("{0:.3f}".format(1.5))  # 类似c中的printf
 print("{0:02d}".format(1))
 
 # 位置参数与关键字参数
-print("{0},{1}".format("apple","pen")) # 等价于print("{},{}".format("apple","pen"))
-print("{1},{0}".format("apple","pen"))
-print("{1},{0},{all}".format("apple","pen",all="applepen")) #关键字参数只能放在位置参数后面
+# 等价于print("{},{}".format("apple","pen"))
+print("{0},{1}".format("apple", "pen"))
+print("{1},{0}".format("apple", "pen"))
+print("{1},{0},{all}".format("apple", "pen", all="applepen"))  # 关键字参数只能放在位置参数后面
 
 table = {'Google': 1, 'Runoob': 2, 'Taobao': 3}
 print('Runoob: {0[Runoob]:d}; Google: {0[Google]:d}; '
-	'Taobao: {0[Taobao]:d}'.format(table))
+      'Taobao: {0[Taobao]:d}'.format(table))
 
 
-#'!a' (使用 ascii()), '!s' (使用 str()) 和 '!r' (使用 repr()) 
-#可以用于在格式化某个值之前对其进行转化:
+# '!a' (使用 ascii()), '!s' (使用 str()) 和 '!r' (使用 repr())
+# 可以用于在格式化某个值之前对其进行转化:
 import math
 print('常量 PI 的值近似为： {}。'.format(math.pi))
-#常量 PI 的值近似为： 3.141592653589793。
+# 常量 PI 的值近似为： 3.141592653589793。
 print('常量 PI 的值近似为： {!r}。'.format(math.pi))
-#常量 PI 的值近似为： 3.141592653589793。
+# 常量 PI 的值近似为： 3.141592653589793。
 
 # 需要在解释器环境中
-#print("读取键盘读入")
+# print("读取键盘读入")
 #s2 = input("请输入：");
 #print ("你输入的内容是: ", s2)
 
@@ -49,52 +50,52 @@ mode：mode决定了打开文件的模式：只读，写入，追加等。所有
 这个参数是非强制的，默认文件访问模式为只读(r)。
 """
 
-f = open("zzz_io_test","w") # r rb r+ rb+ w wb w+ wb+ a ab a+ ab+
+f = open("zzz_io_test", "w")  # r rb r+ rb+ w wb w+ wb+ a ab a+ ab+
 v_writed = f.write("Hello World \n\tfrom python")
 f.flush()
-print("写入字节数:",v_writed) 
+print("写入字节数:", v_writed)
 f.close()
 
-f1 = open("zzz_io_test","r")
+f1 = open("zzz_io_test", "r")
 s3 = f1.read()  # f.read(size) siez 指定读取大小，如果没有传，读取文件全部内容
 f1.close()
-print("读取全部文件内容:",s3,repr(s3))
+print("读取全部文件内容:", s3, repr(s3))
 
-f2 = open("zzz_io_test","r")
+f2 = open("zzz_io_test", "r")
 s4 = f2.readline()
 
 # tell() 返回文件对象当前所处的位置, 它是从文件开头开始算起的字节数
-print("当前位置",f2.tell()) 
+print("当前位置", f2.tell())
 
 '''
 f.seek(offset, from_what) 函数。 
 offset 可以为正负值
 from_what 的值(默认0), 如果是 0 表示开头, 如果是 1 表示当前位置, 2 表示文件的结尾
 '''
-f2.seek(0) 
-print("当前位置",f2.tell()) 
-f2.seek(0,2)  # r文本格式读取的时候，位置参数是1或2时，偏移只能是0，否则报错
-print("当前位置",f2.tell()) 
+f2.seek(0)
+print("当前位置", f2.tell())
+f2.seek(0, 2)  # r文本格式读取的时候，位置参数是1或2时，偏移只能是0，否则报错
+print("当前位置", f2.tell())
 f2.close()
-print("读取文件一行内容",s4)
+print("读取文件一行内容", s4)
 
-f2_1 = open("zzz_io_test","rb")
+f2_1 = open("zzz_io_test", "rb")
 f2_1.seek(0)  # 文件开始位置
-print("当前位置",f2_1.tell()) 
-f2_1.seek(-2,2)  # 文件末尾位置
-print("当前位置",f2_1.tell()) 
-f2_1.seek(-5,1) # 文件指针当前位置
-print("当前位置",f2_1.tell()) 
+print("当前位置", f2_1.tell())
+f2_1.seek(-2, 2)  # 文件末尾位置
+print("当前位置", f2_1.tell())
+f2_1.seek(-5, 1)  # 文件指针当前位置
+print("当前位置", f2_1.tell())
 f2_1.close()
 
-f3 = open("zzz_io_test","r")
+f3 = open("zzz_io_test", "r")
 s5 = f3.readlines()
 f3.close()
-print("读取文件所有行",s5)
+print("读取文件所有行", s5)
 
-f4 = open("zzz_io_test","r")
+f4 = open("zzz_io_test", "r")
 for line in f4:
-	print("循环读取文件行",line,end="") #读取的行内容带有换行符 \n
+    print("循环读取文件行", line, end="")  # 读取的行内容带有换行符 \n
 f4.close()
 
 print()
@@ -102,14 +103,14 @@ print("*"*60)
 '''
 通常我们操作文件的时候使用with关键字，它可以帮我们关闭文件。
 '''
-with open("zzz_io_test","r") as f5:
-	for line in f5:
-		print("循环读取文件行",line,end="") #读取的行内容带有换行符 \n
-		print()
-		print("f5 文件关了吗？",f5.closed)
+with open("zzz_io_test", "r") as f5:
+    for line in f5:
+        print("循环读取文件行", line, end="")  # 读取的行内容带有换行符 \n
+        print()
+        print("f5 文件关了吗？", f5.closed)
 
 
-#pickle模块，支持python基本数据到保存文件的序列化和反序列化
+# pickle模块，支持python基本数据到保存文件的序列化和反序列化
 
 
 '''
@@ -133,27 +134,28 @@ print(os.listdir())
 os.mkdir(path, mode=0o777, *, dir_fd=None) 
 '''
 try:
-	os.mkdir("dir_test")
-except FileExistsError: #异常捕获
-	pass
+    os.mkdir("dir_test")
+except FileExistsError:  # 异常捕获
+    pass
 '''
 创建目录列表，根据name
 os.makedirs(name, mode=0o777, exist_ok=False) 
 '''
 try:
-	os.makedirs("dir_test/a/a.txt") #只能创建目录
+    os.makedirs("dir_test/a/a.txt")  # 只能创建目录
 except FileExistsError:
-	pass
+    pass
 
-#查看文件是否存在，是否是文件或是目录
-print("zzz_io_test 存在吗？ "+str(os.path.exists("zzz_io_test"))+","+str(os.path.isfile("zzz_io_test")))
+# 查看文件是否存在，是否是文件或是目录
+print("zzz_io_test 存在吗？ "+str(os.path.exists("zzz_io_test")) +
+      ","+str(os.path.isfile("zzz_io_test")))
 print(os.path.isdir("zzz_io_test"))
 
 '''
 删除文件，如果是目录会报错
 os.remove(path, *, dir_fd=None) 
 '''
-os.remove("zzz_io_test") #删除文件
+os.remove("zzz_io_test")  # 删除文件
 '''
 递归删除空目录
 os.removedirs(name) 
@@ -170,9 +172,9 @@ os.renames(old, new)
 # except FileExistsError: #异常捕获
 # 	pass
 try:
-	os.rename("dir_test","dir_test_1")
+    os.rename("dir_test", "dir_test_1")
 except FileNotFoundError:
-	pass
+    pass
 '''
 替换文件，如果dst是目录则会报错
 os.replace(src, dst, *, src_dir_fd=None, dst_dir_fd=None) 
@@ -180,9 +182,9 @@ os.replace(src, dst, *, src_dir_fd=None, dst_dir_fd=None)
 os.rmdir(path, *, dir_fd=None) 
 '''
 try:
-	os.rmdir("dir_test")
+    os.rmdir("dir_test")
 except FileNotFoundError:
-	pass
+    pass
 
 '''
 查看文件或者目录状态,返回一个class os.stat_result 
@@ -219,55 +221,62 @@ os.system(command)
 '''
 print("**************************拷贝目录")
 
-#拷贝目录与文件
+# 拷贝目录与文件
 import shutil
 import tempfile
 
-def copyFile(src_path,dst_path):
-	# filename1 = tempfile.mktemp (".txt")
-	open (dst_path, "w").close ()
 
-	# if(os.path.isfile(dst_path)):
-	# 	os.remove(dst_path)
+def copyFile(src_path, dst_path):
+    # filename1 = tempfile.mktemp (".txt")
+    open(dst_path, "w").close()
 
-	#dst_path = src_path + ".copy"
-	print(src_path, "=>", dst_path)
+    # if(os.path.isfile(dst_path)):
+    # 	os.remove(dst_path)
 
-	#拷文件
-	shutil.copy (src_path, dst_path)
-	if os.path.isfile (dst_path): 
-		print(dst_path,"Copy Success")
+    #dst_path = src_path + ".copy"
+    print(src_path, "=>", dst_path)
+
+    # 拷文件
+    shutil.copy(src_path, dst_path)
+    if os.path.isfile(dst_path):
+        print(dst_path, "Copy Success")
 
 
-def copyDir(src_path,dst_path):
-	#拷贝目录
-	#dirname1 = tempfile.mktemp (".dir")
-	os.mkdir (dst_path)
-	# dst_path = src_path + ".copy"
-	print(src_path, "=>", dst_path)
+def copyDir(src_path, dst_path):
+    # 拷贝目录
+    #dirname1 = tempfile.mktemp (".dir")
+    os.mkdir(dst_path)
+    # dst_path = src_path + ".copy"
+    print(src_path, "=>", dst_path)
 
-	shutil.copytree (src_path, dst_path)
-	if os.path.isdir (dst_path): print(dst_path,"Copy Success")
+    shutil.copytree(src_path, dst_path)
+    if os.path.isdir(dst_path):
+        print(dst_path, "Copy Success")
 
 # copyFile("test/testCopy","test/testCopy_")
 
+
 print("**************************遍历目录结构")
-#遍历所有目录结构
-def visitDir(path,func=None):
-	retPaths=[]#文件路径列表
-	retFiles = [];#文件名列表
+# 遍历所有目录结构
 
-	for dirpath,dirnames,filenames in os.walk(path):
-		print("dirpath=",dirpath,",dirnames=",dirnames,",filenames=",filenames)
 
-		for file in filenames:
-			retFiles.append(file)
-			fullpath=os.path.join(dirpath,file)
-			retPaths.append(fullpath)
+def visitDir(path, func=None):
+    retPaths = []  # 文件路径列表
+    retFiles = []  # 文件名列表
 
-			if(func and callable(func)):
-				func(dirpath,file)
-	
-	return retFiles,retPaths
+    for dirpath, dirnames, filenames in os.walk(path):
+        print("dirpath=", dirpath, ",dirnames=",
+              dirnames, ",filenames=", filenames)
+
+        for file in filenames:
+            retFiles.append(file)
+            fullpath = os.path.join(dirpath, file)
+            retPaths.append(fullpath)
+
+            if(func and callable(func)):
+                func(dirpath, file)
+
+    return retFiles, retPaths
+
 
 print(visitDir("."))

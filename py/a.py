@@ -2,6 +2,15 @@
 # @ guliping
 
 '''
+    python
+    vscode 配置：
+        {
+            "name": "Python: Current File",
+            "type": "python", //指定python配置，参见python的安装
+            "request": "launch",
+            "program": "${file}"//指定运行当前文件
+        }
+
 查询python环境
 import builtins
 dir(builtins)#跟lua一样，查看当前内建的变量和函数，模块

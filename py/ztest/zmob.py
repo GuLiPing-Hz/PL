@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#python 2.7
-#MOB 短信请求byhttp
+# python 2.7
+# MOB 短信请求byhttp
 
 """
 请求发起短信请求
@@ -45,8 +45,10 @@ zone	string	区号	必填(区号86)
 """
 
 
-import urllib,urllib2
-import json;
+import urllib
+import urllib2
+import json
+
 
 class MobSMS:
     def __init__(self, appkey):
@@ -62,10 +64,11 @@ class MobSMS:
         req = urllib2.Request(self.url, data)
         o = urllib2.urlopen(req)
         if o.getcode() == 200:
-		j = json.loads(o.read())
-		    return j.get("status")
+            j = json.loads(o.read())
+                return j.get("status")
         return 500
+
 
 if __name__ == '__main__':
     mobsms = MobSMS('1eb63d197f5c7')
-    #print mobsms.verify_sms_code(86, 15000003329)
+    # print mobsms.verify_sms_code(86, 15000003329)
