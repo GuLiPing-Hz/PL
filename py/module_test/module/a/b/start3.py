@@ -4,7 +4,7 @@ if __name__ == '__main__':
     # 然后并不推荐这样写,这样是由于设计目录的时候原本就不规范导致
     # 正确的方法应该是把我们自己写的脚本都放到一个目录，并且子目录的脚本不能引用上级目录的模块
     import sys
-    sys.path.append("../..")  # 引入上上层目录
+    sys.path.append(__file__[:__file__.rfind("\\")]+"\\..\\..")# 引入上上层目录
     import dir_same
     print(dir_same.add(0, 8))
 
@@ -18,7 +18,7 @@ else:
     #     from .. import dir_same #这里直接当主入口运行是会报错的
     # except ValueError as e: #attempted relative import beyond top-level package
     #     import sys
-    #     sys.path.append("..")
+    #     sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
     #     import dir_same
 
     print(module.dir_same.add(0, 8))

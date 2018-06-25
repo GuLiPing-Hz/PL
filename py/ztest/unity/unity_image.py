@@ -6,7 +6,7 @@ from xml.etree import ElementTree
 import math
 
 import sys
-sys.path.append("..")
+sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
 import file_helper
 
 

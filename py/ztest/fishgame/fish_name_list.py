@@ -7,7 +7,7 @@ import os
 # 然后并不推荐这样写,这样是由于设计目录的时候原本就不规范导致
 # 正确的方法应该是把我们自己写的脚本都放到一个目录，并且子目录的脚本不能引用上级目录的模块
 import sys
-sys.path.append("..")
+sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
 import file_helper
 
 
@@ -222,18 +222,18 @@ if __name__ == '__main__':
     # 捕鱼合图
     # parsePlistImage("D:/glp/Github/fishjs/res1/games/fish","PlistFish01.plist")
     # 大厅合图
-    parsePlistImage("D:/glp/Github/fishjs/res1/platform",
-                    "PlistPlatform01.plist")
-    parsePlistImage("D:/glp/Github/fishjs/res1/platform",
-                    "PlistPlatform02.plist")
-    parsePlistImage("D:/glp/Github/fishjs/res1/platform",
-                    "PlistPlatform03.plist")
-    parsePlistImage("D:/glp/Github/fishjs/res1/platform",
-                    "PlistPlatform04.plist")
-    parsePlistImage("D:/glp/Github/fishjs/res1/platform",
-                    "PlistPlatform05.plist")
-    parsePlistImage("D:/glp/Github/fishjs/res1/platform",
-                    "PlistPlatform06.plist")
+    # parsePlistImage("D:/glp/Github/fishjs/res1/platform",
+    #                 "PlistPlatform01.plist")
+    # parsePlistImage("D:/glp/Github/fishjs/res1/platform",
+    #                 "PlistPlatform02.plist")
+    # parsePlistImage("D:/glp/Github/fishjs/res1/platform",
+    #                 "PlistPlatform03.plist")
+    # parsePlistImage("D:/glp/Github/fishjs/res1/platform",
+    #                 "PlistPlatform04.plist")
+    # parsePlistImage("D:/glp/Github/fishjs/res1/platform",
+    #                 "PlistPlatform05.plist")
+    # parsePlistImage("D:/glp/Github/fishjs/res1/platform",
+    #                 "PlistPlatform06.plist")
 
     def water_name(path, file):
         print(path, file)

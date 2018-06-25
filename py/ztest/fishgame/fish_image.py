@@ -2,7 +2,7 @@
 import os
 
 import sys
-sys.path.append("..")
+sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
 import file_helper
 
 IMAGE_KEY = "key"

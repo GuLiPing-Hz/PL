@@ -6,7 +6,7 @@ import os
 #然后并不推荐这样写,这样是由于设计目录的时候原本就不规范导致
 #正确的方法应该是把我们自己写的脚本都放到一个目录，并且子目录的脚本不能引用上级目录的模块
 import sys
-sys.path.append("..")
+sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
 import file_helper
 
 def ChangePosition(src_name,out_name,isIphoneX=False,isReverse=False):
