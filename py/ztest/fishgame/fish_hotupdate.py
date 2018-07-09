@@ -161,72 +161,80 @@ def main(src_dir, dst_dir):
 curAssetCnt = 0
 
 
-def createManifestEx(manifest_file_pre, path, ver, ver_pre):
-    try:
-        with open(manifest_file_pre, "r") as file:
-            manifest = json.load(file)
-            print(manifest, type(manifest))
+def createManifestEx(url, src, dest, ver):
 
-            project_manifest = "project_platform.manifest"
-            version_manifest = "version_platform.manifest"
+    project_manifest = "project_platform.manifest"
+    version_manifest = "version_platform.manifest"
 
-            url = manifest["packageUrl"]
-            manifest["remoteManifestUrl"] = url+ver+"/"+project_manifest
-            manifest["remoteVersionUrl"] = url+ver+"/"+version_manifest
-            manifest["version"] = ver
+    manifest = {
+        "packageUrl": url,
+        "remoteManifestUrl": url+"/"+project_manifest,
+        "remoteVersionUrl": url+"/"+version_manifest,
+        "version": ver,
+        "assets": {},
+        "searchPaths": ["update"]  # "update"
+    }
 
-            global curAssetCnt
-            curAssetCnt = len(manifest["assets"])
+    def walk_dir(path, file):
+        full_path_file = path+"/"+file
 
-            def walk_dir(path, file):
-                full_path_file = path+"/"+file
+        if(file.endswith(".js.map")):  # 解释文件不记录
+            file_helper.remove_file(full_path_file)
+            return
+        if(file.endswith(".manifest")):  # 配置文件不记录
+            return
+        if(file.endswith(".lib")):  # 配置文件不记录
+            return
+        if(file.endswith(".dll")):  # 配置文件不记录
+            return
+        if(file.endswith(".gitignore")):  # 配置文件不记录
+            return
+        if(file.endswith(".bat")):  # 配置文件不记录
+            return
+        if(file.endswith(".pdb")):  # 配置文件不记录
+            return
+        if(file.endswith(".exp")):  # 配置文件不记录
+            return
+        if(file.endswith(".exe")):  # 配置文件不记录
+            return
 
-                if(file.endswith(".js.map")):  # 解释文件不记录
-                    file_helper.remove_file(full_path_file)
-                    return
-                if(file.endswith(".manifest")):  # 配置文件不记录
-                    return
+        # print(path,file);
+        new_path_dir = path[len(src)+1:]
+        print(new_path_dir, new_path_dir == "")
+        new_path_file = file if new_path_dir == "" else new_path_dir+"/"+file
+        print(new_path_file)
 
-                if(not file.endswith(".zip")):
-                    return
+        # {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
+        asset = {
+            "path": new_path_file,
+            "size": file_helper.file_size(full_path_file),
+            "md5": file_helper.md5_file(full_path_file),
+            "compressed": file.endswith(".zip")}
+        print(asset)
 
-                global curAssetCnt
-                print(curAssetCnt)
-                # print(path,file);
-                new_path_file = "update/"+file
-                print(new_path_file)
+        manifest["assets"][new_path_file] = asset
 
-                # {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
-                asset = {
-                    "path": new_path_file,
-                    "md5": file_helper.md5_file(full_path_file),
-                    "compressed": file.endswith(".zip"),
-                    "size": file_helper.file_size(full_path_file)}
-                print(asset)
+    # 遍历目录
+    file_helper.Diskwalk(src).walk(walk_dir)
 
-                curAssetCnt += 1
-                update_asset_name = "update"+str(curAssetCnt)
-                manifest["assets"][update_asset_name] = asset
+    cur_manifest_file_src = src+"/res/manifest/"+project_manifest
+    cur_ver_manifest_file_src = src+"/res/manifest/"+version_manifest
+    cur_manifest_file_dest = dest+"/res/manifest/"+project_manifest
+    # if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
+    # Debug目录
+    file_helper.write_str_to_file(cur_manifest_file_src, json.dumps(
+        manifest, indent=0, sort_keys=False))
+    # 工程目录
+    file_helper.write_str_to_file(cur_manifest_file_dest, json.dumps(
+        manifest, indent=0, sort_keys=False))
 
-            file_helper.Diskwalk(path).walk(walk_dir)
+    # 版本校验
+    del manifest["assets"]
+    del manifest["searchPaths"]
+    file_helper.write_str_to_file(cur_ver_manifest_file_src, json.dumps(
+        manifest, indent=0, sort_keys=False))
 
-            path_update = path+"/../"+ver_pre
-            file_helper.make_dirs(path_update)
-            file_helper.write_str_to_file(
-                path_update+"/"+project_manifest, json.dumps(manifest, indent=0, sort_keys=False))
-
-            del manifest["assets"]
-            del manifest["searchPaths"]
-            file_helper.write_str_to_file(
-                path_update+"/"+version_manifest, json.dumps(manifest, indent=0, sort_keys=False))
-
-            path_cur = path+"/../"+ver
-            file_helper.remove_dir(path_cur)
-            file_helper.copy_dir(path_update, path_cur)
-
-    except FileNotFoundError:
-        print(manifest_file_pre+" FileNotFoundError")
-        pass
+    print("当前项目资源生成完毕："+ver)
 
 
 def creatLobbyManifest(ver_pre, version, url, src, dest, next=False):
@@ -237,7 +245,7 @@ def creatLobbyManifest(ver_pre, version, url, src, dest, next=False):
         "remoteVersionUrl": url_pre+"version.manifest",
         "version": ver_pre,
         "assets": {},
-        "searchPaths": []  # "update"
+        "searchPaths": ["update"]  # "update"
     }
 
     def walk_dir(path, file):
@@ -318,7 +326,7 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
         "remoteVersionUrl": url+game_ver_manifest_name,
         "version": "1.0.0",
         "assets": {},
-        "searchPaths": []  # "update"
+        "searchPaths": ["update"]  # "update"
     }
 
     if(need_first):
@@ -383,16 +391,11 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
 
 
 def lailaifish_manifest_gen():
-    # 公司电脑
-    # main("D:/glp/work/temp/fishjs","D:/glp/GitHub/fishjs/frameworks/runtime-src/proj.win32/Debug.win32")
-
-    # 家里
-    # main("D:/work/temp/fishjs","D:/work/GitHub/fishjs/frameworks/runtime-src/proj.win32/Debug.win32")
-
     # 生成捕鱼更新包 manifest
-    manifest_file_pre = "D:/glp/Github/fishjs/third_part/update/v1.0.7/1.0.6/project_platform.manifest"
-    createManifestEx(manifest_file_pre,
-                     "D:/glp/work/temp/update", "1.0.7", "1.0.6")
+    # 必须是已经加密过的jsc和图片资源
+    createManifestEx("https://www.fanyu123.cn/ver/game/",
+                     "D:/glp/Github/fishjs/frameworks/runtime-src/proj.win32/Release.win32",
+                     "D:/glp/Github/fishjs", "1.0.8")
 
 
 if __name__ == '__main__':
