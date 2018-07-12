@@ -5,7 +5,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
     <!-- jsdelivr分发中心，寻找js，可以 https://cdn.jsdelivr.net/npm/ + "jquery/" 模块名称+/ -->
+    <!-- AJAX 调用库 -->
     <script src="https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.js"></script>
+    <!-- 访问限制库 -->
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.js"></script>
 </head>
 
@@ -43,19 +45,19 @@
             methods: {
                 getAnswer: function () {
                     if (this.question.indexOf('?') === -1) {
-                        this.answer = 'Questions usually contain a question mark. ;-)'
-                        return
+                        this.answer = 'Questions usually contain a question mark. ;-)';
+                        return;
                     }
-                    this.answer = 'Thinking...'
-                    var vm = this
+                    this.answer = 'Thinking...';
+                    var vm = this;
                     axios.get('https://yesno.wtf/api')
                         .then(function (response) {
-                            console.log(response);
-                            vm.answer = _.capitalize(response.data.answer)
+                            console.log(JSON.stringify(response));
+                            vm.answer = _.capitalize(response.data.answer)//首字母大写
                         })
                         .catch(function (error) {
                             vm.answer = 'Error! Could not reach the API. ' + error
-                        })
+                        });
                 }
             }
         })
