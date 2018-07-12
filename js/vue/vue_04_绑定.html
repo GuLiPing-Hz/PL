@@ -120,6 +120,13 @@
             <p>来自methods</p>
             <li v-for="(item, index) in even(numbers)">{{item}},{{index}}</li>
         </ol>
+
+        <!-- 事件的监听 -->
+        <p>{{cnt}}
+            <button v-on:click="cnt++">增加计数</button>
+        </p>
+        <button v-on:click="clickGreet">问候一下</button>
+        <button v-on:click="clickGreet()">问候一下(调用带括号)</button>
     </div>
 
     <script>
@@ -189,7 +196,9 @@
 
                 numbers: [
                     11, 22, 33, 44, 55, 66
-                ]
+                ],
+
+                cnt: 0
             },
             computed: {
                 evenNum: function () {//获取偶数
@@ -203,6 +212,10 @@
                     return nums.filter(function (num) {
                         return num % 2 == 0;
                     })
+                },
+                clickGreet: function (event) {
+                    console.log(event);
+                    alert("Hello I'm from Vue click");
                 }
             }
         });
