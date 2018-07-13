@@ -161,18 +161,24 @@ def main(src_dir, dst_dir):
 curAssetCnt = 0
 
 
-def createManifestEx(url, src, dest, ver):
-
+def createManifestEx(url, src, dest, update, ver):
+    """
+        @url 域名地址
+        @src 文件release存放位置
+        @dest 当前项目地址
+        @update 更新文件制定存放目录
+        @ver 更新版本
+    """
     project_manifest = "project_platform.manifest"
     version_manifest = "version_platform.manifest"
 
     manifest = {
         "packageUrl": url,
-        "remoteManifestUrl": url+"/"+project_manifest,
-        "remoteVersionUrl": url+"/"+version_manifest,
+        "remoteManifestUrl": url+project_manifest,
+        "remoteVersionUrl": url+version_manifest,
         "version": ver,
         "assets": {},
-        "searchPaths": ["update"]  # "update"
+        "searchPaths": [update]  # "update"
     }
 
     def walk_dir(path, file):
@@ -206,7 +212,7 @@ def createManifestEx(url, src, dest, ver):
 
         # {"size":7418,"md5":"7551284fcba1c5543c0454526bb8991a"}
         asset = {
-            "path": new_path_file,
+            "path": update+"/"+new_path_file,
             "size": file_helper.file_size(full_path_file),
             "md5": file_helper.md5_file(full_path_file),
             "compressed": file.endswith(".zip")}
@@ -220,6 +226,7 @@ def createManifestEx(url, src, dest, ver):
     cur_manifest_file_src = src+"/res/manifest/"+project_manifest
     cur_ver_manifest_file_src = src+"/res/manifest/"+version_manifest
     cur_manifest_file_dest = dest+"/res/manifest/"+project_manifest
+    cur_main_manifest_file_dest = dest+"/res_main/manifest/"+project_manifest
     # if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
     # Debug目录
     file_helper.write_str_to_file(cur_manifest_file_src, json.dumps(
@@ -227,10 +234,14 @@ def createManifestEx(url, src, dest, ver):
     # 工程目录
     file_helper.write_str_to_file(cur_manifest_file_dest, json.dumps(
         manifest, indent=0, sort_keys=False))
+    # git 工程目录
+    file_helper.write_str_to_file(cur_main_manifest_file_dest, json.dumps(
+        manifest, indent=0, sort_keys=False))
 
     # 版本校验
     del manifest["assets"]
     del manifest["searchPaths"]
+    manifest["forceUpdate"] = False
     file_helper.write_str_to_file(cur_ver_manifest_file_src, json.dumps(
         manifest, indent=0, sort_keys=False))
 
@@ -395,7 +406,7 @@ def lailaifish_manifest_gen():
     # 必须是已经加密过的jsc和图片资源
     createManifestEx("https://www.fanyu123.cn/ver/game/",
                      "D:/glp/Github/fishjs/frameworks/runtime-src/proj.win32/Release.win32",
-                     "D:/glp/Github/fishjs", "1.0.8")
+                     "D:/glp/Github/fishjs", "update", "1.0.8")
 
 
 if __name__ == '__main__':

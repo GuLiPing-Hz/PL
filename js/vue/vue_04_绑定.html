@@ -128,6 +128,89 @@
         <button v-on:click="clickGreet">问候一下</button>
         <button v-on:click="clickGreet()">问候一下(调用带括号)</button>
         <button v-on:click="clickGreet($event)">问候一下(调用带括号)</button>
+
+        <br>
+        <button v-on:click="clickSay('Jack')">Jack</button>
+        <button v-on:click="clickSay('Tom',$event)">Tom</button>
+
+        <br>
+        <!-- 事件修饰符 -->
+        <!-- 阻止单击事件继续传播 -->
+        <a v-on:click.stop="clickMsg('doThis')">阻止单击事件继续传播</a>
+
+        <!-- 提交事件不再重载页面 -->
+        <form v-on:submit.prevent="clickMsg('onSubmit')">提交事件不再重载页面</form>
+
+        <!-- 修饰符可以串联 -->
+        <a v-on:click.stop.prevent="clickMsg('doThat')">修饰符可以串联</a>
+
+        <!-- 只有修饰符 -->
+        <form v-on:submit.prevent>只有修饰符</form>
+
+        <!-- 添加事件监听器时使用事件捕获模式 -->
+        <!-- 即元素自身触发的事件先在此处处理，然后才交由内部元素进行处理 -->
+        <div v-on:click.capture="clickMsg('doThis')">使用事件捕获模式</div>
+
+        <!-- 只当在 event.target 是当前元素自身时触发处理函数 -->
+        <!-- 即事件不是从内部元素触发的 -->
+        <div v-on:click.self="clickMsg('doThat')">当前元素自身时触发处理函数</div>
+
+        <!-- 使用修饰符时，顺序很重要；相应的代码会以同样的顺序产生。
+            因此，用 v-on:click.prevent.self 会阻止所有的点击，
+            而 v-on:click.self.prevent 只会阻止对元素自身的点击。 -->
+
+        <!-- 点击事件将只会触发一次 -->
+        <a v-on:click.once="clickMsg('一次')">点击事件将只会触发一次</a>
+
+        <!-- 滚动事件的默认行为 (即滚动行为) 将会立即触发 -->
+        <!-- 而不会等待 `onScroll` 完成  -->
+        <!-- 这其中包含 `event.preventDefault()` 的情况 -->
+        <div v-on:scroll.passive="clickMsg('onScroll')">滚动事件的默认行为 (即滚动行为) 将会立即触发 </div>
+        <!-- 不要把 .passive 和 .prevent 一起使用，因为 .prevent 将会被忽略，同时浏览器可能会向你展示一个警告。
+            请记住，.passive 会告诉浏览器你不想阻止事件的默认行为。 -->
+
+        <!-- 按键修饰符 -->
+        <!-- 全部的按键别名：
+            键盘：
+            .enter
+            .tab
+            .delete (捕获“删除”和“退格”键)
+            .esc
+            .space
+            .up
+            .down
+            .left
+            .right
+
+            .ctrl
+            .alt
+            .shift
+            .meta 在 Mac 系统键盘上，meta 对应 command 键 (⌘)。在 Windows 系统键盘 meta 对应 Windows 徽标键 (⊞)
+
+            .exact 
+            修饰符允许你控制由精确的系统修饰符组合触发的事件。
+            即使 Alt 或 Shift 被一同按下时也会触发
+            <button @click.ctrl="onClick">A</button>
+            有且只有 Ctrl 被按下的时候才触发
+            <button @click.ctrl.exact="onCtrlClick">A</button>
+            没有任何系统修饰符被按下的时候才触发
+            <button @click.exact="onClick">A</button>
+
+            鼠标：
+            .left
+            .right
+            .middle
+        -->
+        <input type="text" v-on:keyup.enter="clickMsg('key')">
+
+        <!-- Alt + C -->
+        <input @keyup.alt.67="clear">
+        <!-- 请注意修饰键与常规按键不同，在和 keyup 事件一起用时，事件触发时修饰键必须处于按下状态。
+            换句话说，只有在按住 ctrl 的情况下释放其它按键，才能触发 keyup.ctrl。而单单释放 ctrl 也不会触发事件。
+            如果你想要这样的行为，请为 ctrl 换用 keyCode：keyup.17。 -->
+
+        <div style="width:100px;height:100px;background-color:red" v-on:keydown="keyDownMsg">键盘测试</div>
+        <div style="width:100px;height:100px;color:red" v-on:keydown="keyDownMsg">键盘测试</div>
     </div>
 
     <script>
@@ -217,7 +300,17 @@
                 clickGreet: function (event) {
                     console.log(event);
                     alert("Hello I'm from Vue click");
-                }
+                },
+                clickSay: function (name, event) {
+                    console.log(name, event);
+                    alert("Hello " + name + "~! I'm from Vue click");
+                },
+                clickMsg: function (msg, event) {
+                    console.log(msg, event);
+                },
+                keyDownMsg: function (event) {
+                    console.log(msg, event);
+                },
             }
         });
     </script>
