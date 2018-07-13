@@ -209,7 +209,7 @@
             换句话说，只有在按住 ctrl 的情况下释放其它按键，才能触发 keyup.ctrl。而单单释放 ctrl 也不会触发事件。
             如果你想要这样的行为，请为 ctrl 换用 keyCode：keyup.17。 -->
 
-        <div style="width:100px;height:100px;background-color:red" v-on:keydown="keyDownMsg">键盘测试</div>
+        <input style="width:100px;height:100px;background-color:red" v-on:keydown="keyDownMsg" />
         <div style="width:100px;height:100px;color:red" v-on:keydown="keyDownMsg">键盘测试</div>
     </div>
 
@@ -309,7 +309,7 @@
                     console.log(msg, event);
                 },
                 keyDownMsg: function (event) {
-                    console.log(msg, event);
+                    console.log("keyDownMsg", event);
                 },
             }
         });
