@@ -195,6 +195,8 @@
             <button @click.ctrl.exact="onCtrlClick">A</button>
             没有任何系统修饰符被按下的时候才触发
             <button @click.exact="onClick">A</button>
+            对象语法 (2.4.0+)
+            <button v-on="{ mousedown: doThis, mouseup: doThat }"></button>
 
             鼠标：
             .left
@@ -209,10 +211,10 @@
             换句话说，只有在按住 ctrl 的情况下释放其它按键，才能触发 keyup.ctrl。而单单释放 ctrl 也不会触发事件。
             如果你想要这样的行为，请为 ctrl 换用 keyCode：keyup.17。 -->
 
-        <input style="width:100px;height:100px;background-color:red" v-on:keydown="keyDownMsg" />
-        <div style="width:100px;height:100px;color:red" v-on:keydown="keyDownMsg">键盘测试</div>
+        <input style="width:100px;height:100px;background-color:red;" placeholder="键盘测试" v-on:keydown="commonMsg" />
+        <div style="width:100px;height:100px;color:red;background-color: green" v-on="{
+            mousedown:commonMsg,mousemove:commonMsg,mouseover:commonMsg,mouseout:commonMsg,mouseup:commonMsg}">鼠标测试</div>
     </div>
-
     <script>
         var app = new Vue({
             el: "#app-0",
@@ -308,8 +310,8 @@
                 clickMsg: function (msg, event) {
                     console.log(msg, event);
                 },
-                keyDownMsg: function (event) {
-                    console.log("keyDownMsg", event);
+                commonMsg: function (event) {
+                    console.log("commonMsg", event);
                 },
             }
         });
