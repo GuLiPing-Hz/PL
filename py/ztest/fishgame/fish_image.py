@@ -19,7 +19,10 @@ def optionJSRes5(path, file):
     new_file = file.replace(".webp", ".png")
     new_fullpath = file_helper.join(new_path, new_file)
     print(fullpath, ">>", new_fullpath)
-    file_helper.move_file(fullpath, new_fullpath)
+
+    file_helper.make_dirs(new_path)
+    # file_helper.move_file(fullpath, new_fullpath)
+    file_helper.copy_file(fullpath, new_fullpath)
 
 
 def encFile(path, file):

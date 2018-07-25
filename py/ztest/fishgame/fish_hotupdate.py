@@ -401,19 +401,27 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
         print("第一版游戏资源生成完毕")
 
 
-def lailaifish_manifest_gen():
+def lailaifish_manifest_gen(version):
     # 生成捕鱼更新包 manifest
     # 必须是已经加密过的jsc和图片资源
     createManifestEx("https://www.fanyu123.cn/ver/game/",
                      "D:/glp/Github/fishjs/frameworks/runtime-src/proj.win32/Release.win32",
-                     "D:/glp/Github/fishjs", "update", "1.0.8")
+                     "D:/glp/Github/fishjs", "update", version)#"1.0.8"
 
 
 if __name__ == '__main__':
     # 以后路径统一使用 '/ 请勿使用 '\\'
 
+    import sys
+
+    version = "1.1.0"
+    if len(sys.argv) > 1:
+        str_ver = sys.argv[1]
+        version = str_ver[str_ver.find("-v=")+3:]
+    
+    print(version+"更新包生成。。。")
     # 来来捕鱼更新包配置文件
-    lailaifish_manifest_gen()
+    lailaifish_manifest_gen(version)
 
     """
 		额。。。有点繁琐，先这样吧。。

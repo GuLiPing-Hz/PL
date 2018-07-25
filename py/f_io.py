@@ -5,6 +5,11 @@
 IO，标准IO，文件IO
 """
 
+print("命令行参数")
+import sys
+for i in range(len(sys.argv)):
+    print("sys[",i,"]=",sys.argv[i])
+
 # 格式化字符串输出  str.format()
 # str()： 函数返回一个用户易读的表达形式。
 # repr()： 产生一个解释器易读的表达形式。

@@ -233,25 +233,13 @@ def ParseCCSSpriteProp(json_content, name=None, singleFile=False):
         name = "FileData"
     # 设置纹理
     str_sprite = json_content[name]["Path"]
-    # printCustom(str_sprite)
-    resource = "res"
-    # printCustom(str_sprite)
-    if(str_sprite.startswith("games")):
-        pos_start = str_sprite.find("/")+1
-        pos_end = str_sprite.find("/", pos_start)
-        resource += "_"+str_sprite[pos_start:pos_end]
-
-    str_sprite_name = str_sprite[str_sprite.rfind("/")+1:]
 
     # printCustom(str_sprite_name)
     is_frame = False
-    if USERIMAGEPLIST and (not (singleFile or str_sprite_name.startswith("num_") or str_sprite_name.startswith("scene_"))):
-        resource += "_frames"
+    if json_content[name]["Type"] == "MarkedSubImage":#plist图片
         is_frame = True
 
-    str_sprite_name = str_sprite_name.replace(".", "_")
-
-    return resource+"."+str_sprite_name, is_frame
+    return "res/"+str_sprite, is_frame
 
 
 def ParseCCSBtn(json_content, str_parent, str_node, cur_cnt, ret_cnt):
@@ -278,10 +266,10 @@ def ParseCCSBtn(json_content, str_parent, str_node, cur_cnt, ret_cnt):
     img_path, is_frame = ParseCCSSpriteProp(json_content)
     if USERIMAGEPLIST and is_frame:
         printSpace8(ret_cnt,str_node+".loadTextureNormal(" +
-                    img_path+", ccui.Widget.PLIST_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
         printSpace8(ret_cnt,str_node+".loadTextureNormal(" +
-                    img_path+", ccui.Widget.LOCAL_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
     return cur_cnt
 
@@ -306,15 +294,15 @@ def ParseCCSSprite(json_content, str_parent, cur_cnt, ret_cnt):
 
         # 设置纹理
         img_path, is_frame = ParseCCSSpriteProp(json_content)
-        if USERIMAGEPLIST and is_frame:
+        if USERIMAGEPLIST or is_frame:
             printSpace8(ret_cnt,"{")
             printSpace8(ret_cnt,
-                "    var spriteFrame = cc.spriteFrameCache.getSpriteFrame("+img_path+");")
+                "    var spriteFrame = cc.spriteFrameCache.getSpriteFrame("+repr(img_path)+");")
             printSpace8(ret_cnt,"    if(spriteFrame)")
             printSpace8(ret_cnt,"        "+name+".setSpriteFrame(spriteFrame);")
             printSpace8(ret_cnt,"}")
         else:
-            printSpace8(ret_cnt,name+".initWithFile("+img_path+");")
+            printSpace8(ret_cnt,name+".initWithFile("+repr(img_path)+");")
 
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt, has_blend=not is_btn)
 
@@ -348,10 +336,10 @@ def ParseCCSImage(json_content, str_parent, cur_cnt, ret_cnt):
 
         img_path, is_frame = ParseCCSSpriteProp(json_content)
         if USERIMAGEPLIST and is_frame:
-            printSpace8(ret_cnt,name+".loadTexture("+img_path +
+            printSpace8(ret_cnt,name+".loadTexture("+repr(img_path) +
                         ", ccui.Widget.PLIST_TEXTURE);")
         else:
-            printSpace8(ret_cnt,name+".loadTexture("+img_path +
+            printSpace8(ret_cnt,name+".loadTexture("+repr(img_path) +
                         ", ccui.Widget.LOCAL_TEXTURE);")
 
         # 设置九宫格
@@ -487,7 +475,7 @@ def ParseCCSTextAtlas(json_content, str_parent, cur_cnt, ret_cnt):
     img_path, is_frame = ParseCCSSpriteProp(
         json_content, "LabelAtlasFileImage_CNB", True)
     printSpace8(ret_cnt,"var "+name+" = new ccui.TextAtlas('"+json_content["LabelText"]+"', "
-                + img_path
+                + repr(img_path)
                 + ", "+str(json_content["CharWidth"]) +
                 ", "+str(json_content["CharHeight"])
                 + ", '"+json_content["StartChar"]+"');")
@@ -530,10 +518,10 @@ def ParseCCSLoadingBar(json_content, str_parent, cur_cnt, ret_cnt):
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "ImageFileData")
     if USERIMAGEPLIST and is_frame:
-        printSpace8(ret_cnt,name+".loadTexture("+img_path +
+        printSpace8(ret_cnt,name+".loadTexture("+repr(img_path) +
                     ", ccui.Widget.PLIST_TEXTURE);")
     else:
-        printSpace8(ret_cnt,name+".loadTexture("+img_path +
+        printSpace8(ret_cnt,name+".loadTexture("+repr(img_path) +
                     ", ccui.Widget.LOCAL_TEXTURE);")
 
     printSpace8(ret_cnt,name+".setPercent(0);")
@@ -544,7 +532,7 @@ def ParseCCSLoadingBar(json_content, str_parent, cur_cnt, ret_cnt):
 def ParseCCSParticle(json_content, str_parent, cur_cnt, ret_cnt):
     name = json_content["Name"]
     img_path, is_frame = ParseCCSSpriteProp(json_content, None, True)
-    printSpace8(ret_cnt,"var "+name+" = cc.ParticleSystem.create("+img_path+");")
+    printSpace8(ret_cnt,"var "+name+" = cc.ParticleSystem.create("+repr(img_path)+");")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
     if(name.endswith("_use")):
@@ -609,10 +597,10 @@ def ParseCCSPanel(json_content, str_parent, cur_cnt, ret_cnt):
 
             img_path, is_frame = ParseCCSSpriteProp(json_content)
             if USERIMAGEPLIST and is_frame:
-                printSpace8(ret_cnt,name+".setBackGroundImage("+img_path +
+                printSpace8(ret_cnt,name+".setBackGroundImage("+repr(img_path) +
                             ", ccui.Widget.PLIST_TEXTURE);")
             else:
-                printSpace8(ret_cnt,name+".setBackGroundImage("+img_path +
+                printSpace8(ret_cnt,name+".setBackGroundImage("+repr(img_path) +
                             ", ccui.Widget.LOCAL_TEXTURE);")
 
             # 检查九宫格设置
@@ -687,27 +675,27 @@ def ParseCCSSlider(json_content, str_parent, cur_cnt, ret_cnt):
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "BackGroundData")
     if USERIMAGEPLIST and is_frame:
-        printSpace8(ret_cnt,name+".loadBarTexture("+img_path +
+        printSpace8(ret_cnt,name+".loadBarTexture("+repr(img_path) +
                     ", ccui.Widget.PLIST_TEXTURE);")
     else:
-        printSpace8(ret_cnt,name+".loadBarTexture("+img_path +
+        printSpace8(ret_cnt,name+".loadBarTexture("+repr(img_path) +
                     ", ccui.Widget.LOCAL_TEXTURE);")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "ProgressBarData")
     if USERIMAGEPLIST and is_frame:
         printSpace8(ret_cnt,name+".loadProgressBarTexture(" +
-                    img_path+", ccui.Widget.PLIST_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
         printSpace8(ret_cnt,name+".loadProgressBarTexture(" +
-                    img_path+", ccui.Widget.LOCAL_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "BallNormalData")
     if USERIMAGEPLIST and is_frame:
         printSpace8(ret_cnt,name+".loadSlidBallTextures(" +
-                    img_path+","+img_path+","+img_path+", ccui.Widget.PLIST_TEXTURE);")
+                    repr(img_path)+","+repr(img_path)+","+repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
         printSpace8(ret_cnt,name+".loadSlidBallTextures(" +
-                    img_path+","+img_path+","+img_path+", ccui.Widget.LOCAL_TEXTURE);")
+                    repr(img_path)+","+repr(img_path)+","+repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
     printSpace8(ret_cnt,name+".setPercent(0);")
 
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt)
@@ -759,18 +747,18 @@ def ParseCCSCheckBox(json_content, str_parent, cur_cnt, ret_cnt):
     img_path, is_frame = ParseCCSSpriteProp(json_content, "NormalBackFileData")
     if USERIMAGEPLIST and is_frame:
         printSpace8(ret_cnt,name+".loadTextureBackGround(" +
-                    img_path+", ccui.Widget.PLIST_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
         printSpace8(ret_cnt,name+".loadTextureBackGround(" +
-                    img_path+", ccui.Widget.LOCAL_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "NodeNormalFileData")
     if USERIMAGEPLIST and is_frame:
         printSpace8(ret_cnt,name+".loadTextureFrontCross(" +
-                    img_path+", ccui.Widget.PLIST_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
         printSpace8(ret_cnt,name+".loadTextureFrontCross(" +
-                    img_path+", ccui.Widget.LOCAL_TEXTURE);")
+                    repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt, no_size=True)
 
@@ -902,7 +890,7 @@ def ParseCCSTextInput(json_content, str_parent, cur_cnt, ret_cnt):
                 name+".setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);")
 
     printSpace8(ret_cnt,
-        name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);//设置水平对齐")
+        name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_LEFT);//设置靠左对齐")
     printSpace8(ret_cnt,name+".setString('');")
 
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt, no_color=True)
@@ -955,6 +943,24 @@ def ParseCCSScrollView(json_content, str_parent, cur_cnt, ret_cnt):
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt)
 
 
+def ParseFnt(json_content, str_parent, cur_cnt, ret_cnt):
+    name = json_content["Name"]
+
+    printSpace8(ret_cnt,"var "+name+" = new ccui.TextBMFont();")
+    if(str_parent):
+        printSpace8(ret_cnt,str_parent+".addChild("+name+");")
+    if(name.endswith("_use")):
+        # global PUSHCNT;
+        printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
+        printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
+        cur_cnt += 1
+        printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
+
+    printSpace8(ret_cnt,name+".setFntFile("+repr("res/"+json_content["LabelBMFontFile_CNB"]["Path"])+");")
+    printSpace8(ret_cnt,name+".setString("+repr(json_content["LabelText"])+");")
+    
+    return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt)
+
 def ParseCCSChildren(json_children, str_parent, cur_cnt, ret_cnt):
     for i in range(len(json_children)):
         json_content = json_children[i]
@@ -994,6 +1000,8 @@ def ParseCCSChildren(json_children, str_parent, cur_cnt, ret_cnt):
         elif(json_content["ctype"] == "ScrollViewObjectData"):
             cur_cnt = ParseCCSScrollView(
                 json_content, str_parent, cur_cnt, ret_cnt)
+        elif(json_content["ctype"] == "TextBMFontObjectData"):
+            cur_cnt = ParseFnt(json_content, str_parent, cur_cnt, ret_cnt)
         elif(json_content["ctype"] == "ProjectNodeObjectData"):
             json_file = json_content["FileData"]["Path"]  # 获取到json文件
 
