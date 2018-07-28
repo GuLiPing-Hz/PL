@@ -2,20 +2,8 @@ import codecs
 # Http 模块
 import http.client
 import urllib.parse
-# 日期
-from datetime import datetime, date, time
-# UTC time
-import time as _time
-# 随机数
-import random
-# md5 sh1 加密模块
-import hashlib
 # json解析模块
 import json
-
-import sys
-sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
-import file_helper
 
 HEADERS = {"Content-Type": "application/json", "Accept": "text/plain"}
 
@@ -58,9 +46,9 @@ def unregrobt(uid):
 		# https 本地地址
 		# conn = http.client.HTTPSConnection("192.168.0.120:9191")
 		# 本地地址
-		# conn = http.client.HTTPConnection("192.168.0.120:9191")
+		conn = http.client.HTTPConnection("192.168.0.120:9191")
 		# 正式服地址
-		conn = http.client.HTTPConnection("34.199.120.59:9191")
+		# conn = http.client.HTTPConnection("34.199.120.59:9191")
 		print(conn)
 		
 		tempHead = dict(HEADERS)
