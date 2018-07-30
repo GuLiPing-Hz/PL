@@ -209,9 +209,14 @@ def ParseCCSNode(json_content, str_parent, cur_cnt, ret_cnt, str_node=None):
         printSpace8(ret_cnt,name+".setPosition(pos);")
     if(name.endswith("_use")):
         # global PUSHCNT;#申明是全局变量
+
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
-        cur_cnt += 1
+
+        if name.startswith("FileNode_"):
+            cur_cnt = 1
+        else:
+            cur_cnt += 1
         printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
     if(name.startswith("box_")):
         printSpace8(ret_cnt,name+".setName('box');")
@@ -1042,7 +1047,7 @@ def ParseCCSJson(json_file, str_node=None, str_parent=None, cur_cnt=0, ret_cnt=0
                 printSpace4(ret_cnt,"{")
 
                 printSpace8(ret_cnt,"var "+getCurRetName(ret_cnt)+" = [];")
-                ParseCCSNode(root, str_parent, 0, ret_cnt, str_node)
+                ParseCCSNode(root, str_parent, cur_cnt, ret_cnt, str_node)
 
                 printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
                 cur_cnt += 1
@@ -1134,7 +1139,7 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     # 大厅
-    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
+    # AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     # 游戏
-    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
+    AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
