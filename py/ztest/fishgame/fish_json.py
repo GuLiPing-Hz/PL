@@ -1139,7 +1139,7 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     # 大厅
-    # AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
+    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     # 游戏
-    AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
+    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")

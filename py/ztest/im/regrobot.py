@@ -46,9 +46,9 @@ def unregrobt(uid):
 		# https 本地地址
 		# conn = http.client.HTTPSConnection("192.168.0.120:9191")
 		# 本地地址
-		conn = http.client.HTTPConnection("192.168.0.120:9191")
+		# conn = http.client.HTTPConnection("192.168.0.120:9191")
 		# 正式服地址
-		# conn = http.client.HTTPConnection("34.199.120.59:9191")
+		conn = http.client.HTTPConnection("34.199.120.59:9191")
 		print(conn)
 		
 		tempHead = dict(HEADERS)
@@ -84,6 +84,6 @@ def regrobots(file):
 
 
 if __name__ == '__main__':
-	regrobots("D:/glp/Github/relay/robot/user.txt")
+	regrobots("D:/glp/Github/PL/py/ztest/im/user_0730.txt")
 
 	# regrobot(1000000,"http://robot-1253351729.costj.myqcloud.com/1.jpg","Aaron",1)
