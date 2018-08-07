@@ -161,7 +161,7 @@ def main(src_dir, dst_dir):
 curAssetCnt = 0
 
 
-def createManifestEx(url, src, dest, update, ver):
+def createManifestEx(url, src, dest, update, ver,project=True):
     """
         @url 域名地址
         @src 文件release存放位置
@@ -225,18 +225,26 @@ def createManifestEx(url, src, dest, update, ver):
 
     cur_manifest_file_src = src+"/res/manifest/"+project_manifest
     cur_ver_manifest_file_src = src+"/res/manifest/"+version_manifest
-    cur_manifest_file_dest = dest+"/res/manifest/"+project_manifest
-    cur_main_manifest_file_dest = dest+"/res_main/manifest/"+project_manifest
-    # if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
+    if project:
+        cur_manifest_file_dest = dest+"/res/manifest/"+project_manifest
+        cur_main_manifest_file_dest = dest+"/res_main/manifest/"+project_manifest
+        # if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
+        
+
+         # 工程目录
+        file_helper.write_str_to_file(cur_manifest_file_dest, json.dumps(
+            manifest, indent=0, sort_keys=False))
+        # git 工程目录
+        file_helper.write_str_to_file(cur_main_manifest_file_dest, json.dumps(
+            manifest, indent=0, sort_keys=False))
+    else:
+        cur_manifest_file_src = src+"/../"+project_manifest
+        cur_ver_manifest_file_src = src+"/../"+version_manifest
+
     # Debug目录
     file_helper.write_str_to_file(cur_manifest_file_src, json.dumps(
         manifest, indent=0, sort_keys=False))
-    # 工程目录
-    file_helper.write_str_to_file(cur_manifest_file_dest, json.dumps(
-        manifest, indent=0, sort_keys=False))
-    # git 工程目录
-    file_helper.write_str_to_file(cur_main_manifest_file_dest, json.dumps(
-        manifest, indent=0, sort_keys=False))
+   
 
     # 版本校验
     del manifest["assets"]
@@ -406,7 +414,13 @@ def lailaifish_manifest_gen(version):
     # 必须是已经加密过的jsc和图片资源
     createManifestEx("https://www.fanyu123.cn/ver/game/",
                      "D:/glp/Github/fishjs/frameworks/runtime-src/proj.win32/Release.win32",
-                     "D:/glp/Github/fishjs", "update", version)#"1.0.8"
+                     "D:/glp/Github/fishjs", 
+                     "update", version)#"1.0.8"
+
+    # createManifestEx("http://192.168.0.18/ver/game/",
+    #                  "C:/nginx-1.13.12/html/ver/game/update",
+    #                  "C:/nginx-1.13.12/html/ver",
+    #                  "update", version,False)#"1.0.8"
 
 
 if __name__ == '__main__':
@@ -414,7 +428,7 @@ if __name__ == '__main__':
 
     import sys
 
-    version = "1.1.0"
+    version = "1.1.1"
     if len(sys.argv) > 1:
         str_ver = sys.argv[1]
         version = str_ver[str_ver.find("-v=")+3:]
