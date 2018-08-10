@@ -105,7 +105,7 @@ def ParseCCSNodeProp(json_content, str_node, cur_cnt, ret_cnt, is_node=False, is
         str_node = str_node+".node"
     # print("//"+str_node)
 
-    # printSpace8(ret_cnt,str_node+".setCascadeOpacityEnabled(true);//自身的alpha属性是否影响子类");
+    printSpace8(ret_cnt,str_node+".setCascadeOpacityEnabled(true);//自身的alpha属性是否影响子类");
 
     # 设置颜色混合
     if(has_blend and "BlendFunc" in json_content):
@@ -1047,7 +1047,8 @@ def ParseCCSJson(json_file, str_node=None, str_parent=None, cur_cnt=0, ret_cnt=0
                 printSpace4(ret_cnt,"{")
 
                 printSpace8(ret_cnt,"var "+getCurRetName(ret_cnt)+" = [];")
-                ParseCCSNode(root, str_parent, cur_cnt, ret_cnt, str_node)
+                # ParseCCSNode(root, str_parent, cur_cnt, ret_cnt, str_node)
+                ParseCCSNode(root, str_parent, 0, ret_cnt, str_node)
 
                 printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
                 cur_cnt += 1
@@ -1139,7 +1140,7 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/fishjs/res1"
     # 大厅
-    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
+    # AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
 
     # 游戏
-    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
+    AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")

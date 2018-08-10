@@ -104,10 +104,10 @@ if __name__ == '__main__':
     # IMAGE_KEY = "spzhejiangfanyu2018" #sp渠道加密
 
     # main("D:/glp/GitHub/fishjs")
-    # temp("D:/glp/work/UI/temp",False);#是否遍历子目录
+    temp("D:/glp/work/UI/temp",False);#是否遍历子目录
 
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
-    enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
+    # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
     # enc_jss("D:/glp/Github/fishjs/third_part/jsc_sp")//短信渠道包
 
     # 热更新 jsc加密一下
