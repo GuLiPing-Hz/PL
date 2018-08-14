@@ -35,14 +35,14 @@ print(add(3, 4))
 def addEx(a=0, b=1):  # 添加默认值
     return add(a, b)
 
-
 print(addEx())
 print(addEx(2))
 print(addEx(b=2))  # 关键字参数，指定传给b参数
 
+fAdd = add          #函数类型的变量
+print(fAdd(10, 11)) #调用
+
 # 可变长参数函数
-
-
 def average(*vartuple):  # ‘*’ 接受所有超出参数列表的位置参数，
     result = 0
     for i in vartuple:
