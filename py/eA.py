@@ -1,3 +1,5 @@
+#!python3.6
+# @ guliping
 # 模块事例
 
 # 公开函数

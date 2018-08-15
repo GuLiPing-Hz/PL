@@ -19,6 +19,30 @@ def joke():
 joke()
 # print(c)    # 报错，这里c是未定义
 
+#局部变量测试 nonlocal global
+def scope_test():
+    def do_local():
+        spam = "local spam"
+
+    def do_nonlocal():
+        nonlocal spam
+        spam = "nonlocal spam"
+
+    def do_global():
+        global spam
+        spam = "global spam"
+
+    spam = "test spam"
+    do_local()
+    print("After local assignment:", spam)
+    do_nonlocal()
+    print("After nonlocal assignment:", spam)
+    do_global()
+    print("After global assignment:", spam)
+
+scope_test()
+print("In global scope:", spam)
+
 v = 1
 while(v >= 1):
     a = 3     	# 全局变量

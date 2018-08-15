@@ -1,3 +1,5 @@
+#!python3.6
+# @ guliping
 
 def a():
     print("call a - B")

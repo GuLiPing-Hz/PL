@@ -106,6 +106,8 @@ print("列表相乘", ["Hi"]*4)
 
 # 元组 tuple 跟列表类似，但是不能修改元组中的数据
 print("元组", (1, 2, 3, "a", 'b'))
+a,b,c = (1,2,3)
+print("元组=",a,b,c)
 
 # 字典
 tab1 = {}  # 申明一个空的字典跟列表一致
@@ -135,8 +137,13 @@ print(dir(dict))
 lst = [1, 2, 3]
 itr = iter(lst)  # 创建迭代器对象
 print(itr)
-print(next(itr))  # 访问第一个值
-print(next(itr))  # 访问第二个值
+print("print(next(itr))=",next(itr))  # 访问第一个值
+print("print(next(itr))=",next(itr))  # 访问第二个值
+print("print(next(itr))=",next(itr))
+try:
+    print("print(next(itr))=",next(itr))
+except StopIteration as e:
+    print(e)
 
 # python生成器 ，生成器只能用于迭代，否则没必要这样写
 import sys
