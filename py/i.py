@@ -11,7 +11,7 @@ count = 10000
 
 class AsyncWork(threading.Thread):
 	count = 0
-	lock = threading.RLock()#折返锁，统一线程可锁定多次
+	lock = threading.RLock()#折返锁，同一线程可锁定多次
 	
 	def __init__(self,id):
 		threading.Thread.__init__(self)
@@ -36,16 +36,18 @@ class AsyncWork(threading.Thread):
 				
 
 
-
+#创建多线程实例
 aw1 = AsyncWork(1)
 aw2 = AsyncWork(2)
 
+#开启多线程
 aw1.start()
 aw2.start()
 print('The main program continues to run in foreground.')
 
-
+#等待多线程结束
 aw1.join()# Wait for the background task to finish
 aw2.join()
 print('Main program waited until background was done.')
 
+#结束。。。
