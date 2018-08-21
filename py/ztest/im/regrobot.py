@@ -68,7 +68,7 @@ def unregrobt(uid):
 		pass
 
 #读取带BOM的utf8文件
-def regrobots(file):
+def regrobots(file,reg):
 	with open(file,"r",encoding="utf-8-sig") as f:
 		for line in f:
 			# print(line)  
@@ -76,14 +76,16 @@ def regrobots(file):
 				items = line.split(" ")
 				print(items)
 
-				
-				# regrobot(int(items[0]),items[1],items[2],int(items[3]))
-				unregrobt(int(items[0]))
+				if reg:
+					regrobot(int(items[0]),items[1],items[2],int(items[3]))
+				else:
+					unregrobt(int(items[0]))
 			# break
 
 
 
 if __name__ == '__main__':
-	regrobots("D:/glp/Github/PL/py/ztest/im/user_0730.txt")
+	# regrobots("D:/glp/Github/PL/py/ztest/im/user.txt",True)
+	regrobots("D:/glp/Github/PL/py/ztest/im/user.txt",False)
 
 	# regrobot(1000000,"http://robot-1253351729.costj.myqcloud.com/1.jpg","Aaron",1)
