@@ -151,6 +151,7 @@ def ParseCCSNodeProp(json_content, str_node, cur_cnt, ret_cnt, is_node=False, is
     if("RotationSkewX" in json_content):
         printSpace8(ret_cnt,str_node+".setRotationX(" +
                     str(json_content["RotationSkewX"])+");")
+    if("RotationSkewY" in json_content):
         printSpace8(ret_cnt,str_node+".setRotationY(" +
                     str(json_content["RotationSkewY"])+");")
 
