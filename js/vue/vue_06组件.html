@@ -45,6 +45,16 @@
                         <div v-html="post.content"></div>
                       </div>`
         });
+
+
+        // v-model的使用
+        // <input v-model="searchText"> 等价于：
+        // <input v-bind:value="searchText" v-on:input="searchText = $event.target.value"> 
+        // 实现自定义输入框
+        Vue.component("custom_input", {
+            props: ["value"],
+            template: `<input v-bind:value="value" v-on:input="$emit('input',$event.target.value)">`
+        });
     </script>
 </head>
 
@@ -69,11 +79,9 @@
             </blog_post>
         </div>
 
-        <!-- 
-            v-model的使用
-            <input v-model="searchText"> 等价于：
-            <input v-bind:value="searchText" v-on:input="searchText = $event.target.value"> 
-        -->
+        <p>custom_input</p>
+        <custom_input v-model="msg1"></custom_input>
+        <p>{{msg1}}</p>
     </div>
 
     <script>
@@ -86,7 +94,8 @@
                 posts2: [
                     { id: 1, title: "789", content: "内容1" }
                 ],
-                fS: 1
+                fS: 1,
+                msg1: ""
             },
             methods: {
                 addFontSize: function (add) {
