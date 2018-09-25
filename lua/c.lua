@@ -5,7 +5,7 @@ http://blog.csdn.net/glp3329/article/details/52538511
 ]]
 function none()
 end
-print(none()) --返回空
+print(none() == nil) --返回空
 
 function sub(a,b)
 	return a-b

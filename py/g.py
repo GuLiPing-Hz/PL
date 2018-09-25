@@ -153,6 +153,7 @@ class Point:
 		return Point(self.x - other.x,self.y - other.y)
 
 	def area(self):
+		#python 抛出异常使用raise
 		raise NotImplementedError("Point no area")
 		
 a = Point(1,2)

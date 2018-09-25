@@ -70,26 +70,71 @@ print("删除 arras[1][1] 后 arras[1]=",arras[1])
 --print("列表相加",{1,2,3}+{4,5,6}) --不支持需要自己重载
 --print("列表相乘",{"Hi"}*4)
 
--- 字典 （table） lua中所有的数据结构都可以通过table实现
+-- 表或字典 （table） lua中所有的数据结构都可以通过table实现
 tab1 = {} -- 申明一个空的字典跟列表一致
 tab2 = {x=1,y=2,z="a",100} -- 申明字典
-print("字典",tab1)
+print("tab1=",tab1)
 print(tab1.x,tab2.x,tab2["z"]) -- 访问字典table，索引不再是数字
 tab1.x = 3
-print("插入字典",tab1.x)
+print("插入 tab1.x=",tab1.x)
 tab2.x = nil -- 删除元素
 tab2[2] = 1
 print(tab2)
 -- lua 中申明table的时候无法指定数字作为(key=vale)中的key，但是可以给单独的值，
 
+function tableToStr(tab)
+	if tab and type(tab) == "table" then
+		local ret = ""
+		for k,v in pairs(tab) do
+			ret = ret.."tab["..k.."]="..v..";"
+		end
+		return ret
+	else 
+		return ""..tab
+	end
+end
 
-print("table.concat 连接")
-print("table.insert 插入")
-print("table.move 移动")
-print("table.pack 封包")
-print("table.remove 移除")
-print("table.sort 排序")
-print("table.unpack 解包")
+--local
+tab3 = {1,2,3,4,5,6,7,8,9,0}
+print("tab3=",tab3)
+
+--[[
+table.concat (list [, sep [, i [, j]] 
+-- 连接list，类似字符串的拼接功能，列表元素只能是数字或者字符串
+--默认 sep空字符串, i is 1, 
+--j is #list. If i is greater than j, returns the empty string.
+--]]
+local ret = table.concat(tab3,";",2,3)
+print("table.concat 连接 [",ret,"] type(ret)=",type(ret))
+
+-- table.insert (list, [pos,] value)
+-- 表插入
+-- 默认pos is #list+1, 所以不带pos参数，默认插入到表的最后
+ret = table.insert(tab3,2,5)
+print("table.insert 插入 [",tableToStr(tab3),"] type(ret)=",type(ret))
+
+-- table.move (a1, f, e, t [,a2])
+-- 把a1[f,e]的数据移动到a2[t]的位置。默认a2 is a1. 
+ret = table.move(tab3,2,3,7)
+print("table.move 移动 [",tableToStr(ret),"] type(ret)=",type(ret))
+
+-- table.pack (···) 打包一个n值进去
+ret = table.pack("x","y")
+print("table.pack 封包 [",tableToStr(ret),"] type(ret)=",type(ret))
+
+-- table.remove (list [, pos])
+-- 默认 pos is #list, so that a call table.remove(l) removes the last element of list l.
+ret = table.remove(tab3)--返回移除的值
+print("table.remove 移除 [",tableToStr(tab3),"] type(ret)=",type(ret),ret)
+
+-- table.sort (list [, comp])
+table.sort(tab3,function(a,b) return a<b end)
+print("table.sort 排序 [",tableToStr(tab3),"]")
+
+-- table.unpack (list [, i [, j]])
+-- 默认, i is 1 and j is #list.
+local ret1,ret2,ret3,ret4 = table.unpack(tab3)
+print("table.unpack 解包 [",ret1,ret2,ret3,ret4,"]")
 
 
 -- 迭代器
