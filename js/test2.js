@@ -290,4 +290,128 @@ try {
     // 此处不会执行
     console.log('f1 caught outer "bogus"');
 }
+console.log("\n");
+
+/**
+ * console对象
+ * 
+ * console.log方法支持以下占位符，不同类型的数据必须使用对应的占位符。
+
+%s 字符串
+%d 整数
+%i 整数
+%f 浮点数
+%o 对象的链接
+%c CSS 格式字符串
+ */
+console.log('console格式字符串 %s + %s ', 1, 1, '= 2');
+
+/**
+ * 类似的打印函数还有
+ * console.info
+ * console.debug
+ * 
+ * console.warn()
+ * console.error()
+ * 
+ * 
+ * 可以这样理解：
+ * log方法是写入标准输出（stdout），warn方法和error方法是写入标准错误（stderr）。
+ */
+console.info("console.info");
+//默认情况下，console.debug输出的信息不会显示，只有在打开显示级别在verbose的情况下，才会显示。
+console.debug("console.debug");
+
+console.warn("console.warn");
+console.error("console.error");
+
+var obj = {
+    a: 1,
+    b: 2
+};
+console.table(obj);//仅针对浏览器环境，node环境没有输出
+
+//count方法用于计数，输出它被调用了多少次。
+//该方法可以接受一个字符串作为参数，作为标签，对执行次数进行分类
+// console.count();
+
+function greet(user) {
+    console.count(user);//node环境 莫名其妙打印了两次
+    console.log('hi ' + user);
+}
+greet('bob');
+greet('alice');
+greet('bob');
+
+console.log(obj);
+console.dir(obj);//node环境 跟log输出一致
+// console.dir(obj, { colors: true });
+//dirxml方法主要用于以目录树的形式，显示 DOM 节点
+console.dirxml(obj);//node环境 无输出
+
+//断言的用法
+// console.assert(false, '判断条件不成立');
+
+//这两个方法用于计时，可以算出一个操作所花费的准确时间
+console.time("Test Time");
+console.timeEnd("Test Time");//node环境 会打出两个时间。。。
+
+//将显示的信息分组。它只在输出大量信息时有用，分在一组的信息，可以用鼠标折叠/展开。
+console.group('一级分组');
+console.log('一级分组的内容');
+
+console.group('二级分组');
+console.log('二级分组的内容');
+
+console.groupEnd(); // 二级分组结束
+console.groupEnd(); // 一级分组结束
+//console.groupCollapsed方法与console.group方法很类似
+
+//打印调用堆栈
+console.log(typeof console.trace());
+//清空打印信息
+console.clear();//node vscode 环境没用
+
+/**
+ * 控制台命令行 API
+ * 
+ * $_属性返回上一个表达式的值
+ * 
+ * $0 - $4 
+ * 控制台保存了最近5个在 Elements 面板选中的 DOM 元素，$0代表倒数第一个（最近一个），
+ * $1代表倒数第二个，以此类推直到$4
+ * 
+ * $(selector)返回第一个匹配的元素，等同于document.querySelector()
+ * 注意，如果页面脚本对$有定义，则会覆盖原始的定义。比如，页面里面有 jQuery，
+ * 控制台执行$(selector)就会采用 jQuery 的实现，返回一个数组
+ * 
+ * $$(selector)返回选中的 DOM 对象，等同于document.querySelectorAll
+ * 
+ * $x(path)方法返回一个数组，包含匹配特定 XPath 表达式的所有 DOM 元素
+ * 
+ * inspect(object)方法打开相关面板，并选中相应的元素，显示它的细节
+ * 
+ * getEventListeners(object)方法返回一个对象，该对象的成员为object登记了回调函数的各种事件
+ * （比如click或keydown），每个事件对应一个数组，数组的成员为该事件的回调函数
+ * 
+ * keys(object)方法返回一个数组，包含object的所有键名。
+ * 
+ * values(object)方法返回一个数组，包含object的所有键值
+ * 
+ * monitorEvents(object[, events])方法监听特定对象上发生的特定事件
+ * 事件发生时，会返回一个Event对象，包含该事件的相关信息。unmonitorEvents方法用于停止监听。
+ * 
+ * 命令行 API 还提供以下方法。
+ * 
+ * clear()：清除控制台的历史。
+ * copy(object)：复制特定 DOM 元素到剪贴板
+ * dir(object)：显示特定对象的所有属性，是console.dir方法的别名
+ * dirxml(object)：显示特定对象的 XML 形式，是console.dirxml方法的别名。
+ */
+
+ /**
+  * debugger语句主要用于除错，作用是设置断点。如果有正在运行的除错工具，
+  * 程序运行到debugger语句时会自动停下。如果没有除错工具，debugger语句不会产生任何结果，
+  * JavaScript 引擎自动跳过这一句。
+  */
 
