@@ -65,10 +65,13 @@ class MobSMS:
         o = urllib2.urlopen(req)
         if o.getcode() == 200:
             j = json.loads(o.read())
-                return j.get("status")
+            return j.get("status")
         return 500
 
 
 if __name__ == '__main__':
     mobsms = MobSMS('1eb63d197f5c7')
+
+    
+
     # print mobsms.verify_sms_code(86, 15000003329)
