@@ -320,3 +320,105 @@ var extend2 = function (to, from) {
 var copy3 = extend2({}, src2);
 copy3.a = 20;
 console.log("对象的拷贝3:", src2.a, copy3.a, copy3);
+
+/**
+ * 控制对象状态
+ * 有时需要冻结对象的读写状态，防止对象被改变。JavaScript 提供了三种冻结方法，
+ * 最弱的一种是Object.preventExtensions，其次是Object.seal，最强的是Object.freeze
+ *      Object.preventExtensions方法可以使得一个对象无法再添加新的属性
+ *      Object.isExtensible方法用于检查一个对象是否使用了Object.preventExtensions方法。
+ *          也就是说，检查是否可以为一个对象添加属性
+ * 
+ *      Object.seal方法使得一个对象既无法添加新属性，也无法删除旧属性
+ *      Object.isSealed方法用于检查一个对象是否使用了Object.seal方法
+ * 
+ *      Object.freeze方法可以使得一个对象无法添加新属性、无法删除旧属性、也无法改变属性的值，使得这个对象实际上变成了常量
+ *      Object.isFrozen方法用于检查一个对象是否使用了Object.freeze方法
+ */
+
+/**
+ * 局限性
+ * 上面的三个方法锁定对象的可写性有一个漏洞：可以通过改变原型对象，来为对象增加属性
+ */
+var obj = new Object();
+Object.preventExtensions(obj);
+
+var proto = Object.getPrototypeOf(obj);
+proto.t = 'hello';
+console.log("改变原型对象，来为对象增加属性", obj.t);
+//一种解决方案是，把obj的原型也冻结住
+
+/**
+ * 另外一个局限是，如果属性值是对象，上面这些方法只能冻结属性指向的对象，而不能冻结对象本身的内容。
+ */
+var obj1 = {
+    foo: 1,
+    bar: ['a', 'b']
+};
+Object.freeze(obj1);
+
+obj1.bar.push('c');
+obj1.bar // ["a", "b", "c"]
+console.log("属性值是对象,无法确保内容不变", obj.t);
+//综上，阻止扩张，密封，冰冻，并不能很好的使用。
+
+/**
+ * Array对象
+ * Array是 JavaScript 的原生对象，同时也是一个构造函数，可以用它生成新的数组
+ * 
+ * var arr = new Array(2);
+ * // 等同于
+ * var arr = Array(2);
+ */
+var arra = new Array(2);
+console.log("arra = ", arra, arra.length)
+
+/*
+    Array构造函数行为多变
+        // 无参数时，返回一个空数组
+        new Array() // []
+
+        // 单个正整数参数，表示返回的新数组的长度
+        new Array(1) // [ empty ]
+        new Array(2) // [ empty x 2 ]
+
+        // 非正整数的数值作为参数，会报错
+        new Array(3.2) // RangeError: Invalid array length
+        new Array(-3) // RangeError: Invalid array length
+
+        // 单个非数值（比如字符串、布尔值、对象等）作为参数，
+        // 则该参数是返回的新数组的成员
+        new Array('abc') // ['abc']
+        new Array([1]) // [Array[1]]
+
+        // 多参数时，所有参数都是返回的新数组的成员
+        new Array(1, 2) // [1, 2]
+        new Array('a', 'b', 'c') // ['a', 'b', 'c']
+
+    可以看到，Array作为构造函数，行为很不一致。因此，不建议使用它生成新数组，直接使用数组字面量是更好的做法
+        // bad
+        var arr = new Array(1, 2);
+        // good
+        var arr = [1, 2];
+
+    注意，如果参数是一个正整数，返回数组的成员都是空位。虽然读取的时候返回undefined，
+    但实际上该位置没有任何值。虽然可以取到length属性，但是取不到键名
+*/
+var a = new Array(3);
+var b = [undefined, undefined, undefined];
+console.log("Array 和 数组字面量创建数组的比较", a.length, b.length, a[0], b[0], 0 in a, 0 in b);
+
+/**
+ * 数组静态方法
+ * 
+ * Array.isArray方法返回一个布尔值，表示参数是否为数组。它可以弥补typeof运算符的不足
+ */
+console.log(typeof a, Array.isArray(a));
+
+/**
+ * 数组实例方法
+ * valueOf()，toString()
+ * valueOf方法是一个所有对象都拥有的方法，表示对该对象求值。不同对象的valueOf方法不尽一致，数组的valueOf方法返回数组本身
+ * toString方法也是对象的通用方法，数组的toString方法返回数组的字符串形式
+ */
+console.log(a.valueOf(),a.toString());

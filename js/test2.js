@@ -409,9 +409,10 @@ console.clear();//node vscode 环境没用
  * dirxml(object)：显示特定对象的 XML 形式，是console.dirxml方法的别名。
  */
 
- /**
-  * debugger语句主要用于除错，作用是设置断点。如果有正在运行的除错工具，
-  * 程序运行到debugger语句时会自动停下。如果没有除错工具，debugger语句不会产生任何结果，
-  * JavaScript 引擎自动跳过这一句。
-  */
+/**
+ * debugger语句主要用于除错，作用是设置断点。如果有正在运行的除错工具，
+ * 程序运行到debugger语句时会自动停下。如果没有除错工具，debugger语句不会产生任何结果，
+ * JavaScript 引擎自动跳过这一句。
+ */
+debugger//程序运行到这里自动停住
 
