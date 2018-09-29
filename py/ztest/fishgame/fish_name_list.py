@@ -210,7 +210,7 @@ if __name__ == '__main__':
     # C++文件列表
     # file_helper.Diskwalk("D:/glp/GitHub/LongConnectionTCP/src/Classes/app",False).walk(optionCPP);
     # 平台 图片文件
-    file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/platform").walk(optionJSRes1);
+    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/platform").walk(optionJSRes1);
     # 音频文件
     # file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
     # 捕鱼 游动plist文件

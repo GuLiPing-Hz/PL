@@ -267,7 +267,7 @@ var obj3 = Object.defineProperty({}, 'p', {
 });
 
 console.log(obj3.p); // "getter"
-obj3.p = 123 // "setter: 123"
+obj3.p = 123; // "setter: 123"
 
 // JavaScript 还提供了存取器的另一种写法。
 var obj4 = {//这个写法跟obj3是等价的
@@ -358,7 +358,7 @@ var obj1 = {
 Object.freeze(obj1);
 
 obj1.bar.push('c');
-obj1.bar // ["a", "b", "c"]
+// obj1.bar // ["a", "b", "c"]
 console.log("属性值是对象,无法确保内容不变", obj.t);
 //综上，阻止扩张，密封，冰冻，并不能很好的使用。
 
@@ -371,7 +371,7 @@ console.log("属性值是对象,无法确保内容不变", obj.t);
  * var arr = Array(2);
  */
 var arra = new Array(2);
-console.log("arra = ", arra, arra.length)
+console.log("arra = ", arra, arra.length);
 
 /*
     Array构造函数行为多变
@@ -421,4 +421,93 @@ console.log(typeof a, Array.isArray(a));
  * valueOf方法是一个所有对象都拥有的方法，表示对该对象求值。不同对象的valueOf方法不尽一致，数组的valueOf方法返回数组本身
  * toString方法也是对象的通用方法，数组的toString方法返回数组的字符串形式
  */
-console.log(a.valueOf(),a.toString());
+console.log(a.valueOf(), a.toString());
+
+// push方法用于在数组的末端添加一个或多个元素，并返回添加新元素后的数组长度。注意，该方法会改变原数组
+// pop方法用于删除数组的最后一个元素，并返回该元素。注意，该方法会改变原数组。
+var c = [1, 2, 3];
+console.log("push c=", c.push(4, 5), c);
+console.log("pop c=", c.pop(), c);
+// 对空数组使用pop方法，不会报错，而是返回undefined
+console.log("pop 空数组", [].pop());
+//push和pop结合使用，就构成了“后进先出”的栈结构（stack）
+
+// shift方法用于删除数组的第一个元素，并返回该元素。注意，该方法会改变原数组
+console.log("shift c=", c.shift(), c);
+//push和shift结合使用，就构成了“先进先出”的队列结构（queue）
+
+// unshift 方法用于在数组的第一个位置添加元素，并返回添加新元素后的数组长度。注意，该方法会改变原数组
+console.log("unshift c=", c.unshift(6), c);
+
+// join方法以指定参数作为分隔符，将所有数组成员连接为一个字符串返回。如果不提供参数，默认用逗号分隔
+// 如果数组成员是undefined或null或空位，会被转成空字符串
+console.log("join c=", c.join(), c.join("!"));
+
+// 通过call方法，这个方法也可以用于字符串或类似数组的对象
+console.log("call方法", Array.prototype.join.call("Hello", "#"));
+var obj = { 0: 'a', 1: 'b', length: 2 };
+console.log("call方法", Array.prototype.join.call(obj, '-'));
+
+// concat方法用于多个数组的合并。它将新数组的成员，添加到原数组成员的后部，然后返回一个新数组，原数组不变
+var d = [7, 8]
+console.log("concat", c.concat(d), c, d, d.concat(9, 10, 11));
+
+// 如果数组成员包括对象，concat方法返回当前数组的一个浅拷贝。所谓“浅拷贝”，指的是新数组拷贝的是对象的引用
+var obj = { a: 1 };
+var oldArray = [obj];
+var newArray = oldArray.concat();
+obj.a = 2;
+console.log("concat 浅拷贝", obj.a, newArray[0].a);
+
+// reverse方法用于颠倒排列数组元素，返回改变后的数组。注意，该方法将改变原数组
+console.log("reverse " + d, d.reverse(), d);
+
+// slice方法用于提取目标数组的一部分，返回一个新数组，原数组不变
+// slice方法的一个重要应用，是将类似数组的对象转为真正的数组
+var e = ['a', 'b', { a: 1 }];
+var e2 = e.slice();
+e[2].a = 2;
+console.log("\nslice", e.slice(0), e.slice(1), e.slice(1, 2), e.slice(2, 6), e[2].a, e2[2].a);
+// 最后一个例子slice没有参数，实际上等于返回一个原数组的拷贝(浅拷贝)
+
+// splice方法用于删除原数组的一部分成员，并可以在删除的位置添加新的数组成员，
+// 返回值是被删除的元素。注意，该方法会改变原数组
+// arr.splice(start, count, addElement1, addElement2, ...);
+// splice的第一个参数是删除的起始位置（从0开始），第二个参数是被删除的元素个数。
+// 如果后面还有更多的参数，则表示这些就是要被插入数组的新元素
+console.log("splice " + c, c.splice(1, 2), c);
+var f = [10, 20, 30, 40, 50, 60];
+// 如果只是单纯地插入元素，splice方法的第二个参数可以设为0
+console.log("splice 单纯插入", f.splice(3, 0, 70));
+// 如果只提供第一个参数，等同于将原数组在指定位置拆分成两个数组
+console.log("splice 拆分两个", f.splice(3), f);
+
+// sort方法对数组成员进行排序，默认是按照字典顺序排序。排序后，原数组将被改变
+// sort方法不是按照大小排序，而是按照字典顺序。
+// 也就是说，数值会被先转成字符串，再按照字典顺序进行比较，所以101排在11的前面
+console.log("sort", f.sort(function (a, b) { return b - a; }));
+
+// map方法将数组的所有成员依次传入参数函数，然后把每一次的执行结果组成一个新数组返回
+console.log("map " + f, f.map(function (v, i, arra) { return v ** 2; }), f);//原数组没有变化
+// map方法还可以接受第二个参数，用来绑定回调函数内部的this变量
+// 如果数组有空位，map方法的回调函数在这个位置不会执行，会跳过数组的空位
+
+// forEach方法与map方法很相似，也是对数组的所有成员依次执行参数函数。
+// 但是，forEach方法不返回值，只用来操作数据。
+// 这就是说，如果数组遍历的目的是为了得到返回值，那么使用map方法，否则使用forEach方法
+console.log("forEach", f.forEach(function (v, i, arra) { v = arra[i] + i; console.log("forEach1", v) }), f);
+// forEach方法也可以接受第二个参数，绑定参数函数的this变量
+// 注意，forEach方法无法中断执行，总是会将所有成员遍历完。如果希望符合某种条件时，就中断遍历，要使用for循环
+// forEach方法也会跳过数组的空位(跟map函数一样)
+
+// filter方法用于过滤数组成员，满足条件的成员组成一个新数组返回
+console.log("filter " + f, f.filter(function (v, i, arra) { return i <= 1; }));
+// filter方法还可以接受第二个参数，用来绑定参数函数内部的this变量
+
+// some方法是只要一个成员的返回值是true，则整个some方法的返回值就是true，否则返回false
+// every方法是所有成员的返回值都是true，整个every方法才返回true，否则返回false
+// 注意，对于空数组，some方法返回false，every方法返回true，回调函数都不会执行
+// some和every方法还可以接受第二个参数，用来绑定参数函数内部的this变量
+console.log("some and every", f.some(function (v, i, arra) { return v > 20 })
+    , f.every(function (v, i, arra) { return v > 20 }));
+

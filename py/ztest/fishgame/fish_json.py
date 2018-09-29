@@ -374,6 +374,22 @@ def ParseCCSImage(json_content, str_parent, cur_cnt, ret_cnt):
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt)
 
 
+# def ParseCCSLabel(json_content, str_parent, cur_cnt, ret_cnt):
+#     name = getJsonPropName(json_content["Name"],str_parent);
+
+#     ;
+#         ui.setTextColor(color || cc.color("#ffffff"));
+#         ui.setSystemFontName(res.default_font);
+#         ui.setSystemFontSize(fsize || 36);
+#         ui.setAnchorPoint(anchor || cc.p(0.5, 0.5));
+#         ui.setPosition(pos || cc.p(0, 0));
+#         ui.setString(text || "");
+
+#         if (parent)
+#             parent.addChild(ui);
+
+#         return ui
+
 """
     "IsCustomSize": true,
     "FontSize": 30,
@@ -385,7 +401,15 @@ def ParseCCSImage(json_content, str_parent, cur_cnt, ret_cnt):
 
 def ParseCCSText(json_content, str_parent, cur_cnt, ret_cnt):
     name = getJsonPropName(json_content["Name"],str_parent);
-    printSpace8(ret_cnt,"var "+name+" = new ccui.Text();")
+
+    isLabel = False
+    if(name.startswith("label_")):
+        isLabel = True
+        printSpace8(ret_cnt,"var "+name+" = new cc.Label();")
+    else:
+        printSpace8(ret_cnt,"var "+name+" = new ccui.Text();")
+
+    
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
     if(name.endswith("_use")):
@@ -395,37 +419,54 @@ def ParseCCSText(json_content, str_parent, cur_cnt, ret_cnt):
         cur_cnt += 1
         printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
 
-    printSpace8(ret_cnt,name+".setFontName(res.default_font);")
+    if(isLabel):
+        printSpace8(ret_cnt,name+".setSystemFontName(res.default_font);")
+    else:
+        printSpace8(ret_cnt,name+".setFontName(res.default_font);")
     if("IsCustomSize" in json_content):
-        printSpace8(ret_cnt,name+".ignoreContentAdaptWithSize(false);")
-
         json_size = json_content["Size"]
-        printSpace8(ret_cnt,name+".setTextAreaSize(cc.size(" +
-                    str(json_size["X"])+", "+str(json_size["Y"])+"));")
+        if(isLabel):
+            # printSpace8(ret_cnt,name+".setMaxLineWidth("+str(json_size["X"])+");")
+            printSpace8(ret_cnt,name+".setWidth("+str(json_size["X"])+");")
+            printSpace8(ret_cnt,name+".setHeight("+str(json_size["Y"])+");")
+        else:
+            printSpace8(ret_cnt,name+".ignoreContentAdaptWithSize(false);")
+            printSpace8(ret_cnt,name+".setTextAreaSize(cc.size(" +str(json_size["X"])+", "+str(json_size["Y"])+"));")
     if("FontSize" in json_content):
-        printSpace8(ret_cnt,name+".setFontSize("+str(json_content["FontSize"])+");")
+        if(isLabel):
+            printSpace8(ret_cnt,name+".setSystemFontSize("+str(json_content["FontSize"])+");")
+        else:
+            printSpace8(ret_cnt,name+".setFontSize("+str(json_content["FontSize"])+");")
     if("LabelText" in json_content):
         printSpace8(ret_cnt,name+".setString("+repr(json_content["LabelText"])+");")
 
     if("HorizontalAlignmentType" in json_content):
         horizontal_align = json_content["HorizontalAlignmentType"]
         if(horizontal_align == "HT_Center"):
-            printSpace8(ret_cnt,
-                name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);")
+            if(isLabel):
+                printSpace8(ret_cnt,name+".setHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);")
+            else:
+                printSpace8(ret_cnt,name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_CENTER);")
         elif(horizontal_align == "HT_Right"):
-            printSpace8(ret_cnt,
-                name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_RIGHT);")
+            if(isLabel):
+                printSpace8(ret_cnt,name+".setHorizontalAlignment(cc.TEXT_ALIGNMENT_RIGHT);")
+            else:
+                printSpace8(ret_cnt,name+".setTextHorizontalAlignment(cc.TEXT_ALIGNMENT_RIGHT);")
 
     if("VerticalAlignmentType" in json_content):
         vertical_align = json_content["VerticalAlignmentType"]
         if(vertical_align == "VT_Center"):
-            printSpace8(ret_cnt,
-                name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);")
+            if(isLabel):
+                printSpace8(ret_cnt,name+".setVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);")
+            else:
+                printSpace8(ret_cnt,name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_CENTER);")
         elif(vertical_align == "VT_Bottom"):
-            printSpace8(ret_cnt,
-                name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);")
+            if(isLabel):
+                printSpace8(ret_cnt,name+".setVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);")
+            else:
+                printSpace8(ret_cnt,name+".setTextVerticalAlignment(cc.VERTICAL_TEXT_ALIGNMENT_BOTTOM);")
 
-    if("TouchEnable" in json_content):
+    if(isLabel and "TouchEnable" in json_content):
         printSpace8(ret_cnt,name+".setTouchEnabled(true);")
 
     if "ShadowEnabled" in json_content:
