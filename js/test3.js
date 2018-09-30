@@ -421,7 +421,7 @@ console.log(typeof a, Array.isArray(a));
  * valueOf方法是一个所有对象都拥有的方法，表示对该对象求值。不同对象的valueOf方法不尽一致，数组的valueOf方法返回数组本身
  * toString方法也是对象的通用方法，数组的toString方法返回数组的字符串形式
  */
-console.log(a.valueOf(), a.toString());
+console.log("valueOf,toString", a.valueOf(), a.toString());
 
 // push方法用于在数组的末端添加一个或多个元素，并返回添加新元素后的数组长度。注意，该方法会改变原数组
 // pop方法用于删除数组的最后一个元素，并返回该元素。注意，该方法会改变原数组。
@@ -510,4 +510,102 @@ console.log("filter " + f, f.filter(function (v, i, arra) { return i <= 1; }));
 // some和every方法还可以接受第二个参数，用来绑定参数函数内部的this变量
 console.log("some and every", f.some(function (v, i, arra) { return v > 20 })
     , f.every(function (v, i, arra) { return v > 20 }));
+
+/**
+ * reduce方法和reduceRight方法依次处理数组的每个成员，最终累计为一个值。它们的差别是，
+ * reduce是从左到右处理（从第一个成员到最后一个成员），reduceRight则是从右到左（从最后一个成员到第一个成员），
+ * 其他完全一样
+ */
+console.log("reduce =", [1, 2, 3, 4].reduce(function (累积变量, 当前变量, 当前位置, 原数组) {
+    return 累积变量 ** 当前变量;
+}));
+console.log("reduceRight =", [1, 2, 3, 4].reduceRight(function (累积变量, 当前变量, 当前位置, 原数组) {
+    return 累积变量 ** 当前变量;
+}));
+// 如果要对累积变量指定初值，可以把它放在reduce方法和reduceRight方法的第二个参数
+// 由于空数组取不到初始值，reduce方法会报错。这时，加上第二个参数，就能保证总是会返回一个值
+console.log("reduce2 =", [].reduce(function (累积变量, 当前变量, 当前位置, 原数组) {
+    console.log("reduce2 function", 累积变量, 当前变量, typeof 当前变量);//空数组这里不会执行
+    return 累积变量 ** 当前变量;
+}, 1));//不加入第二个值会报错
+
+// indexOf方法返回给定元素在数组中第一次出现的位置，如果没有出现则返回-1
+// indexOf方法还可以接受第二个参数，表示搜索的开始位置
+// lastIndexOf方法返回给定元素在数组中最后一次出现的位置，如果没有出现则返回-1
+// 注意，这两个方法不能用来搜索NaN的位置，即它们无法确定数组成员是否包含NaN 判断是由严格相等
+var g = [1, 2, 3, '4', 5, NaN];
+console.log("indexOf", g.indexOf(4), g.indexOf(2), g.indexOf(1, 3), g.indexOf(NaN));
+console.log("lastIndexOf", g.lastIndexOf(4), g.lastIndexOf(1), g.lastIndexOf(1, 3));
+
+/**
+ * 包装对象
+ */
+// 所谓“包装对象”，就是分别与数值、字符串、布尔值相对应的Number、String、Boolean三个原生对象。
+// 这三个原生对象可以把原始类型的值变成（包装成）对象
+// Number、String和Boolean如果不作为构造函数调用（即调用时不加new），
+// 常常用于将任意类型的值转为数值、字符串和布尔值
+var objNum = new Number(1);//使用new创建一个对象
+var objNum1 = Number("1");//如果不是用new，常常用于数值转换
+var objStr = new String("2");
+var objBoolean = new Boolean(true);
+console.log("包装对象", typeof objNum, typeof objNum1, typeof objStr, typeof objBoolean);
+// 包装对象的最大目的，首先是使得 JavaScript 的对象涵盖所有的值，其次使得原始类型的值可以方便地调用某些方法
+// 包装对象都有valueOf 和 toString
+
+// 原始类型与实例对象的自动转换
+// 原始类型的值，可以自动当作包装对象调用，即调用包装对象的属性和方法。
+// 这时，JavaScript 引擎会自动将原始类型的值转为包装对象实例，在使用后立刻销毁实例
+console.log('"abc".length =', "abc".length);//自动转对象调用length方法,用完销毁
+// 自动转换生成的包装对象是只读的，无法修改。所以，字符串无法添加新属性
+var str = "123";
+str.x = 1;
+console.log("字符串自动包装对象只读", str.x);
+
+// 除了原生的实例方法，包装对象还可以自定义方法和属性，供原始类型的值直接调用
+String.prototype.double = function () {
+    return this.valueOf() + this.valueOf();
+}
+Number.prototype.double = function () {
+    return this.valueOf() + this.valueOf();
+}
+console.log("自定义方法", "123".double(), (123).double());//数字必须加括号才能调用
+
+//Boolean对象
+console.log("Booean 对象", !!new Boolean(false), !!new Boolean(false).valueOf(), Boolean(false));//false转换成对象判断为true
+
+//Number对象
+console.log("Number 对象", Number(true));
+console.log("Number 静态属性", Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY
+    , Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+// toString方法可以接受一个参数，表示输出的进制
+console.log("Number toString", Number.prototype.toString.call(10, 2));//默认十进制
+// toString方法只能将十进制的数，转为其他进制的字符串。如果要将其他进制的数，转回十进制，需要使用parseInt方法
+// toFixed方法的参数为小数位数，有效范围为0到20，超出这个范围将抛出 RangeError 错误
+console.log("Number toFixed 1", Number.prototype.toFixed.call(4.554, 2));//保留两位有效数字
+console.log("Number toFixed 2", Number.prototype.toFixed.call(4.555, 2));//保留两位有效数字
+console.log("Number toFixed 3", Number.prototype.toFixed.call(4.556, 2));//保留两位有效数字
+console.log("Number toExponential", Number.prototype.toExponential.call(4.556, 1));//转为科学计数，保留有效数字1位
+// toPrecision方法的参数为有效数字的位数，范围是1到21，超出这个范围会抛出 RangeError 错误。
+// toPrecision方法用于四舍五入时不太可靠，跟浮点数不是精确储存有关
+console.log("Number toPrecision", Number.prototype.toPrecision.call(174.556, 1));//转为指定位数的有效数字，保留有效数字1位
+// 与其他对象一样，Number.prototype对象上面可以自定义方法，被Number的实例继承
+
+//String对象
+console.log("String对象", typeof "abcd", typeof new String("abcd"));
+console.log("String对象 String.fromCharCode()", String.fromCharCode(48), String.fromCharCode(97));
+// 注意，该方法不支持 Unicode 码点大于0xFFFF的字符，即传入的参数不能大于0xFFFF（即十进制的 65535）
+// 这种现象的根本原因在于，码点大于0xFFFF的字符占用四个字节，而 JavaScript 默认支持两个字节的字符。
+// 这种情况下，必须把0x20BB7拆成两个字符表示。
+// 0x20BB7
+console.log("0x20BB7=", String.fromCharCode(0x20BB7), String.fromCharCode(0x20BB7) === String.fromCharCode(0x0BB7)
+    , String.fromCharCode(0xD842, 0xDFB7));
+
+var str = "123";
+// 如果没有任何参数，charCodeAt返回首字符的 Unicode 码点
+console.log("String对象 实例方法 ", str.length, str.charAt(0), str.charCodeAt(0), str.charCodeAt(), str.charCodeAt(-1));
+// 注意，charCodeAt方法返回的 Unicode 码点不会大于65536（0xFFFF），
+// 也就是说，只返回两个字节的字符的码点。如果遇到码点大于 65536 的字符（四个字节的字符），
+// 必需连续使用两次charCodeAt，不仅读入charCodeAt(i)，还要读入charCodeAt(i+1)，
+// 将两个值放在一起，才能得到准确的字符
+console.log("中文长度", "中文".length, "ab".length, "中".charCodeAt(), String.fromCharCode(20013));
 
