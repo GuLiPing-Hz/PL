@@ -591,6 +591,7 @@ console.log("Number toPrecision", Number.prototype.toPrecision.call(174.556, 1))
 // 与其他对象一样，Number.prototype对象上面可以自定义方法，被Number的实例继承
 
 //String对象
+//静态方法String.fromCharCode
 console.log("String对象", typeof "abcd", typeof new String("abcd"));
 console.log("String对象 String.fromCharCode()", String.fromCharCode(48), String.fromCharCode(97));
 // 注意，该方法不支持 Unicode 码点大于0xFFFF的字符，即传入的参数不能大于0xFFFF（即十进制的 65535）
@@ -600,6 +601,23 @@ console.log("String对象 String.fromCharCode()", String.fromCharCode(48), Strin
 console.log("0x20BB7=", String.fromCharCode(0x20BB7), String.fromCharCode(0x20BB7) === String.fromCharCode(0x0BB7)
     , String.fromCharCode(0xD842, 0xDFB7));
 
+//实例属性
+// String.prototype.length
+/*实例方法
+String.prototype.charAt()
+String.prototype.charCodeAt()
+String.prototype.concat()
+String.prototype.slice()
+String.prototype.substring()
+String.prototype.substr()
+String.prototype.indexOf()，String.prototype.lastIndexOf()
+String.prototype.trim()
+String.prototype.toLowerCase()，String.prototype.toUpperCase()
+String.prototype.match()
+String.prototype.search()，String.prototype.replace()
+String.prototype.split()
+String.prototype.localeCompare()
+ */
 var str = "123";
 // 如果没有任何参数，charCodeAt返回首字符的 Unicode 码点
 console.log("String对象 实例方法 ", str.length, str.charAt(0), str.charCodeAt(0), str.charCodeAt(), str.charCodeAt(-1));
@@ -608,4 +626,326 @@ console.log("String对象 实例方法 ", str.length, str.charAt(0), str.charCod
 // 必需连续使用两次charCodeAt，不仅读入charCodeAt(i)，还要读入charCodeAt(i+1)，
 // 将两个值放在一起，才能得到准确的字符
 console.log("中文长度", "中文".length, "ab".length, "中".charCodeAt(), String.fromCharCode(20013));
+console.log("concat", str.concat("456", 7), str);//不改变源字符串
+console.log("slice", str.slice(1, 7), str);//不改变源字符串
+console.log("substring", str.substring(1, 2), str);//不改变源字符串
+// 如果参数是负数，substring方法会自动将负数转为0
+// 由于第二个参数小于第一个参数，会自动互换位置
+// 由于这些规则违反直觉，因此不建议使用substring方法，应该优先使用slice
 
+console.log("substr", str.substr(1, 1), str);//不改变源字符串
+// 如果第一个参数是负数，表示倒数计算的字符位置。如果第二个参数是负数，将被自动转为0，因此会返回空字符串
+
+console.log("indexOf", str.indexOf(1, 1), str.indexOf(1, 0), str);//不改变源字符串
+console.log("lastIndexOf", str.lastIndexOf(1, 1), str.lastIndexOf(1, 0), str);//不改变源字符串
+var str2 = " 空格 ]";
+console.log("trim", str2.trim(), str2);//不改变源字符串
+// 该方法去除的不仅是空格，还包括制表符（\t、\v）、换行符（\n）和回车符（\r）
+
+str += "aBc";
+console.log("toLowerCase", str.toLowerCase(), str);//不改变源字符串
+console.log("toUpperCase", str.toUpperCase(), str);//不改变源字符串
+
+var str3 = 'cat, bat, sat, fat2' // ["at"]
+var matchs = str3.match("at")
+//返回的数组还有index属性和input属性，分别表示匹配字符串开始的位置和原始字符串
+console.log("match", matchs, matchs.input, matchs.index, str3.match("atx"), str3);
+console.log("search", str3.search("at"), str3);
+console.log("replace", str3.replace("at", "et"), str3);//默认只替换第一个
+
+console.log("split", str3.split(","), str3);
+console.log("localeCompare", 'apple'.localeCompare('banana'), 'B'.localeCompare('a')
+    , 'a'.localeCompare('a'), 'A'.localeCompare('a'));
+// 该方法的最大特点，就是会考虑自然语言的顺序。举例来说，正常情况下，大写的英文字母小于小写字母
+// localeCompare还可以有第二个参数，指定所使用的语言（默认是英语），然后根据该语言的规则进行比较
+
+//Math对象
+/*
+Math.E：常数e。
+Math.LN2：2 的自然对数。
+Math.LN10：10 的自然对数。
+Math.LOG2E：以 2 为底的e的对数。
+Math.LOG10E：以 10 为底的e的对数。
+Math.PI：常数π。
+Math.SQRT1_2：0.5 的平方根。
+Math.SQRT2：2 的平方根。
+
+Math对象提供以下一些静态方法。
+Math.abs()：绝对值
+Math.ceil()：向上取整
+Math.floor()：向下取整
+Math.max()：最大值
+Math.min()：最小值
+Math.pow()：指数运算
+Math.sqrt()：平方根
+Math.log()：自然对数
+Math.exp()：e的指数
+Math.round()：四舍五入
+Math.random()：随机数
+
+Math.sin()：返回参数的正弦（参数为弧度值）
+Math.cos()：返回参数的余弦（参数为弧度值）
+Math.tan()：返回参数的正切（参数为弧度值）
+Math.asin()：返回参数的反正弦（返回值为弧度值）
+Math.acos()：返回参数的反余弦（返回值为弧度值）
+Math.atan()：返回参数的反正切（返回值为弧度值）
+*/
+
+// Date 对象
+// 它以1970年1月1日00:00:00作为时间的零点，可以表示的时间范围是前后各1亿天（单位为毫秒）
+console.log("Date", Date(), Date(2000, 1, 1));
+// 注意，即使带有参数，Date作为普通函数使用时，返回的还是当前时间
+/*
+年：使用四位数年份，比如2000。如果写成两位数或个位数，则加上1900，即10代表1910年。如果是负数，表示公元前。
+月：0表示一月，依次类推，11表示12月。
+日：1到31。
+小时：0到23。
+分钟：0到59。
+秒：0到59
+毫秒：0到999。
+*/
+console.log("new Date", new Date(2013, 0, 1, 0, 0, 0, 0), new Date(2013, 15));
+// 注意，月份从0开始计算，但是，天数从1开始计算。另外，除了日期的默认值为1，小时、分钟、秒钟和毫秒的默认值都是0
+// 这些参数如果超出了正常范围，会被自动折算。比如，如果月设为15，就折算为下一年的4月
+
+// 两个日期实例对象进行减法运算时，返回的是它们间隔的毫秒数；进行加法运算时，返回的是两个字符串连接而成的新字符串
+console.log("now", Date.now());
+console.log("parse", Date.parse('Aug 9, 1995'));
+console.log("parse", Date.parse('January 26, 2011 13:51:50'));
+console.log("parse", Date.parse('Mon, 25 Dec 1995 13:30:00 GMT'));
+console.log("parse", Date.parse('Mon, 25 Dec 1995 13:30:00 +0430'));
+console.log("parse", Date.parse('2011-10-10'));
+console.log("parse", Date.parse('2011-10-10T14:48:00'), Date.parse("xxx"), Date.UTC(2011, 0, 1, 2, 3, 4, 567));
+// YYYY-MM-DDTHH:mm:ss.sssZ 其中最后的Z表示时区
+
+/*
+Date的实例对象，有几十个自己的方法，除了valueOf和toString，可以分为以下三类。
+to类：从Date对象返回一个字符串，表示指定的时间。
+get类：获取Date对象的日期和时间。
+set类：设置Date对象的日期和时间
+
+toString 返回一个完整的日期字符串
+toUTCString 返回对应的 UTC 时间，也就是比北京时间晚8个小时
+toISOString 返回对应时间的 ISO8601 写法
+toJSON 返回一个符合 JSON 格式的 ISO 日期字符串，与toISOString方法的返回结果完全相同
+toDateString 返回日期字符串（不含小时、分和秒）
+toTimeString 返回时间字符串（不含年月日）
+
+本地时间的字符串。
+Date.prototype.toLocaleString()：完整的本地时间。
+Date.prototype.toLocaleDateString()：本地日期（不含小时、分和秒）。
+Date.prototype.toLocaleTimeString()：本地时间（不含年月日）
+
+getTime()：返回实例距离1970年1月1日00:00:00的毫秒数，等同于valueOf方法。
+getDate()：返回实例对象对应每个月的几号（从1开始）。
+getDay()：返回星期几，星期日为0，星期一为1，以此类推。
+getYear()：返回距离1900的年数。
+getFullYear()：返回四位的年份。
+getMonth()：返回月份（0表示1月，11表示12月）。
+getHours()：返回小时（0-23）。
+getMilliseconds()：返回毫秒（0-999）。
+getMinutes()：返回分钟（0-59）。
+getSeconds()：返回秒（0-59）。
+getTimezoneOffset()：返回当前时间与 UTC 的时区差异，以分钟表示，返回结果考虑到了夏令时因素。
+    分钟和秒：0 到 59
+    小时：0 到 23
+    星期：0（星期天）到 6（星期六）
+    日期：1 到 31
+    月份：0（一月）到 11（十二月）
+    年份：距离1900年的年数
+
+//UTC版本
+getUTCDate()
+getUTCFullYear()
+getUTCMonth()
+getUTCDay()
+getUTCHours()
+getUTCMinutes()
+getUTCSeconds()
+getUTCMilliseconds()
+
+setDate(date)：设置实例对象对应的每个月的几号（1-31），返回改变后毫秒时间戳。
+setYear(year): 设置距离1900年的年数。
+setFullYear(year [, month, date])：设置四位年份。
+setHours(hour [, min, sec, ms])：设置小时（0-23）。
+setMilliseconds()：设置毫秒（0-999）。
+setMinutes(min [, sec, ms])：设置分钟（0-59）。
+setMonth(month [, date])：设置月份（0-11）。
+setSeconds(sec [, ms])：设置秒（0-59）。
+setTime(milliseconds)：设置毫秒时间戳
+
+//UTC版本
+setUTCDate()
+setUTCFullYear()
+setUTCHours()
+setUTCMilliseconds()
+setUTCMinutes()
+setUTCMonth()
+setUTCSeconds()
+*/
+
+// RegExp 对象
+// 新建正则表达式有两种方法。一种是使用字面量，以斜杠表示开始和结束。
+// var regex = /xyz/;
+// 另一种是使用RegExp构造函数。
+// var regex = new RegExp('xyz');
+// 前者的效率较高。而且，前者比较便利和直观，所以实际应用中，基本上都采用字面量定义正则表达式
+
+// 一类是修饰符相关，返回一个布尔值，表示对应的修饰符是否设置。
+// RegExp.prototype.ignoreCase：返回一个布尔值，表示是否设置了i修饰符。
+// RegExp.prototype.global：返回一个布尔值，表示是否设置了g修饰符。
+// RegExp.prototype.multiline：返回一个布尔值，表示是否设置了m修饰符
+// RegExp.prototype.lastIndex：返回一个整数，表示下一次开始搜索的位置。该属性可读写，但是只在进行连续搜索时有意义，详细介绍请看后文。
+// RegExp.prototype.source：返回正则表达式的字符串形式（不包括反斜杠），该属性只读。
+// RegExp.prototype.test() 正则实例对象的test方法返回一个布尔值，表示当前模式是否能匹配参数字符串
+// 如果正则表达式带有g修饰符，则每一次test方法都从上一次结束的位置开始向后匹配
+// 带有g修饰符时，可以通过正则对象的lastIndex属性指定开始搜索的位置
+// 如果正则模式是一个空字符串，则匹配所有字符串
+// RegExp.prototype.exec()
+var s = '_x_x';
+var r1 = /x/;
+var r2 = /y/;
+console.log("exec", r1.exec(s), r2.exec(s), /_(x)/.exec(s));
+// 如果正则表示式包含圆括号（即含有“组匹配”），则返回的数组会包括多个成员。
+// 第一个成员是整个匹配成功的结果，后面的成员就是圆括号对应的匹配成功的组。
+// 也就是说，第二个成员对应第一个括号，第三个成员对应第二个括号，以此类推。整个数组的length属性等于组匹配的数量再加1
+// 结果带属性 
+// input：整个原字符串。
+// index：整个模式匹配成功的开始位置（从0开始计数）
+
+// 正则实例对象的lastIndex属性不仅可读，还可写。设置了g修饰符的时候，只要手动设置了lastIndex的值，就会从指定位置开始匹配
+
+var s = 'abba';
+var r = /a/g;
+console.log("字符串match和exec", s.match(r), r.exec(s));//match会一次性返回所有匹配成功的结果
+
+/*
+replace方法的第二个参数可以使用美元符号$，用来指代所替换的内容。
+$&：匹配的子字符串。
+$`：匹配结果前面的文本。
+$'：匹配结果后面的文本。
+$n：匹配成功的第n组内容，n是从1开始的自然数。
+$$：指代美元符号$。
+*/
+console.log("replace", 'hello world'.replace(/(\w+)\s(\w+)/, '$2 $1'), 'abc'.replace('b', '[$`-$&-$\']'));
+// replace方法的第二个参数还可以是一个函数，将每一个匹配内容替换为函数返回值
+console.log("replace", '3 and 5'.replace(/[0-9]+/g, function (match, pos, src) {
+    console.log("function", match, "|", pos, "|", src);
+    return 2 * match;
+}));
+// 作为replace方法第二个参数的替换函数，可以接受多个参数。
+// 其中，第一个参数是捕捉到的内容，第二个参数是捕捉到的组匹配（有多少个组匹配，就有多少个对应的参数）。
+// 组匹配需要用小括号()
+// 此外，最后还可以添加两个参数，倒数第二个参数是捕捉到的内容在整个字符串中的位置（比如从第五个位置开始），
+// 最后一个参数是原字符串
+
+// String.prototype.split()
+// 字符串对象的split方法按照正则规则分割字符串，返回一个由分割后的各个部分组成的数组。
+
+// 匹配规则
+/*
+字面量字符和元字符
+    1）点字符（.)
+        匹配除回车（\r）、换行(\n) 、行分隔符（\u2028）和段分隔符（\u2029）以外的所有字符。
+        注意，对于码点大于0xFFFF字符，点字符不能正确匹配，会认为这是两个字符
+    2）位置字符
+        位置字符用来提示字符所处的位置，主要有两个字符。
+        ^ 表示字符串的开始位置
+        $ 表示字符串的结束位置
+    3）选择符（|）
+        竖线符号（|）在正则表达式中表示“或关系”（OR），即cat|dog表示匹配cat或dog
+
+转义符
+    正则表达式中那些有特殊含义的元字符，如果要匹配它们本身，就需要在它们前面要加上反斜杠。比如要匹配+，就要写成\+
+
+特殊字符
+    正则表达式对一些不能打印的特殊字符，提供了表达方法。
+    \cX 表示Ctrl-[X]，其中的X是A-Z之中任一个英文字母，用来匹配控制字符。
+    [\b] 匹配退格键(U+0008)，不要与\b混淆。
+    \n 匹配换行键。
+    \r 匹配回车键。
+    \t 匹配制表符 tab（U+0009）。
+    \v 匹配垂直制表符（U+000B）。
+    \f 匹配换页符（U+000C）。
+    \0 匹配null字符（U+0000）。
+    \xhh 匹配一个以两位十六进制数（\x00-\xFF）表示的字符。
+    \uhhhh 匹配一个以四位十六进制数（\u0000-\uFFFF）表示的 Unicode 字符
+
+字符类
+    所有可供选择的字符都放在方括号内，比如[xyz] 表示x、y、z之中任选一个匹配
+    字符类（class）表示有一系列字符可供选择，只要匹配其中一个就可以了。
+
+    1）脱字符（^）
+        如果方括号内的第一个字符是[^]，则表示除了字符类之中的字符，其他字符都可以匹配。
+        比如，[^xyz]表示除了x、y、z之外都可以匹配
+    2）连字符（-）
+        某些情况下，对于连续序列的字符，连字符（-）用来提供简写形式，表示字符的连续范围。
+        比如，[abc]可以写成[a-c]，[0123456789]可以写成[0-9]，同理[A-Z]表示26个大写字母
+
+预定义模式
+    预定义模式指的是某些常见模式的简写方式。
+    \d 匹配0-9之间的任一数字，相当于[0-9]。
+    \D 匹配所有0-9以外的字符，相当于[^0-9]。
+    \w 匹配任意的字母、数字和下划线，相当于[A-Za-z0-9_]。
+    \W 除所有字母、数字和下划线以外的字符，相当于[^A-Za-z0-9_]。
+    \s 匹配空格（包括换行符、制表符、空格符等），相等于[ \t\r\n\v\f]。
+    \S 匹配非空格的字符，相当于[^ \t\r\n\v\f]。
+    \b 匹配词的边界。
+    \B 匹配非词边界，即在词的内部
+
+重复类
+    模式的精确匹配次数，使用大括号（{}）表示。{n}表示恰好重复n次，{n,}表示至少重复n次，{n,m}表示重复不少于n次，不多于m次
+
+量词符
+    量词符用来设定某个模式出现的次数。
+    ? 问号表示某个模式出现0次或1次，等同于{0, 1}。
+    * 星号表示某个模式出现0次或多次，等同于{0,}。
+    + 加号表示某个模式出现1次或多次，等同于{1,}
+
+贪婪模式
+    上一小节的三个量词符，默认情况下都是最大可能匹配，即匹配直到下一个字符不满足匹配规则为止。这被称为贪婪模式
+
+    除了非贪婪模式的加号，还有非贪婪模式的星号（*）和非贪婪模式的问号（?）。
+    +?：表示某个模式出现1次或多次，匹配时采用非贪婪模式。
+    *?：表示某个模式出现0次或多次，匹配时采用非贪婪模式。
+    ??：表格某个模式出现0次或1次，匹配时采用非贪婪模式
+
+修饰符
+    修饰符（modifier）表示模式的附加规则，放在正则模式的最尾部。
+    修饰符可以单个使用，也可以多个一起使用
+
+    1）g 修饰符
+        默认情况下，第一次匹配成功后，正则对象就停止向下匹配了。g修饰符表示全局匹配（global），
+        加上它以后，正则对象将匹配全部符合条件的结果，主要用于搜索和替换
+    2）i 修饰符
+        默认情况下，正则对象区分字母的大小写，加上i修饰符以后表示忽略大小写（ignorecase）
+    3）m 修饰符
+        m修饰符表示多行模式（multiline），会修改^和$的行为。默认情况下（即不加m修饰符时），
+        ^和$匹配字符串的开始处和结尾处，加上m修饰符以后，^和$还会匹配行首和行尾，即^和$会识别换行符（\n）
+
+组匹配
+    1）概述
+        正则表达式的括号表示分组匹配，括号中的模式可以用来匹配分组的内容
+            /fred+/.test('fredd') // true
+            /(fred)+/.test('fredfred') // true
+        上面代码中，第一个模式没有括号，结果+只表示重复字母d，第二个模式有括号，结果+就表示匹配fred这个词
+
+        正则表达式内部，还可以用\n引用括号匹配的内容，n是从1开始的自然数，表示对应顺序的括号
+        括号还可以嵌套
+            /y((..)\2)\1/.test('yabababab') // true
+            上面代码中，\1指向外层括号，\2指向内层括号
+    2）非捕获组
+        (?:x)称为非捕获组（Non-capturing group），表示不返回该组匹配的内容，即匹配的结果中不计入这个括号
+            var m = 'abc'.match(/(?:.)b(.)/);
+            m // ["abc", "c"]
+            上面代码中的模式，一共使用了两个括号。其中第一个括号是非捕获组，
+            所以最后返回的结果中没有第一个括号，只有第二个括号匹配的内容
+    3）先行断言
+        x(?=y)称为先行断言（Positive look-ahead），x只有在y前面才匹配，y不会被计入返回结果。
+        比如，要匹配后面跟着百分号的数字，可以写成/\d+(?=%)/
+    4）先行否定断言
+        x(?!y)称为先行否定断言（Negative look-ahead），x只有不在y前面才匹配，y不会被计入返回结果。
+        比如，要匹配后面跟的不是百分号的数字，就要写成/\d+(?!%)/
+*/
+console.log("组匹配", /y(..)(.)\2\1/.test('yabccab'), /y((..)\2)\1/.test('yabababab'));
+console.log("组匹配", /(.)b(.)/.exec("abc"), /(?:.)b(.)/.exec("abc"));
