@@ -30,6 +30,7 @@ import os
 import hashlib
 import shutil
 import tempfile
+import zipfile
 
 
 def get_curpy_dir(file):
@@ -142,18 +143,18 @@ class Diskwalk(object):
     def __init__(self, path, recursive=True):
         """ 
                 构造函数 
-                @path 		指定目录
-                @recursive 	是否遍历子目录
+                @path       指定目录
+                @recursive  是否遍历子目录
         """
         self.path = path
         self.recursive = recursive
 
     def walk(self, func=None):
         """ 
-                遍历目录文件
-                @func 		指定回调, 回传当前路径和文件
+                遍历目录和文件
+                @func       指定回调, 回传当前路径和文件
 
-                @return 	返回 文件名数组,全路径文件名数组  一一对应
+                @return     返回 文件名数组,全路径文件名数组  一一对应
         """
         path_collection = []
         files = []
@@ -180,10 +181,10 @@ class Diskwalk(object):
 
     def walk_dir(self, func=None):
         """ 
-                遍历目录子目录
-                @func 		指定回调, 回传当前路径和文件
+                遍历目录不遍历文件
+                @func       指定回调, 回传当前路径和文件
 
-                @return 	返回 所有子目录
+                @return     返回 所有子目录
         """
         path_collection = []
         for dirpath, dirnames, filenames in os.walk(self.path):
@@ -192,6 +193,7 @@ class Diskwalk(object):
             # print("dirnames=",dirnames)
             # print("filenames=",filenames)
 
+            dirpath = dirpath.replace("\\", "/")
             for dirname in dirnames:
                 if(func and callable(func)):
                     func(dirpath, dirname)
@@ -243,12 +245,17 @@ def remove_dir(dir):
 
 
 def main():
-    print("**************************遍历目录文件结构")
-    print("结果数组=", Diskwalk(".").walk())
-    print("**************************遍历目录目录结构")
-    testDir = "D:\\glp\\work\\temp\\fishjs_hotupdate"
-    print("结果数组=", Diskwalk(testDir).walk_dir())
-    remove_dir(testDir)
+    # print("**************************遍历目录文件结构")
+    # print("结果数组=", Diskwalk(".").walk())
+    # print("**************************遍历目录目录结构")
+    # testDir = "D:\\glp\\work"
+    # print("结果数组=", Diskwalk(testDir).walk_dir())
+    #### remove_dir(testDir)
+
+    # r w a
+    with zipfile.ZipFile('D:/glp/cocos/spam.zip', 'a') as myzip:
+        myzip.write('D:/glp/cocos/eggs.txt',"eggs.txt")
+        myzip.write('D:/glp/cocos/eggs1.txt',"eggs1.txt")
 
     text = """	
 	echo 当前盘符：%~d0
@@ -261,7 +268,7 @@ def main():
 	cd %~dp0
 	cocos jscompile -s update -d update_jsc
 			"""
-    write_str_to_file(join(testDir, "jscompile.bat"), text)
+    # write_str_to_file(join(testDir, "jscompile.bat"), text)
 
 
 if __name__ == '__main__':
