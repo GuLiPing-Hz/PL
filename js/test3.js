@@ -949,3 +949,5 @@ console.log("replace", '3 and 5'.replace(/[0-9]+/g, function (match, pos, src) {
 */
 console.log("组匹配", /y(..)(.)\2\1/.test('yabccab'), /y((..)\2)\1/.test('yabababab'));
 console.log("组匹配", /(.)b(.)/.exec("abc"), /(?:.)b(.)/.exec("abc"));
+
+console.log("abcdefghijklmnopqrstuvwxyz".toUpperCase(),Math.round(Math.random() * 10),Math.round(9.3));
