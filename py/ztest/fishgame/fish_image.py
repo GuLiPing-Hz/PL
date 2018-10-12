@@ -104,16 +104,16 @@ if __name__ == '__main__':
     # IMAGE_KEY = "spzhejiangfanyu2018" #sp渠道加密
 
     # main("D:/glp/GitHub/Fish2")
-    temp("D:/glp/work/UI/temp",False);#是否遍历子目录
+    # temp("D:/glp/work/UI/temp",False);#是否遍历子目录
 
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
 
     #打包整个项目
-    # enc_jss("D:/glp/Github/Fish2/third_part/jsc/src")
-    # file_helper.remove_dir("D:/glp/Github/Fish2/third_part/jsc_ios/src");
-    # file_helper.copy_dir("D:/glp/Github/Fish2/third_part/jsc/src","D:/glp/Github/Fish2/third_part/jsc_ios/src");
-    # file_helper.remove_file("D:/glp/Github/Fish2/third_part/jsc_ios/src/app.jsc")#ios目录不需要这个文件
+    enc_jss("D:/glp/Github/Fish2/third_part/jsc/src")
+    file_helper.remove_dir("D:/glp/Github/Fish2/third_part/jsc_ios/src");
+    file_helper.copy_dir("D:/glp/Github/Fish2/third_part/jsc/src","D:/glp/Github/Fish2/third_part/jsc_ios/src");
+    file_helper.remove_file("D:/glp/Github/Fish2/third_part/jsc_ios/src/app.jsc")#ios目录不需要这个文件
 
 
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
