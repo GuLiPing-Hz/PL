@@ -96,6 +96,10 @@ python操作符
 # 1.算术运算符:
 a = 10
 b = 20
+
+a,b = b,a
+print("a=",a,"b=",b)
+
 print("a+b=", a+b)  # 加
 print("a-b=", a-b)  # 减
 print("a*b=", a*b)  # 乘
@@ -211,4 +215,6 @@ print(__file__)
 
 # 三目运算
 print("1" if False else "2")
+
+
 

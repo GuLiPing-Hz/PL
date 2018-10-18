@@ -71,7 +71,10 @@ def getJsonPropName(name,str_parent):
             name = name[:-4] + "__use"
         else:
             name = name+"_"
-    return name
+    elif name.endswith("_nouse"):
+        return "",False
+
+    return name,True
 
 """
     {
@@ -205,10 +208,14 @@ def ParseCCSNodeProp(json_content, str_node, cur_cnt, ret_cnt, is_node=False, is
 
 
 def ParseCCSNode(json_content, str_parent, cur_cnt, ret_cnt, str_node=None):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
     if(str_node):
         name = str_node
 
+    # print("ParseCCSNode str_node =",str_node)
+    # print("ParseCCSNode name =",name)
     printSpace8(ret_cnt,"var "+name+" = new cc.Node();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
@@ -241,7 +248,7 @@ def ParseCCSNode(json_content, str_parent, cur_cnt, ret_cnt, str_node=None):
 """
 
 
-def ParseCCSSpriteProp(json_content, name=None, singleFile=False):
+def ParseCCSSpriteProp(json_content, name=None):
     if(not name):
         name = "FileData"
     # 设置纹理
@@ -251,9 +258,14 @@ def ParseCCSSpriteProp(json_content, name=None, singleFile=False):
     is_frame = False
     if json_content[name]["Type"] == "MarkedSubImage":#plist图片
         is_frame = True
+    elif json_content[name]["Type"] == "Default":
+        str_sprite = ""
 
-    return "res/"+str_sprite, is_frame
-
+    if str_sprite == "":
+        return "", is_frame
+    else:
+        return "res/"+str_sprite, is_frame
+        
 
 def ParseCCSBtn(json_content, str_parent, str_node, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+str_node+" = new ccui.Button();")
@@ -286,9 +298,65 @@ def ParseCCSBtn(json_content, str_parent, str_node, cur_cnt, ret_cnt):
 
     return cur_cnt
 
+def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
+    printSpace8(ret_cnt,"var "+name+" = new ccui.Button();")
+    if(str_parent):
+        printSpace8(ret_cnt,str_parent+".addChild("+name+");")
+    if(name.endswith("_use")):
+        # global PUSHCNT;
+        printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
+        printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
+        cur_cnt += 1
+        printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
+
+    # 设置按钮属性
+    printSpace8(ret_cnt,
+        name+".setPressedActionEnabled(true);//--启用点击动作,只有当设置了按下的图片才有效果")
+    
+    printSpace8(ret_cnt,name+".setTitleFontName(res.default_font);")
+    printSpace8(ret_cnt,name+".setTitleFontSize(32);")
+    printSpace8(ret_cnt,name+".setTitleText('');")
+    printSpace8(ret_cnt,name+".setTitleColor(cc.color('#ffffff'));")
+    printSpace8(ret_cnt,name+".setZoomScale(0);")
+
+    # 设置纹理
+    img_path, is_frame = ParseCCSSpriteProp(json_content,"NormalFileData")
+    if USERIMAGEPLIST and is_frame:
+        printSpace8(ret_cnt,name+".loadTextureNormal(" +
+                    repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
+    else:
+        printSpace8(ret_cnt,name+".loadTextureNormal(" +
+                    repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
+
+    img_path, is_frame = ParseCCSSpriteProp(json_content,"PressedFileData")
+    if(img_path != ""):
+        if USERIMAGEPLIST and is_frame:
+            printSpace8(ret_cnt,name+".loadTexturePressed(" +
+                        repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
+        else:
+            printSpace8(ret_cnt,name+".loadTexturePressed(" +
+                        repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
+    else:
+        printSpace8(ret_cnt,name+".setZoomScale(-0.1);//--点击缩小,有点击就缩小，不用则置为0")
+
+    img_path, is_frame = ParseCCSSpriteProp(json_content,"DisabledFileData")
+    if(img_path != ""):
+        if USERIMAGEPLIST and is_frame:
+            printSpace8(ret_cnt,name+".loadTexturePressed(" +
+                        repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
+        else:
+            printSpace8(ret_cnt,name+".loadTexturePressed(" +
+                        repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
+
+    return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt)
 
 def ParseCCSSprite(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     is_btn = name.startswith("btn_")
     if(is_btn):
@@ -331,7 +399,9 @@ def ParseCCSSprite(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSImage(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     if(name.startswith("btn_")):
         cur_cnt = ParseCCSBtn(json_content, str_parent,
@@ -400,7 +470,9 @@ def ParseCCSImage(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSText(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     isLabel = False
     if(name.startswith("label_")):
@@ -524,10 +596,12 @@ def ParseCCSText(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSTextAtlas(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     img_path, is_frame = ParseCCSSpriteProp(
-        json_content, "LabelAtlasFileImage_CNB", True)
+        json_content, "LabelAtlasFileImage_CNB")
     printSpace8(ret_cnt,"var "+name+" = new ccui.TextAtlas('"+json_content["LabelText"]+"', "
                 + repr(img_path)
                 + ", "+str(json_content["CharWidth"]) +
@@ -558,7 +632,9 @@ def ParseCCSTextAtlas(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSLoadingBar(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     printSpace8(ret_cnt,"var "+name+" = new ccui.LoadingBar();")
     if(str_parent):
@@ -584,8 +660,10 @@ def ParseCCSLoadingBar(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSParticle(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
-    img_path, is_frame = ParseCCSSpriteProp(json_content, None, True)
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
+    img_path, is_frame = ParseCCSSpriteProp(json_content, None)
     printSpace8(ret_cnt,"var "+name+" = cc.ParticleSystem.create("+repr(img_path)+");")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
@@ -624,7 +702,9 @@ def ParseCCSParticle(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSPanel(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
     printSpace8(ret_cnt,"var "+name+" = new ccui.Layout();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
@@ -716,7 +796,9 @@ def ParseCCSPanel(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSSlider(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
     printSpace8(ret_cnt,"var "+name+" = new ccui.Slider();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
@@ -786,7 +868,9 @@ def ParseCCSSlider(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSCheckBox(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     printSpace8(ret_cnt,"var "+name+" = new ccui.CheckBox();")
     if(str_parent):
@@ -880,7 +964,9 @@ def ParseCCSTextField(json_content, str_parent, str_node, cur_cnt, ret_cnt):
 
 
 def ParseCCSTextInput(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
     if(name == str_parent):
         if(name.endswith("_use")):
             name = name[:-4] + "__use"
@@ -968,7 +1054,9 @@ def ParseCCSTextInput(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseCCSScrollView(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     printSpace8(ret_cnt,"var "+name+" = new ccui.ScrollView();")
     if(str_parent):
@@ -1003,7 +1091,9 @@ def ParseCCSScrollView(json_content, str_parent, cur_cnt, ret_cnt):
 
 
 def ParseFnt(json_content, str_parent, cur_cnt, ret_cnt):
-    name = getJsonPropName(json_content["Name"],str_parent);
+    name,ret = getJsonPropName(json_content["Name"],str_parent);
+    if (not ret) :
+        return ret_cnt
 
     printSpace8(ret_cnt,"var "+name+" = new ccui.TextBMFont();")
     if(str_parent):
@@ -1028,6 +1118,9 @@ def ParseCCSChildren(json_children, str_parent, cur_cnt, ret_cnt):
                 json_content, str_parent, cur_cnt, ret_cnt)
         elif(json_content["ctype"] == "SpriteObjectData"):
             cur_cnt = ParseCCSSprite(
+                json_content, str_parent, cur_cnt, ret_cnt)
+        elif(json_content["ctype"] == "ButtonObjectData"):
+            cur_cnt = ParseCCSBtn2(
                 json_content, str_parent, cur_cnt, ret_cnt)
         elif(json_content["ctype"] == "ImageViewObjectData"):
             cur_cnt = ParseCCSImage(
@@ -1064,7 +1157,7 @@ def ParseCCSChildren(json_children, str_parent, cur_cnt, ret_cnt):
         elif(json_content["ctype"] == "ProjectNodeObjectData"):
             json_file = json_content["FileData"]["Path"]  # 获取到json文件
 
-            name = getJsonPropName(json_content["Name"],str_parent);
+            name,ret = getJsonPropName(json_content["Name"],str_parent);
 
             ret_cnt_new = ret_cnt+1
             cur_cnt,load_as_csj = ParseCCSJson(CURGAMERESDIR+"/"+json_file,
@@ -1198,3 +1291,6 @@ if __name__ == '__main__':
 
     # 游戏
     # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
+
+    # 水浒传
+    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game2")
