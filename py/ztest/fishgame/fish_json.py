@@ -1254,19 +1254,10 @@ def PrintComments():
     printCustom("*/")
 
 
-def AutoParseJsonDirLobby(path):
+def AutoParseJsonDir(path, moduleName):
     # 解析节点json
     PrintComments()
-    printCustom("var AutoUiForMain = {")
-    file_helper.Diskwalk(path).walk(JsonWalk)
-    printCustom("};")
-    printCustom()
-
-
-def AutoParseJsonDirFish(path):
-    # 解析节点json
-    PrintComments()
-    printCustom("var AutoUiForFish = {")
+    printCustom("var "+moduleName+" = {")
     file_helper.Diskwalk(path).walk(JsonWalk)
     printCustom("};")
     printCustom()
@@ -1287,10 +1278,10 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/Fish2/res1"
     # 大厅
-    AutoParseJsonDirLobby(CURGAMERESDIR+"/scene_ext_ignore/vip")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 游戏
-    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
-    # AutoParseJsonDirFish(CURGAMERESDIR+"/scene_ext_ignore/game2")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")
