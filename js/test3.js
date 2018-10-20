@@ -652,6 +652,7 @@ var matchs = str3.match("at")
 console.log("match", matchs, matchs.input, matchs.index, str3.match("atx"), str3);
 console.log("search", str3.search("at"), str3);
 console.log("replace", str3.replace("at", "et"), str3);//默认只替换第一个
+//替换全部参见正则表达式一章
 
 console.log("split", str3.split(","), str3);
 console.log("localeCompare", 'apple'.localeCompare('banana'), 'B'.localeCompare('a')

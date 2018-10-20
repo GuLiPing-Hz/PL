@@ -109,7 +109,7 @@ def MergeToOneDir(src_dir,dest_dir):
 
 
 if __name__ == '__main__':
-    MergeToOneDir("D:/glp/cocos/luaenc","D:/glp/cocos/luaenc_")
+    MergeToOneDir("D:/glp/cocos/luaenc__","D:/glp/cocos/luaenc_")
 
     
 
