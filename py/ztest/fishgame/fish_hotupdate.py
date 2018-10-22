@@ -203,6 +203,8 @@ def createManifestEx(url, src, dest, update, ver,project=True):
             return
         if(file.endswith(".exe")):  # 配置文件不记录
             return
+        if(file == "main.jsc" or file == "main_ios.jsc"):
+            return
 
         # print(path,file);
         new_path_dir = path[len(src)+1:]
@@ -369,7 +371,9 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
         if(file.endswith(".manifest")):  # 配置文件不记录
             return
 
-        # print(path,file);
+        # print("path=",path,"file",file);
+
+        # return
         new_path_file = ""
         if(path == game_dir):
             new_path_file = file
@@ -428,7 +432,7 @@ if __name__ == '__main__':
 
     import sys
 
-    version = "1.1.2.3"
+    version = "1.2.0.1"
     if len(sys.argv) > 1:
         str_ver = sys.argv[1]
         version = str_ver[str_ver.find("-v=")+3:]

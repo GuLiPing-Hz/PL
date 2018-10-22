@@ -951,3 +951,69 @@ console.log("replace", '3 and 5'.replace(/[0-9]+/g, function (match, pos, src) {
 console.log("组匹配", /y(..)(.)\2\1/.test('yabccab'), /y((..)\2)\1/.test('yabababab'));
 console.log("组匹配", /(.)b(.)/.exec("abc"), /(?:.)b(.)/.exec("abc"));
 
+/**
+ * JSON对象
+ * 
+ * JSON 对值的类型和格式有严格的规定。
+ * 
+ * 1.复合类型的值只能是数组或对象，不能是函数、正则表达式对象、日期对象。
+ * 2.原始类型的值只有四种：字符串、数值（必须以十进制表示）、布尔值和null（不能使用NaN, Infinity, -Infinity和undefined）。
+ * 3.字符串必须使用双引号表示，不能使用单引号。
+ * 4.对象的键名必须放在双引号里面。
+ * 5.数组或对象最后一个成员的后面，不能加逗号
+ */
+
+//JSON.stringify()
+//JSON.stringify方法用于将一个值转为 JSON 字符串。该字符串符合 JSON 格式，并且可以被JSON.parse方法还原
+console.log("JSON对象 stringify", JSON.stringify(true), JSON.stringify('true'), JSON.stringify(/foo/));
+// JSON.stringify方法会忽略对象的不可遍历的属性
+var obj = {};
+Object.defineProperties(obj, {
+    'foo': {
+        value: 1,
+        enumerable: true
+    },
+    'bar': {
+        value: 2,
+        enumerable: false
+    }
+});
+console.log(JSON.stringify(obj)); // "{"foo":1}"
+// JSON.stringify方法还可以接受一个数组，作为第二个参数，指定需要转成字符串的属性
+// 这个类似白名单的数组，只对对象的属性有效，对数组无效
+// 第二个参数还可以是一个函数，用来更改JSON.stringify的返回值
+function f(key, value) {//上面代码中的f函数，接受两个参数，分别是被转换的对象的键名和键值
+    if (typeof value === "number") {
+        value = 2 * value;
+    }
+    console.log("JSON.stringify 函数", key, value);
+    return value;
+}
+
+console.log("JSON.stringify,第二个参数是数组", JSON.stringify({ a: 1, b: 2 }, ["a"]));
+//node 环境只返回一个 {} ,并没有调用传入的f函数
+console.log("JSON.stringify,第二个参数是函数", JSON.stringify({ a: 1, b: 2 }, f));
+// 第三个参数 用于增加可读性
+console.log("JSON.stringify,第三个参数是 可读性空格或前缀", JSON.stringify({ a: 1, b: 2 }, null, "value = "));
+// 参数对象的toJSON方法
+var user = {
+    firstName: '三',
+    lastName: '张',
+
+    get fullName() {
+        return this.lastName + this.firstName;
+    },
+
+    toJSON: function () {
+        return {
+            name: this.lastName + this.firstName
+        };
+    }
+};
+console.log(JSON.stringify(user));
+
+// JSON.parse()
+// JSON.parse方法用于将 JSON 字符串转换成对应的值
+console.log("", JSON.parse('{"name": "张三"}'));
+// 如果传入的字符串不是有效的 JSON 格式，JSON.parse方法将报错。
+// JSON.parse方法可以接受一个处理函数，作为第二个参数，用法与JSON.stringify方法类似
