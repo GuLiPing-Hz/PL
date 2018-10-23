@@ -13,18 +13,18 @@
 
 // new命令的作用，就是执行构造函数，返回一个实例对象
 var Vehicle = function (p) {
-    'use strict';//构造函数使用严格模式，必须跟new一起使用
-    this.price = p;
+  'use strict';//构造函数使用严格模式，必须跟new一起使用
+  this.price = p;
 };
 
 var v = new Vehicle(500);
 console.log("new 对象", v.price);
 //忘记调用new,this变成一个全局对象。。
 try {
-    var v1 = Vehicle(600);
-    console.log("new 对象", v1.price);
+  var v1 = Vehicle(600);
+  console.log("new 对象", v1.price);
 } catch (error) {
-    console.log(error);
+  console.log(error);
 }
 
 /**
@@ -50,24 +50,24 @@ new 命令的原理
  */
 // new命令简化的内部流程，可以用下面的代码表示。
 function _new(/* 构造函数 */ constructor, /* 构造函数参数 */ params) {
-    // 将 arguments 对象转为数组
-    var args = [].slice.call(arguments);
-    // 取出构造函数
-    var constructor = args.shift();
-    // 创建一个空对象，继承构造函数的 prototype 属性
-    var context = Object.create(constructor.prototype);
-    // 执行构造函数
-    var result = constructor.apply(context, args);
-    // 如果返回结果是对象，就直接返回，否则返回 context 对象
-    return (typeof result === 'object' && result != null) ? result : context;
+  // 将 arguments 对象转为数组
+  var args = [].slice.call(arguments);
+  // 取出构造函数
+  var constructor = args.shift();
+  // 创建一个空对象，继承构造函数的 prototype 属性
+  var context = Object.create(constructor.prototype);
+  // 执行构造函数
+  var result = constructor.apply(context, args);
+  // 如果返回结果是对象，就直接返回，否则返回 context 对象
+  return (typeof result === 'object' && result != null) ? result : context;
 }
 
 // new.target
 // 函数内部可以使用new.target属性。如果当前函数是new命令调用，new.target指向当前函数，否则为undefined。
 
 function funcNetTarget() {
-    // 使用这个属性，可以判断函数调用的时候，是否使用new命令。
-    console.log("funcNetTarget", new.target === funcNetTarget);
+  // 使用这个属性，可以判断函数调用的时候，是否使用new命令。
+  console.log("funcNetTarget", new.target === funcNetTarget);
 }
 
 funcNetTarget(); // false
@@ -154,3 +154,96 @@ var a = {
 避免数组处理方法中的 this
 避免回调函数中的 this
 */
+
+// 绑定 this 的方法
+// JavaScript 提供了call、apply、bind这三个方法，来切换/固定this的指向。
+
+//call 示例
+var obj = {};
+var fCall = function () {
+  console.log("fCall this=", this);
+  return this;
+};
+
+// f() === window // true //nodejs 环境没有window,由global代替
+console.log("fCall() === global", fCall() === global);
+console.log("fCall.call(obj) === obj", fCall.call(obj) === obj); // true
+// call方法的参数，应该是一个对象。如果参数为空、null和undefined，则默认传入全局对象
+// 传入的原始值也会转成对象
+// call方法还可以接受多个参数
+// call的第一个参数就是this所要指向的那个对象，后面的参数则是函数调用时所需的参数
+function fAdd(a) { return a + this.b; }
+var obj1 = { b: 2 };
+console.log("obj1.b =", obj1.b);
+console.log("call 示例 fAdd.call()", fAdd.call(obj1, 1));
+
+// call方法的一个应用是调用对象的原生方法
+var obj2 = {};
+console.log("obj2.hasOwnProperty('toString')", obj2.hasOwnProperty('toString')); // false
+// 覆盖掉继承的 hasOwnProperty 方法
+obj2.hasOwnProperty = function () {
+  return true;
+};
+console.log("obj2.hasOwnProperty('toString')", obj2.hasOwnProperty('toString')); // false
+console.log("Object.prototype.hasOwnProperty.call(obj2, 'toString')"
+  , Object.prototype.hasOwnProperty.call(obj2, 'toString')); // false
+
+
+//applay 示例
+// apply方法的作用与call方法类似，也是改变this指向，然后再调用该函数。唯一的区别就是，
+// 它接收一个数组作为函数执行时的参数，使用格式如下。
+// func.apply(thisValue, [arg1, arg2, ...])
+console.log("apply 示例 找出最大值 ", Math.max.apply(null, [22, 4, 5, 200, 33]));
+
+// bind 示例
+// bind方法用于将函数体内的this绑定到某个对象，然后返回一个新函数
+// bind不仅可以绑定this，还可以绑定参数
+function fAdd1(a, b) { return a + b; }
+var fAdd2 = fAdd1.bind(null, 2);//这里绑定了参数a为2
+console.log("绑定对象和参数", fAdd2(10));
+
+/*
+每一次返回一个新函数
+bind方法每运行一次，就返回一个新函数，这会产生一些问题。比如，监听事件的时候，不能写成下面这样。
+element.addEventListener('click', o.m.bind(o));
+上面代码中，click事件绑定bind方法生成的一个匿名函数。这样会导致无法取消绑定，所以，下面的代码是无效的。
+
+element.removeEventListener('click', o.m.bind(o));
+正确的方法是写成下面这样：
+
+var listener = o.m.bind(o);
+element.addEventListener('click', listener);
+//  ...
+element.removeEventListener('click', listener);
+*/
+var obj2 = { a: 4, b: 5 };
+function fAdd3() {
+  return this.a + this.b;
+}
+console.log("bind 示例", (fAdd3.bind(obj2))());
+
+//对象的继承
+// 构造函数的缺点 ，同一个构造函数new出来的对象，无法共享对象的属性和方法
+// prototype 属性的作用
+// JavaScript 继承机制的设计思想就是，原型对象的所有属性和方法，都能被实例对象共享
+// JavaScript 规定，每个【函数】都有一个prototype属性，指向一个对象。
+function func1() { };
+console.log("函数的prototype的类型", typeof func1.prototype);
+// 对于普通函数来说，该属性基本无用。但是，对于构造函数来说，生成实例的时候，该属性会自动成为实例对象的原型
+function Cat(name) {
+  this.name = name;
+}
+Cat.prototype.color = "White";
+var catA = new Cat("A");
+var catB = new Cat("B");
+console.log("构造函数原型方法 name:", catA.name, catB.name);
+console.log("构造函数原型方法1 color:", catA.color, catB.color);
+catA.color = "Black";
+console.log("构造函数原型方法2 color:", catA.color, catB.color);
+Cat.prototype.color = "Gray";
+console.log("构造函数原型方法3 color:", catA.color, catB.color);
+
+// 总结一下，原型对象的作用，就是定义所有实例对象共享的属性和方法。
+// 这也是它被称为原型对象的原因，而实例对象可以视作从原型对象衍生出来的子对象
+// JavaScript 规定，所有对象都有自己的原型对象（prototype）。一方面，任何一个对象，
+// 都可以充当其他对象的原型；另一方面，由于原型对象也是对象，所以它也有自己的原型。因此，就会形成一个“原型链”（prototype chain）

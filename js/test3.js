@@ -628,11 +628,12 @@ console.log("String对象 实例方法 ", str.length, str.charAt(0), str.charCod
 console.log("中文长度", "中文".length, "ab".length, "中".charCodeAt(), String.fromCharCode(20013));
 console.log("concat", str.concat("456", 7), str);//不改变源字符串
 console.log("slice", str.slice(1, 7), str);//不改变源字符串
+//start end
 console.log("substring", str.substring(1, 2), str);//不改变源字符串
 // 如果参数是负数，substring方法会自动将负数转为0
 // 由于第二个参数小于第一个参数，会自动互换位置
 // 由于这些规则违反直觉，因此不建议使用substring方法，应该优先使用slice
-
+//start length
 console.log("substr", str.substr(1, 1), str);//不改变源字符串
 // 如果第一个参数是负数，表示倒数计算的字符位置。如果第二个参数是负数，将被自动转为0，因此会返回空字符串
 
