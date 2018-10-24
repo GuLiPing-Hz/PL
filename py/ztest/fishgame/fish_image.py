@@ -112,7 +112,8 @@ if __name__ == '__main__':
     #打包整个项目
     enc_jss("D:/glp/Github/Fish2/third_part/jsc/src")
     file_helper.remove_dir("D:/glp/Github/Fish2/third_part/jsc_ios/src");
-    file_helper.copy_dir("D:/glp/Github/Fish2/third_part/jsc/src","D:/glp/Github/Fish2/third_part/jsc_ios/src");
+    file_helper.copy_dir("D:/glp/Github/Fish2/third_part/jsc/src"
+        ,"D:/glp/Github/Fish2/third_part/jsc_ios/src");
     file_helper.remove_file("D:/glp/Github/Fish2/third_part/jsc_ios/src/app.jsc")#ios目录不需要这个文件
 
 

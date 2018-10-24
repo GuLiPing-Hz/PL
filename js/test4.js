@@ -247,3 +247,9 @@ console.log("构造函数原型方法3 color:", catA.color, catB.color);
 // 这也是它被称为原型对象的原因，而实例对象可以视作从原型对象衍生出来的子对象
 // JavaScript 规定，所有对象都有自己的原型对象（prototype）。一方面，任何一个对象，
 // 都可以充当其他对象的原型；另一方面，由于原型对象也是对象，所以它也有自己的原型。因此，就会形成一个“原型链”（prototype chain）
+// 所有对象的原型都指向Object.prototype。而Object.prototype的原型对象是null
+console.log("Object.getPrototypeOf(Object.prototype)", Object.getPrototypeOf(Object.prototype));
+
+// constructor 属性
+// prototype对象有一个constructor属性，默认指向prototype对象所在的构造函数
+// constructor属性的作用是，可以得知某个实例对象，到底是哪一个构造函数产生的

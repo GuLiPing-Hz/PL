@@ -8,10 +8,12 @@ def TestJson():
     print(d1, type(d1))
     print(data1)
 
+    print("json 加载字符串",json.loads('["foo", {"bar":["baz", null, 1.0, 2]}]'))
+
     try:
         with open("dataJson", "r") as file:
             content = json.load(file)
-            print(content, type(content))
+            print("json 加载文件",content, type(content))
     except FileNotFoundError:
         pass
 
