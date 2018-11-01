@@ -432,7 +432,7 @@ if __name__ == '__main__':
 
     import sys
 
-    version = "1.2.0.1"
+    version = "1.2.1.0"
     if len(sys.argv) > 1:
         str_ver = sys.argv[1]
         version = str_ver[str_ver.find("-v=")+3:]

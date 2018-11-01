@@ -116,7 +116,6 @@ if __name__ == '__main__':
         ,"D:/glp/Github/Fish2/third_part/jsc_ios/src");
     file_helper.remove_file("D:/glp/Github/Fish2/third_part/jsc_ios/src/app.jsc")#ios目录不需要这个文件
 
-
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc_sp")//短信渠道包
 

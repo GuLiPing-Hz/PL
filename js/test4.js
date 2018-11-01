@@ -253,3 +253,34 @@ console.log("Object.getPrototypeOf(Object.prototype)", Object.getPrototypeOf(Obj
 // constructor 属性
 // prototype对象有一个constructor属性，默认指向prototype对象所在的构造函数
 // constructor属性的作用是，可以得知某个实例对象，到底是哪一个构造函数产生的
+function A() { }
+console.log("构造函数constructor属性,A.prototype.constructor === A", A.prototype.constructor === A);
+var a = new A();//这里调用了A.prototype.constructor
+console.log("构造函数constructor属性,a.constructor === A", a.constructor === A);
+// 修改原型对象时，一般要同时修改constructor属性的指向
+function B() { }
+B.prototype = {
+
+};
+//这里由于只是修改了B的原型对象，并没有修改原型对象的constructor，导致B的构造指向了Object
+console.log("修改原型对象后必须也要修改constructor属性,B.prototype.constructor === Object"
+  , B.prototype.constructor === Object);
+/*
+修改原型对象
+
+  // 坏的写法
+C.prototype = {
+  method1: function (...) { ... },
+  // ...
+};
+
+// 好的写法
+C.prototype = {
+  constructor: C,
+  method1: function (...) { ... },
+  // ...
+};
+
+// 更好的写法
+C.prototype.method1 = function (...) { ... };
+*/
