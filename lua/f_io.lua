@@ -23,6 +23,10 @@ while true do
 end
 f1:close()
 
+f11 = io.open("zzz_io_test","r")
+print("读取所有内容",f11:read('*a'))--读取所有内容
+f11:close()
+
 -- lua 不提供tell函数，但提供seek函数，不传参数，返回当前文件读取位置，强势可以理解
 -- seek 第一参数就是位置，第二个参数才是偏移量
 f2 = io.open("zzz_io_test","r")

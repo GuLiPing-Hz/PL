@@ -33,9 +33,6 @@ class AsyncWork(threading.Thread):
 				count -= 1
 				print("count=",count,"I'm thread ",self.id)
 
-				
-
-
 #创建多线程实例
 aw1 = AsyncWork(1)
 aw2 = AsyncWork(2)
