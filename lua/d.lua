@@ -70,18 +70,6 @@ print("删除 arras[1][1] 后 arras[1]=",arras[1])
 --print("列表相加",{1,2,3}+{4,5,6}) --不支持需要自己重载
 --print("列表相乘",{"Hi"}*4)
 
--- 表或字典 （table） lua中所有的数据结构都可以通过table实现
-tab1 = {} -- 申明一个空的字典跟列表一致
-tab2 = {x=1,y=2,z="a",100} -- 申明字典
-print("tab1=",tab1)
-print(tab1.x,tab2.x,tab2["z"]) -- 访问字典table，索引不再是数字
-tab1.x = 3
-print("插入 tab1.x=",tab1.x)
-tab2.x = nil -- 删除元素
-tab2[2] = 1
-print(tab2)
--- lua 中申明table的时候无法指定数字作为(key=vale)中的key，但是可以给单独的值，
-
 function tableToStr(tab)
 	if tab and type(tab) == "table" then
 		local ret = ""
@@ -94,9 +82,21 @@ function tableToStr(tab)
 	end
 end
 
+-- 表或字典 （table） lua中所有的数据结构都可以通过table实现
+tab1 = {} -- 申明一个空的字典跟列表一致
+tab2 = {x=1,y=2,z="a",100} -- 申明字典
+print("tab1=",tab1)
+print(tab1.x,tab2.x,tab2["z"]) -- 访问字典table，索引不再是数字
+tab1.x = 3
+print("插入 tab1.x=",tab1.x)
+tab2.x = nil -- 删除元素
+tab2[2] = 1
+print("tab2=",tableToStr(tab2))
+-- lua 中申明table的时候无法指定数字作为(key=vale)中的key，但是可以给单独的值，
+
 --local
 tab3 = {1,2,3,4,5,6,7,8,9,0}
-print("tab3=",tab3)
+print("tab3=",tableToStr(tab3))
 
 --[[
 table.concat (list [, sep [, i [, j]] 
