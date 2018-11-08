@@ -111,8 +111,10 @@ print("元组=",a,b,c)
 
 # 字典
 tab1 = {}  # 申明一个空的字典跟列表一致
+print("字典是否含有 a","a" in tab1)
 key = "a"
 tab1[key] = 3
+print("字典是否含有 a","a" in tab1)
 print("插入字典 tab1[key] =", tab1[key])
 tab2 = {"x": 1, "y": 2, "z": "a", 100: 100}  # -- 申明字典
 print("字典 tab1=", tab1)
