@@ -125,6 +125,12 @@ print("tab.n=",rawget(tab,"n"),';tab[1]=',tab[1])
 -- lua可以计算 数字的字符串和数字的相加
 print("1"+2)
 
+print("数学知识，nan，负无穷，正无穷")
+math_a = math.sqrt(-1)
+math_b = math.log10(0)
+math_c = -math_b
+print("math.sqrt(-1)=",math_a,math_b,math_c)
+print(math_a==math_a,math_b==math_b,math_c==math_c,nil == nil,{}=={},"12"=="12")
 
 --字符串数字转换
 print("字符串->数字",type(tonumber("1")))
