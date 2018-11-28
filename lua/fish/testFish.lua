@@ -1,3 +1,26 @@
+function tableToStr(tab,i)
+    i = i or 0
+
+    if i == 3 then
+        return "table more than 3"
+    else
+        i = i + 1
+    end
+    if tab and type(tab) == "table" then
+        local ret = ""
+        for k,v in pairs(tab) do
+            if type(k) ~= "number" or i == 1 then
+                ret = ret.."tab["..k.."]=["..tableToStr(v,i).."];"
+            else
+                ret = ret.."["..tableToStr(v,i).."]"
+            end
+        end
+        return "\n"..ret.."\n"
+    else 
+        return ""..tab
+    end
+end
+
 function ConvertVersion(strVer)
     local n = 0
     local ver = 0
@@ -116,7 +139,48 @@ function refresChair()
 end
 
 math.randomseed(os.time())
-for i=1,10 do
-    refresChair()
-    print(string.rep("*",100))
+-- for i=1,10 do
+--     refresChair()
+--     print(string.rep("*",100))
+-- end
+
+local DeskChairCnt = 4
+function shuffle()
+    local len, second = 6,10
+
+    local desk_chair_rate_order = {}
+    for i = 1, DeskChairCnt do --插入当前桌子的位置的一套鱼死亡轮询概率
+        local rate_order = {}
+        for i = 1, len do --先顺序插入位置
+            table.insert(rate_order, i)
+        end
+
+        for i = 1, len * 2 do --随机调整位置
+            local pos1 = math.random(len)
+            local pos2 = math.random(len)
+            rate_order[pos1], rate_order[pos2] = rate_order[pos2], rate_order[pos1]
+        end
+        table.insert(desk_chair_rate_order, rate_order)
+    end
+
+    print(tableToStr(desk_chair_rate_order))
+    -- self.__fish_rate_total = len
+    -- self.__fish_rate_per_sec = second
+    -- self.__fish_rate_cur_index = 1
+    -- self.__fish_rete_cur_sec = 0
+    -- self.__fish_rate_list = desk_chair_rate_order
+    -- for m = 1, #self.__fish_rate_list do
+    --     local i, j
+    --     local l = #self.__fish_rate_list[m]
+    --     for i = 1, l do
+    --         j = math.random(l)
+    --         --交换位置
+    --         self.__fish_rate_list[m][i],
+    --             self.__fish_rate_list[m][j] = self.__fish_rate_list[m][j], self.__fish_rate_list[m][i]
+    --     end
+    -- end
 end
+
+shuffle()
+shuffle()
+shuffle()

@@ -110,6 +110,7 @@ if __name__ == '__main__':
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
 
     #打包整个项目
+    # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
     enc_jss("D:/glp/Github/Fish2/third_part/jsc/src")
     file_helper.remove_dir("D:/glp/Github/Fish2/third_part/jsc_ios/src");
     file_helper.copy_dir("D:/glp/Github/Fish2/third_part/jsc/src"
