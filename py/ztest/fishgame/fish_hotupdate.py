@@ -416,7 +416,7 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
 def lailaifish_manifest_gen(version):
     # 生成捕鱼更新包 manifest
     # 必须是已经加密过的jsc和图片资源
-    createManifestEx("https://www.fanyu123.cn/ver2/game/",
+    createManifestEx("https://fanyu123.com/bao/ver/game/",
                      "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
                      "D:/glp/Github/Fish2", 
                      "update", version)#"1.0.8"
