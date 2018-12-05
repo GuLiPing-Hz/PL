@@ -1,0 +1,12 @@
+working 2018-12-05 23:15:01.877101
+0.0
+************************************************************
+<class 'psutil._pslinux.svmem'> svmem(total=3974508544, available=3117768704, percent=21.6, used=572956672, free=264974336, active=1808068608, inactive=1682063360, buffers=155971584, cached=2980605952, shared=1044480, slab=164929536)
+************************************************************
+3974508544 3117768704 21.6
+************************************************************
+[sdiskpart(device='/dev/vda1', mountpoint='/', fstype='ext4', opts='rw,relatime,data=ordered')]
+************************************************************
+sdiskusage(total=42139451392, used=7582650368, free=32392646656, percent=19.0)
+************************************************************
+{'eth0': snetio(bytes_sent=36756504839, bytes_recv=36483367306, packets_sent=364281764, packets_recv=348448668, errin=0, errout=0, dropin=0, dropout=0), 'lo': snetio(bytes_sent=38057917, bytes_recv=38057917, packets_sent=368993, packets_recv=368993, errin=0, errout=0, dropin=0, dropout=0)}
