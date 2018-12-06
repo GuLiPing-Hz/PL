@@ -28,6 +28,8 @@ def ding_text(token, content, numbers, is_all):
     numbers：通知列表
     is_all：是否全员通知
     """
+    # https://oapi.dingtalk.com/robot/send?access_token=75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494
+    
 
     print("ding_text")
     conn = http.client.HTTPSConnection("oapi.dingtalk.com")
@@ -70,24 +72,25 @@ def ding_text(token, content, numbers, is_all):
 
 if __name__ == '__main__':
     # main()
-    numbers = ["17195888272", "18075486676"]
+    numbers = ["15088603329"]
 
     # 查看系统运行状态 pip install psutil
     # https://pypi.python.org/pypi/psutil
-    import psutil
-    print(psutil.cpu_percent())  # 查看CPU
-    print("*"*60)
-    vm = psutil.virtual_memory()
-    print(type(vm), vm)
-    print("*"*60)
-    print(vm.total, vm.available, vm.percent)  # 查看虚拟内存
-    print("*"*60)
-    print(psutil.disk_partitions())  # 查看硬盘分区
-    print("*"*60)
-    print(psutil.disk_usage('/'))  # 查看硬盘使用
-    print("*"*60)
-    print(psutil.net_io_counters(pernic=True))  # 查看网络链接
+    # import psutil
+    # print(psutil.cpu_percent())  # 查看CPU
+    # print("*"*60)
+    # vm = psutil.virtual_memory()
+    # print(type(vm), vm)
+    # print("*"*60)
+    # print(vm.total, vm.available, vm.percent)  # 查看虚拟内存
+    # print("*"*60)
+    # print(psutil.disk_partitions())  # 查看硬盘分区
+    # print("*"*60)
+    # print(psutil.disk_usage('/'))  # 查看硬盘使用
+    # print("*"*60)
+    # print(psutil.net_io_counters(pernic=True))  # 查看网络链接
     # print(psutil.net_connections()) #查看网络连接
+
 
     """
 	Token令牌
@@ -95,4 +98,4 @@ if __name__ == '__main__':
 	通知列表
 	是否全员通知
 	"""
-    #ding_text("997af53119922cdeac1386caec4a6c89352e191e85d9178e86788ed8a22e4dfa","Hello World",numbers,True)
+    ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494","Hello World",numbers,False)
