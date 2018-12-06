@@ -1,4 +1,4 @@
 #*　　*　　*　　*　　*　　command
 # 分　 时　 日　 月　 周　 命令
 
-*	*	*	*	*	/usr/bin/python /opt/py/fish_server_worker.py > /opt/py/1.txt
+*	*	*	*	*	/usr/bin/python /opt/py/fish_server_worker.py production > /opt/py/1.txt

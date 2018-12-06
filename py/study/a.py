@@ -65,6 +65,7 @@ print(id(a))  # 输出 5734688 - 每个人的结果不一样
 
 print(bytes)  # 不可编辑的二进制
 print(bytearray(10))  # 可编辑的二进制数组
+print(type([]))
 '''
 Python3 中有六个标准的数据类型:
 
@@ -215,6 +216,7 @@ print(__file__)
 
 # 三目运算
 print("1" if False else "2")
+
 
 
 
