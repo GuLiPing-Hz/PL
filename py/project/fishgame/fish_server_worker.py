@@ -51,8 +51,11 @@ def ding_text(token, content, numbers, is_all):
 	# params_content = {"content": content}
 	# print(params_content)
 	# dictParams = {'msgtype': 'text', "text": params_content, "at": params_at}
+	whoToAt = ""
+	for i in range(len(numbers)):
+		whoToAt += "@"+str(numbers[i])
 
-	params_content = {"title": "警告","text": content}
+	params_content = {"title": "警告","text": content+"\n"+whoToAt}
 	print(params_content)
 	dictParams = {'msgtype': 'markdown', "markdown": params_content, "at": params_at}
 	# print(dictParams)
@@ -79,8 +82,8 @@ def ding_text(token, content, numbers, is_all):
 		pass
 
 def dint_text_me(text):
-	numbers = ["15088603329"]
-	ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494",text,numbers,True)
+	numbers = ["15088603329","18758032593"]
+	ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494",text,numbers,False)
 
 def getProcByName(name):
 	# attrs = ['pid', 'memory_percent', 'name', 'cpu_times', 'create_time','memory_info']
