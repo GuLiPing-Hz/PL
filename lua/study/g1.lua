@@ -12,7 +12,7 @@ end
 
 print("\npcall")
 local status,val = pcall(doSomething,50)
-print(status,val)
+print(status,val,type(val))
 print(debug.traceback()) --注意这里只是常规打印我们的调用堆栈
 
 -- debug.debug()
@@ -26,4 +26,5 @@ end, 50)
 
 
 print(debug.traceback("11", 2))
--- pcall和xpcall的区别就是，xpcall能在回调的函数中打印错误堆栈，方便查问题，pcall只能打印一行错误信息
+-- pcall和xpcall的区别就是，xpcall能在回调的函数中打印错误堆栈，方便查问题，
+-- pcall只能打印一行错误信息
