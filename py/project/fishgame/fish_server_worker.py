@@ -6,6 +6,8 @@ import datetime
 # 查看系统运行状态 pip install psutil
 # https://pypi.org/project/psutil/
 import psutil
+#pip install pymysql
+import pymysql
 
 #! python3.4
 # @ guliping
@@ -139,6 +141,50 @@ def checkProc(name,restartCmd):
 		text += "result = " + str((proc and proc.is_running())) + "\n"
 	return text,proc
 
+def checkMySql(host,user,pwd,db):
+	#open db connection
+	# Connect to the database
+	connection = pymysql.connect(host=host,
+                             user=user,
+                             password=pwd,
+                             db=db,
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+	print(connection)
+
+	#use cursor()
+	cursor = connection.cursor()
+	print(cursor)
+
+	#use execute() run sql
+	cursor.execute("show variables like '%max_connections%';")
+
+	#USE fetchone()
+	vMax = cursor.fetchone() #fetchall
+	print(vMax)
+
+	cursor.execute("show global status like 'Max_used_connections';")
+	vHistoryMax = cursor.fetchone()
+	print(vHistoryMax)
+
+	cursor.execute("show global status like 'Threads_connected';")
+	cCur = cursor.fetchone()
+	print(cCur)
+
+	cursor.execute("show full processlist;")
+	cCur = cursor.fetchall()
+	print(cCur)
+
+	# print("\n--------------------------------\n")
+	# print("统计日期 ：",time.strftime('%Y-%m-%d %H:%M:%S'))
+	# print("mysql最大连接数 ：",Max)
+	# print("mysql历史最大连接数 ：",History_max[1])
+	# print("mysql当前最大连接数 ：",Currently[1])
+
+	connection.close()
+
+	pass
+
 def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDisk,names,restartCmds):
 	"""
 	thresholdCpu cpu报警上限阈值
@@ -246,24 +292,21 @@ if __name__ == '__main__':
 
 	IsProduction = False
 	#@注意 路径必须以 / 分隔
-	if len(sys.argv) >= 2 and sys.argv[1] == "production":
+	if len(sys.argv) >= 2 and sys.argv[1] == "production":#正式服
 		IsProduction = True
 		names = ["skynet","auth","xqtpay","slot","lottery"]
 		cmds = ["/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
-	else:
+	else:#测试服
 		names = ["tcpproxy","tcpproxy_test","skynet","auth","xqtpay","slot","lottery"]
 		cmds = ["/opt/tcpproxy/start.sh","/opt/tcpproxy_test/start.sh","/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
 
 	print(names)
-	#测试服
-	# worker(10,mb100,"/",mb100,["tcpproxy_test","skynet","auth","xqtpay","slot"]
-	# 	,["/opt/fish/sh_start.sh"])
-	# #正式服
-	worker(IsProduction,10,mb100,"/home",mb1000,names,cmds)
+	# worker(IsProduction,10,mb100,"/home",mb1000,names,cmds)
 
-	
+	#单个函数测试
 	# checkProc("fishjs.exe","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Debug.win32/fishjs.exe")
 	# checkProc("skynet","/opt/fish/sh_start.sh")
+	checkMySql("127.0.0.1","glp4703","glp3329","databasetest")
 
