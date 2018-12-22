@@ -235,7 +235,7 @@ def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDi
 			text += "# CPU Warning\n"
 			text += "TOTAL CPU="+str(cpu)+" is over threshold("+str(thresholdCpu)+")."
 
-			for i in range(procs):
+			for i in range(len(procs)):
 				exeCpu = procs[i].cpu_percent(0.1)
 				text += "["+names[i]+",cpu=]"+str(exeCpu)+"]"
 			text += "\n"
@@ -249,7 +249,7 @@ def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDi
 			text += "TOTAL Memory Available="+getMbFromByte(vm.available)+" is under threshold(" \
 			+getMbFromByte(thresholdAvailableMem)+")."
 
-			for i in range(procs):
+			for i in range(len(procs)):
 				proc = procs[i]
 				text += "["+names[i]+" memory_percent="+str(round(proc.memory_percent(),2)) \
 				+"%,rss(虚拟耗用内存)="+getMbFromByte(proc.memory_info().rss)+",vms(实际物理内存)=" \
@@ -303,10 +303,10 @@ if __name__ == '__main__':
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
 
 	print(names)
-	# worker(IsProduction,10,mb100,"/home",mb1000,names,cmds)
+	worker(IsProduction,90,mb100,"/home",mb1000,names,cmds)
 
 	#单个函数测试
 	# checkProc("fishjs.exe","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Debug.win32/fishjs.exe")
 	# checkProc("skynet","/opt/fish/sh_start.sh")
-	checkMySql("127.0.0.1","glp4703","glp3329","databasetest")
+	# checkMySql("127.0.0.1","glp4703","glp3329","databasetest")
 
