@@ -3,6 +3,7 @@ import platform
 import os
 import subprocess
 import datetime
+import shutil
 # 查看系统运行状态 pip install psutil
 # https://pypi.org/project/psutil/
 import psutil
@@ -141,8 +142,60 @@ def checkProc(name,restartCmd):
 		text += "result = " + str((proc and proc.is_running())) + "\n"
 	return text,proc
 
-def checkMySql(host,user,pwd,db):
-	#open db connection
+
+def parseNetstatTPN(path,useLocal=True):
+	"""
+	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+	"""
+	newPath = path+".txt"
+	try:
+		os.remove(newPath)
+	except FileNotFoundError:
+		pass
+	shutil.copy(path, newPath)
+	with open(newPath,"r") as f:
+		# cells = []
+		dicts = {}
+		for line in f:
+			# print(line)
+			words = line.split(" ")
+			# print(words)
+
+			cell = []
+			for i in range(len(words)):
+				if words[i] == "" or words[i] == "\n":
+					continue
+				cell.append(words[i])
+			# print(cell)
+			# break
+			cellDict = {
+				"Proto":cell[0], "Recv-Q":cell[1],"Send-Q":cell[2],
+				"Local-Address":cell[3],"Foreign-Address":cell[4],
+				"State":cell[5],"PID-Program-name":cell[6]
+			}
+			if useLocal:
+				if cell[3].startswith("127.0.0.1"):
+					if cell[3] != "127.0.0.1:3306":
+						dicts[cell[3]] = cellDict
+				else:
+					dicts[cell[4]] = cellDict
+			else:
+				dicts[cell[3]] = cellDict
+			# cells.append(cell)
+		# print(cells)
+		return dicts
+
+
+def getMySqlState(isProduction,host,user,pwd,db):
+	"""
+		return 4个值（mysql最大连接数，历史最大连接数，线程数，当前连接的程序）
+	"""
+
+	if "Windows" != platform.system():
+		os.system("netstat -tpn | grep 3306 > netstat.txt")
+	netstats = parseNetstatTPN("./netstat.txt",not isProduction)
+
+	# open db connection
 	# Connect to the database
 	connection = pymysql.connect(host=host,
                              user=user,
@@ -150,30 +203,42 @@ def checkMySql(host,user,pwd,db):
                              db=db,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
-	print(connection)
+	# print(connection)
 
 	#use cursor()
 	cursor = connection.cursor()
-	print(cursor)
+	# print(cursor)
 
 	#use execute() run sql
 	cursor.execute("show variables like '%max_connections%';")
 
 	#USE fetchone()
 	vMax = cursor.fetchone() #fetchall
-	print(vMax)
+	print(vMax,type(vMax))
 
 	cursor.execute("show global status like 'Max_used_connections';")
 	vHistoryMax = cursor.fetchone()
-	print(vHistoryMax)
+	print(vHistoryMax,type(vHistoryMax))
 
 	cursor.execute("show global status like 'Threads_connected';")
-	cCur = cursor.fetchone()
-	print(cCur)
+	vThreads = cursor.fetchone()
+	# print(vThreads,type(vThreads))
 
 	cursor.execute("show full processlist;")
 	cCur = cursor.fetchall()
-	print(cCur)
+	print("cCur=",cCur)
+	print("netstats=",netstats)
+	procList = []
+	for i in range(len(cCur)):
+		val = cCur[i]
+		host = val["Host"]
+		# print(host in netstats)
+		if host in netstats:
+			val["Netstat"] = netstats[host]
+			procList.append(val)
+		elif val["Info"] != "show full processlist":
+			procList.append(val)
+	# print("procList=",procList)
 
 	# print("\n--------------------------------\n")
 	# print("统计日期 ：",time.strftime('%Y-%m-%d %H:%M:%S'))
@@ -183,10 +248,13 @@ def checkMySql(host,user,pwd,db):
 
 	connection.close()
 
-	pass
+	return (int(vMax["Value"]),int(vHistoryMax["Value"]),
+		int(vThreads["Value"]),procList)
 
-def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDisk,names,restartCmds):
+def worker(isProduction,mysql,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDisk,names,restartCmds):
 	"""
+	isProduction True表示正式服，False测试服
+	thresholdMysql myslq连接数上限阈值
 	thresholdCpu cpu报警上限阈值
 	thresholdAvailableMem 内存可用下限阈值
 	path 指定路径位置
@@ -204,6 +272,8 @@ def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDi
 	date = now.strftime('%Y-%m-%d %H:%M:%S')
 	# print(now.ctime())
 	curTime = str(date) + "." + str(now.microsecond) + "\n"
+	if not isProduction:
+		curTime += "## Test\n"
 	print("working",curTime)
 	text = curTime
 
@@ -214,7 +284,7 @@ def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDi
 		if proc:
 			procs.append(proc)
 	
-	if text == curTime:#所有程序都在正常运行
+	if text == curTime:#所有程序都在正常运行,检查运行状态
 		# print(proc)
 		# print(proc.exe())
 		# print("cmdline=",proc.cmdline())
@@ -230,15 +300,14 @@ def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDi
 		cpu = psutil.cpu_percent(interval=0.1)
 		exeCpu = proc.cpu_percent(0.1)
 
-		print(cpu,exeCpu)
+		print("cpu=",cpu,exeCpu)
 		if(cpu > thresholdCpu):
 			text += "# CPU Warning\n"
-			text += "TOTAL CPU="+str(cpu)+" is over threshold("+str(thresholdCpu)+")."
+			text += "#### TOTAL CPU="+str(cpu)+" is over threshold("+str(thresholdCpu)+").\n"
 
 			for i in range(len(procs)):
 				exeCpu = procs[i].cpu_percent(0.1)
-				text += "["+names[i]+",cpu=]"+str(exeCpu)+"]"
-			text += "\n"
+				text += "##### ["+names[i]+",cpu=]"+str(exeCpu)+"]\n"
 		# print("*"*60)
 		vm = psutil.virtual_memory()
 		# print("virtual_memory=",type(vm), vm)
@@ -246,14 +315,15 @@ def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDi
 		# print("virtual_memory=",vm.total, vm.available, vm.percent)  # 查看虚拟内存
 		if(vm.available < thresholdAvailableMem):
 			text += "# Memory Warning\n"
-			text += "TOTAL Memory Available="+getMbFromByte(vm.available)+" is under threshold(" \
-			+getMbFromByte(thresholdAvailableMem)+")."
+			text += "#### TOTAL Memory Available="+getMbFromByte(vm.available)+" is under threshold(" \
+			+getMbFromByte(thresholdAvailableMem)+").\n"
 
 			for i in range(len(procs)):
 				proc = procs[i]
-				text += "["+names[i]+" memory_percent="+str(round(proc.memory_percent(),2)) \
+				##### 下面用5个#，虽然字体大小不变，但是可以强制钉钉内容换行。
+				text += "##### ["+names[i]+" memory_percent="+str(round(proc.memory_percent(),2)) \
 				+"%,rss(虚拟耗用内存)="+getMbFromByte(proc.memory_info().rss)+",vms(实际物理内存)=" \
-				+getMbFromByte(proc.memory_info().vms)+"]"
+				+getMbFromByte(proc.memory_info().vms)+"]\n"
 			text += "\n"
 			
 		# print("*"*60)
@@ -264,14 +334,34 @@ def worker(isProduction,thresholdCpu,thresholdAvailableMem,path,thresholdFreeeDi
 		# print("*"*60)
 		if(pathDiskUsage.free < thresholdFreeeDisk):
 			text += "# Disk Warning\n"
-			text += "Disk("+path+") Free="+getMbFromByte(pathDiskUsage.free) \
+			text += "#### Disk("+path+") Free="+getMbFromByte(pathDiskUsage.free) \
 			+" is under threshold("+getMbFromByte(thresholdFreeeDisk)+")\n"
 		# print("net_io_counters=",psutil.net_io_counters(pernic=True))  # 查看网络链接
 
-	if text != curTime:
-		if not isProduction:
-			text += "## Test\n"
+		mysqlState = getMySqlState(isProduction,mysql[0],mysql[1],mysql[2],mysql[3])
+		thresholdConnections = mysqlState[0]*mysql[4]
+		curConnections = len(mysqlState[3])
+		mysqlProcList = mysqlState[3]
+		print("myslq connections",thresholdConnections,curConnections)
+		if thresholdConnections < curConnections:
+			text += "# Mysql Connections Warning\n"
+			text += "#### Connections="+str(curConnections)+" is over threshold(" \
+			+str(thresholdConnections)+")\n"
+			text += "#### ConnectionsInfo Max="+str(mysqlState[0]) \
+			+" HistoryMax="+str(mysqlState[1])+" Threads="+str(mysqlState[2])+"\n"
+		
+			for i in range(len(mysqlProcList)):
+				proc = mysqlProcList[i]
+				programName = "unknow-"+ proc["User"]
+				if "Netstat" in proc and proc["Netstat"]:
+					programName = proc["Netstat"]["PID-Program-name"]
 
+				text += "##### ["+programName+",db="+str(proc["db"]) \
+				+",Command="+proc["Command"]+",Time="+str(proc["Time"])+",State="+proc["State"] \
+				+",Info="+str(proc["Info"])+",Host="+proc["Host"]+"]\n"
+
+
+	if text != curTime:
 		print(text)
 		dint_text_me(text)
 		pass
@@ -287,6 +377,7 @@ if __name__ == '__main__':
 	# worker(10,mb100,"/",mb100,["fishjs.exe"],["D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Debug.win32/fishjs.exe"])
 	names = []
 	cmds = []
+	mysql = []
 
 	print(sys.argv,len(sys.argv))
 
@@ -297,16 +388,20 @@ if __name__ == '__main__':
 		names = ["skynet","auth","xqtpay","slot","lottery"]
 		cmds = ["/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
+		mysql = ["192.168.100.2","root","WY#Bzd!@Pwd$","Buyu",0.8]
 	else:#测试服
 		names = ["tcpproxy","tcpproxy_test","skynet","auth","xqtpay","slot","lottery"]
 		cmds = ["/opt/tcpproxy/start.sh","/opt/tcpproxy_test/start.sh","/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
+		mysql = ["127.0.0.1","root","gate%buyu_test","Buyu",0.5]
 
 	print(names)
-	worker(IsProduction,90,mb100,"/home",mb1000,names,cmds)
+	worker(IsProduction,mysql,90,mb100,"/home",mb1000,names,cmds)
 
 	#单个函数测试
 	# checkProc("fishjs.exe","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Debug.win32/fishjs.exe")
 	# checkProc("skynet","/opt/fish/sh_start.sh")
 	# checkMySql("127.0.0.1","glp4703","glp3329","databasetest")
+	# getMySqlState("127.0.0.1","root","gate%buyu_test","Buyu")
+	# parseNetstatTPN("../../test/netstat.txt")
 
