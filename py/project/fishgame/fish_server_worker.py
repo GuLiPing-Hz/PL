@@ -238,7 +238,7 @@ def getMySqlState(isProduction,host,user,pwd,db):
 			procList.append(val)
 		elif val["Info"] != "show full processlist":
 			procList.append(val)
-	# print("procList=",procList)
+	print("procList=",procList)
 
 	# print("\n--------------------------------\n")
 	# print("统计日期 ：",time.strftime('%Y-%m-%d %H:%M:%S'))
