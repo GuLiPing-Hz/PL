@@ -184,3 +184,31 @@ end
 shuffle()
 shuffle()
 shuffle()
+
+
+function randOneList(list)
+    local probs = list
+    local total = 0
+    for i = 1, #probs do
+        total = total + probs[i]
+        probs[i] = total
+    end
+
+    local r = math.random(total) --随机数
+    for i = 1, #probs do
+        if r <= probs[i] then
+            return i
+        end
+    end
+end
+
+function randOne(...)
+    local probs = table.pack(...)
+    probs.n = nil
+    return randOneList(probs)
+end
+
+
+
+print(randOne(100,200,300,400))
+print(randOneList({100,200,300,400}))

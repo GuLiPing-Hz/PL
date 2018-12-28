@@ -35,12 +35,23 @@ def optionRenameFishId(path, file):
     print(fullpath, ">>", new_path)
     file_helper.move_file(fullpath, new_path)
 
+def optionJSResLobby(path,file):
+    optionJSRes1(path,file)
 
-def optionJSRes1(path, file):
-    if("ignore" in path or file.startswith("particle_") or file.startswith("Plist")):
-        return
-    if path.endswith("_ignore"):
-        return
+def optionJSResFish(path,file):
+    optionJSRes1(path,file,True)
+
+def optionJSRes1(path, file,inFish=False):
+
+    if not inFish:
+        if(file.startswith("particle_") or file.startswith("Plist")):
+            return
+        if "ignore" in path or path.endswith("_ignore"):
+            return
+    else:
+        if(not file.endswith(".png")):
+            return
+
     path_new = path[path.find("res"):].replace("/", "/")+"/"
     # print(path_new)
 
@@ -210,13 +221,13 @@ if __name__ == '__main__':
     # C++文件列表
     # file_helper.Diskwalk("D:/glp/GitHub/LongConnectionTCP/src/Classes/app",False).walk(optionCPP);
     # 平台 图片文件
-    # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/platform").walk(optionJSRes1);
+    # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/platform").walk(optionJSResLobby);
     # 音频文件
     # file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
     # 捕鱼 游动plist文件
     # file_helper.Diskwalk("D:/glp/GitHub/fishjs/studio/res/games/fish/fishs",False).walk(optionJSRes2);
     # 捕鱼图片文件
-    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",False).walk(optionJSRes1);
+    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",True).walk(optionJSResFish);
 
     # 鱼图片文件名字修改
     # file_helper.Diskwalk("D:/glp/work/UI/20170919/package/fishs",False).walk(optionRenameFishId);

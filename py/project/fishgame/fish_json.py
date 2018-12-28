@@ -117,6 +117,15 @@ def ParseCCSNodeProp(json_content, str_node, cur_cnt, ret_cnt, is_node=False, is
 
     printSpace8(ret_cnt,str_node+".setCascadeOpacityEnabled(true);//自身的alpha属性是否影响子类");
 
+    # "FlipX": true,
+    # "FlipY": true,
+
+    if "FlipX" in json_content:
+        printSpace8(ret_cnt,str_node+".setFlippedX(true);")
+
+    if "FlipY" in json_content:
+        printSpace8(ret_cnt,str_node+".setFlippedY(true);")
+
     # 设置颜色混合
     if(has_blend and "BlendFunc" in json_content):
         json_blend = json_content["BlendFunc"]
@@ -345,10 +354,10 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
     img_path, is_frame = ParseCCSSpriteProp(json_content,"DisabledFileData")
     if(img_path != ""):
         if USERIMAGEPLIST and is_frame:
-            printSpace8(ret_cnt,name+".loadTexturePressed(" +
+            printSpace8(ret_cnt,name+".loadTextureDisabled(" +
                         repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
         else:
-            printSpace8(ret_cnt,name+".loadTexturePressed(" +
+            printSpace8(ret_cnt,name+".loadTextureDisabled(" +
                         repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt)
@@ -1278,10 +1287,10 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/Fish2/res1"
     # 大厅
-    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 游戏
-    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")
