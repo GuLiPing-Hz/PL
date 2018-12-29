@@ -221,13 +221,13 @@ if __name__ == '__main__':
     # C++文件列表
     # file_helper.Diskwalk("D:/glp/GitHub/LongConnectionTCP/src/Classes/app",False).walk(optionCPP);
     # 平台 图片文件
-    # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/platform").walk(optionJSResLobby);
+    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/platform").walk(optionJSResLobby);
     # 音频文件
     # file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
     # 捕鱼 游动plist文件
     # file_helper.Diskwalk("D:/glp/GitHub/fishjs/studio/res/games/fish/fishs",False).walk(optionJSRes2);
     # 捕鱼图片文件
-    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",True).walk(optionJSResFish);
+    # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",True).walk(optionJSResFish);
 
     # 鱼图片文件名字修改
     # file_helper.Diskwalk("D:/glp/work/UI/20170919/package/fishs",False).walk(optionRenameFishId);
