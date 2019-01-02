@@ -62,12 +62,15 @@ def printSpace4(ret_cnt,msg):
 def printSpace8(ret_cnt,msg):
     printSpace4(ret_cnt+1,msg)
 
+def needUse(name):
+    return name.startswith("use_") or name.endswith("_use")
+
 def getCurRetName(ret_cnt):
     return "ret" if ret_cnt <= 0 else "ret"+str(ret_cnt)
 
 def getJsonPropName(name,str_parent):
     if(name == str_parent):
-        if(name.endswith("_use")):
+        if(needUse(name)):
             name = name[:-4] + "__use"
         else:
             name = name+"_"
@@ -231,7 +234,7 @@ def ParseCCSNode(json_content, str_parent, cur_cnt, ret_cnt, str_node=None):
     else:
         printSpace8(ret_cnt,"parent.addChild("+name+");")
         printSpace8(ret_cnt,name+".setPosition(pos);")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;#申明是全局变量
 
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
@@ -280,7 +283,7 @@ def ParseCCSBtn(json_content, str_parent, str_node, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+str_node+" = new ccui.Button();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+str_node+");")
-    if(str_node.endswith("_use")):
+    if(needUse(str_node)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,str_node+".setName('"+str(cur_cnt)+"');")
@@ -314,7 +317,7 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = new ccui.Button();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -375,7 +378,7 @@ def ParseCCSSprite(json_content, str_parent, cur_cnt, ret_cnt):
         printSpace8(ret_cnt,"var "+name+" = new cc.Sprite();")
         if(str_parent):
             printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-        if(name.endswith("_use")):
+        if(needUse(name)):
             # global PUSHCNT;
             printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
             printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -419,7 +422,7 @@ def ParseCCSImage(json_content, str_parent, cur_cnt, ret_cnt):
         printSpace8(ret_cnt,"var "+name+" = new ccui.ImageView();")
         if(str_parent):
             printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-        if(name.endswith("_use")):
+        if(needUse(name)):
             # global PUSHCNT;
             printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
             printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -493,7 +496,7 @@ def ParseCCSText(json_content, str_parent, cur_cnt, ret_cnt):
     
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -618,7 +621,7 @@ def ParseCCSTextAtlas(json_content, str_parent, cur_cnt, ret_cnt):
                 + ", '"+json_content["StartChar"]+"');")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         # printCustom("ParseCCSTextAtlas 1",cur_cnt)
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
@@ -648,7 +651,7 @@ def ParseCCSLoadingBar(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = new ccui.LoadingBar();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -676,7 +679,7 @@ def ParseCCSParticle(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = cc.ParticleSystem.create("+repr(img_path)+");")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -717,7 +720,7 @@ def ParseCCSPanel(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = new ccui.Layout();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -811,7 +814,7 @@ def ParseCCSSlider(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = new ccui.Slider();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -884,7 +887,7 @@ def ParseCCSCheckBox(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = new ccui.CheckBox();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -916,7 +919,7 @@ def ParseCCSTextField(json_content, str_parent, str_node, cur_cnt, ret_cnt):
                 + str(json_content["FontSize"])+");")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+str_node+");")
-    if(str_node.endswith("_use")):
+    if(needUse(str_node)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,str_node+".setName('"+str(cur_cnt)+"');")
@@ -977,7 +980,7 @@ def ParseCCSTextInput(json_content, str_parent, cur_cnt, ret_cnt):
     if (not ret) :
         return ret_cnt
     if(name == str_parent):
-        if(name.endswith("_use")):
+        if(needUse(name)):
             name = name[:-4] + "__use"
         else:
             name = name+"_"
@@ -1003,7 +1006,7 @@ def ParseCCSTextInput(json_content, str_parent, cur_cnt, ret_cnt):
             name+".setPlaceHolder(Tips.pleaseType);//这里必须在addChild之前写入，否则位置不对")
         if(str_parent):
             printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-        if(name.endswith("_use")):
+        if(needUse(name)):
             # global PUSHCNT;
             printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
             printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -1070,7 +1073,7 @@ def ParseCCSScrollView(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = new ccui.ScrollView();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -1107,7 +1110,7 @@ def ParseFnt(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,"var "+name+" = new ccui.TextBMFont();")
     if(str_parent):
         printSpace8(ret_cnt,str_parent+".addChild("+name+");")
-    if(name.endswith("_use")):
+    if(needUse(name)):
         # global PUSHCNT;
         printSpace8(ret_cnt,"/**push node "+str(cur_cnt)+" */")
         printSpace8(ret_cnt,name+".setName('"+str(cur_cnt)+"');")
@@ -1248,7 +1251,7 @@ def PrintComments():
         "if you want a button, just rename the sprite/imageview name start with 'btn_'")
     printCustom()
     printCustom(
-        "if you want a node to be return, just rename the node name end with '_use'")
+        "if you want a node to be return, just rename the node name end with '_use' or start with 'use_'")
     printCustom()
     printCustom("if you want a loadingbar use scale9, just do :" + """
 
@@ -1287,10 +1290,10 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/Fish2/res1"
     # 大厅
-    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 捕鱼游戏
-    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")
