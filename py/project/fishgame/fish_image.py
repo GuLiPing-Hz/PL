@@ -110,12 +110,31 @@ if __name__ == '__main__':
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
 
     #打包整个项目
-    enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
-    enc_jss("D:/glp/Github/Fish2/third_part/jsc/src")
-    file_helper.remove_dir("D:/glp/Github/Fish2/third_part/jsc_ios/src");
-    file_helper.copy_dir("D:/glp/Github/Fish2/third_part/jsc/src"
-        ,"D:/glp/Github/Fish2/third_part/jsc_ios/src");
-    file_helper.remove_file("D:/glp/Github/Fish2/third_part/jsc_ios/src/app.jsc")#ios目录不需要这个文件
+    projectDir = "D:/glp/Github/Fish2/"
+    # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
+    enc_jss(projectDir+"third_part/jsc/src")
+    file_helper.remove_dir(projectDir+"third_part/jsc_ios/src");
+    file_helper.copy_dir(projectDir+"third_part/jsc/src"
+        ,projectDir+"third_part/jsc_ios/src");
+    file_helper.remove_file(projectDir+"/third_part/jsc_ios/src/app.jsc")#ios目录不需要这个文件
+    
+    #release路径js替换成jsc
+    file_helper.remove_dir(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/script");
+    file_helper.remove_dir(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/src");
+    try:
+        file_helper.remove_file(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/main.js")
+    except Exception as e:
+        pass
+    try:
+        file_helper.remove_file(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/main_ios.js")
+    except Exception as e:
+        pass
+    file_helper.copy_dir(projectDir+"third_part/jsc/script"
+        ,projectDir+"frameworks/runtime-src/proj.win32/Release.win32/script");
+    file_helper.copy_dir(projectDir+"third_part/jsc/src"
+        ,projectDir+"frameworks/runtime-src/proj.win32/Release.win32/src");
+
+    #然后执行manifest生成脚本
 
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc_sp")//短信渠道包

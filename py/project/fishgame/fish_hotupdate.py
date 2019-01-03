@@ -161,7 +161,7 @@ def main(src_dir, dst_dir):
 curAssetCnt = 0
 
 
-def createManifestEx(url, src, dest, update, ver,project=True):
+def createManifestEx(url, src, dest, update, ver,force,project=True):
     """
         @url 域名地址
         @src 文件release存放位置
@@ -251,7 +251,7 @@ def createManifestEx(url, src, dest, update, ver,project=True):
     # 版本校验
     del manifest["assets"]
     del manifest["searchPaths"]
-    manifest["forceUpdate"] = False
+    manifest["forceUpdate"] = force
     file_helper.write_str_to_file(cur_ver_manifest_file_src, json.dumps(
         manifest, indent=0, sort_keys=False))
 
@@ -413,18 +413,20 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
         print("第一版游戏资源生成完毕")
 
 
-def lailaifish_manifest_gen(version):
+def lailaifish_manifest_gen(version,force,test):
     # 生成捕鱼更新包 manifest
     # 必须是已经加密过的jsc和图片资源
-    createManifestEx("https://fanyu123.com/bao/ver/game/",
-                     "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
-                     "D:/glp/Github/Fish2", 
-                     "update", version)#"1.0.8"
+    if not test:
+        createManifestEx("https://fanyu123.com/bao/ver/game/",
+                         "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
+                         "D:/glp/Github/Fish2", 
+                         "update", version,force)#"1.0.8"
+    else:
+        createManifestEx("https://www.fanyu123.cn/ver3/game/",
+                         "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
+                         "D:/glp/Github/Fish2", 
+                         "update", version,force)#"1.0.8"
 
-    # createManifestEx("http://192.168.0.18/ver/game/",
-    #                  "C:/nginx-1.13.12/html/ver/game/update",
-    #                  "C:/nginx-1.13.12/html/ver",
-    #                  "update", version,False)#"1.0.8"
 
 
 if __name__ == '__main__':
@@ -432,14 +434,14 @@ if __name__ == '__main__':
 
     import sys
 
-    version = "1.2.3.0"
+    version = "2.0.0.8"
     if len(sys.argv) > 1:
         str_ver = sys.argv[1]
         version = str_ver[str_ver.find("-v=")+3:]
     
     print(version+"更新包生成。。。")
     # 来来捕鱼更新包配置文件
-    lailaifish_manifest_gen(version)
+    lailaifish_manifest_gen(version,True,True)
 
     """
 		额。。。有点繁琐，先这样吧。。
