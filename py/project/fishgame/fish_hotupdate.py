@@ -416,6 +416,7 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
 def lailaifish_manifest_gen(version,force,test):
     # 生成捕鱼更新包 manifest
     # 必须是已经加密过的jsc和图片资源
+
     if not test:
         createManifestEx("https://fanyu123.com/bao/ver/game/",
                          "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
@@ -434,7 +435,7 @@ if __name__ == '__main__':
 
     import sys
 
-    version = "2.0.0.8"
+    version = "2.0.0.9"
     if len(sys.argv) > 1:
         str_ver = sys.argv[1]
         version = str_ver[str_ver.find("-v=")+3:]

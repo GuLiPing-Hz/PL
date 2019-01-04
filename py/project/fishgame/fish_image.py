@@ -4,6 +4,7 @@ import os
 import sys
 sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
 import file_helper
+import fish_hotupdate
 
 IMAGE_KEY = "key"
 
@@ -109,8 +110,15 @@ if __name__ == '__main__':
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
 
+    version = "2.0.0.9"
     #打包整个项目
     projectDir = "D:/glp/Github/Fish2/"
+
+    file_helper.write_str_to_file(projectDir+"src/ver.js","""
+var Ver = {
+    version: """+repr(version)+"""//auto write by python
+};
+""")
     # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
     enc_jss(projectDir+"third_part/jsc/src")
     file_helper.remove_dir(projectDir+"third_part/jsc_ios/src");
@@ -134,7 +142,9 @@ if __name__ == '__main__':
     file_helper.copy_dir(projectDir+"third_part/jsc/src"
         ,projectDir+"frameworks/runtime-src/proj.win32/Release.win32/src");
 
+    print(version+"更新包生成。。。")
     #然后执行manifest生成脚本
+    fish_hotupdate.lailaifish_manifest_gen(version,True,True)
 
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc_sp")//短信渠道包
