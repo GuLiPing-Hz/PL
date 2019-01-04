@@ -97,22 +97,10 @@ def enc_jss(path):
     print("完成加密jsc文件...")
 
 
-if __name__ == '__main__':
-    # 以后路径统一使用 '/ 请勿使用 '\\'
-
-    # 运行一次是加密，运行第二次是解密
-    IMAGE_KEY = "aaazhejiangfanyu2018"  # 主包加密
-    # IMAGE_KEY = "spzhejiangfanyu2018" #sp渠道加密
-
-    # main("D:/glp/GitHub/Fish2")
-    # temp("D:/glp/work/UI/temp",False);#是否遍历子目录
-
-    # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
-    # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
-
-    version = "2.0.0.9"
+def productGen(ver,dir):
+    version = ver
     #打包整个项目
-    projectDir = "D:/glp/Github/Fish2/"
+    projectDir = dir
 
     file_helper.write_str_to_file(projectDir+"src/ver.js","""
 var Ver = {
@@ -145,6 +133,25 @@ var Ver = {
     print(version+"更新包生成。。。")
     #然后执行manifest生成脚本
     fish_hotupdate.lailaifish_manifest_gen(version,True,True)
+
+if __name__ == '__main__':
+    # 以后路径统一使用 '/ 请勿使用 '\\'
+
+    # 运行一次是加密，运行第二次是解密
+    IMAGE_KEY = "aaazhejiangfanyu2018"  # 主包加密
+    # IMAGE_KEY = "spzhejiangfanyu2018" #sp渠道加密
+
+    # main("D:/glp/GitHub/Fish2")
+    temp("D:/glp/work/UI/temp",False);#是否遍历子目录
+
+    # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
+    # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
+
+    version = "2.0.0.9"
+    #打包整个项目
+    projectDir = "D:/glp/Github/Fish2/"
+    # productGen(version,projectDir)
+    
 
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc_sp")//短信渠道包

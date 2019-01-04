@@ -85,7 +85,12 @@ def optionJSRes1_(path, file):
 
 def optionJSRes2(path, file):
     name = file.replace(".", "_")
-    print("'res/games/fish/fishs/"+file+"',")
+
+    name = file.replace(".png","' + cfgImageExt")
+    if name.endswith("+ cfgImageExt"):
+        print("'res/games/fish/fishs/"+name+",")
+    else:
+        print("'res/games/fish/fishs/"+name+"',")
 
 
 def optionJSRes3(path, file):
@@ -221,11 +226,11 @@ if __name__ == '__main__':
     # C++文件列表
     # file_helper.Diskwalk("D:/glp/GitHub/LongConnectionTCP/src/Classes/app",False).walk(optionCPP);
     # 平台 图片文件
-    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/platform").walk(optionJSResLobby);
+    # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/platform").walk(optionJSResLobby);
     # 音频文件
     # file_helper.Diskwalk("D:/glp/GitHub/fishjs/res/games/fish/ogg",False).walk(optionJSRes1_);
     # 捕鱼 游动plist文件
-    # file_helper.Diskwalk("D:/glp/GitHub/fishjs/studio/res/games/fish/fishs",False).walk(optionJSRes2);
+    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish/fishs",False).walk(optionJSRes2);
     # 捕鱼图片文件
     # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",True).walk(optionJSResFish);
 
