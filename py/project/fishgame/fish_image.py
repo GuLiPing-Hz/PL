@@ -60,6 +60,11 @@ def encFile(path, file):
         fp.flush()
 
 
+def png2Jpg(path,file):
+    filePath = path + "/" + file
+    newFilePath = filePath.replace(".png",".jpg")
+    file_helper.move_file(filePath,newFilePath)
+
 def temp(path, recursive=False):
     # 图片处理的一些列操作 后缀.webp改成.png
 
@@ -97,16 +102,22 @@ def enc_jss(path):
     print("完成加密jsc文件...")
 
 
-def productGen(ver,dir):
+def productGen(ver,dir,onlyVer=True):
     version = ver
-    #打包整个项目
     projectDir = dir
+    if onlyVer:
+        
+        #打包整个项目
+        
 
-    file_helper.write_str_to_file(projectDir+"src/ver.js","""
+        file_helper.write_str_to_file(projectDir+"src/ver.js","""
 var Ver = {
     version: """+repr(version)+"""//auto write by python
 };
-""")
+        """)
+        print("Write ver.js")
+        return
+
     # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
     enc_jss(projectDir+"third_part/jsc/src")
     file_helper.remove_dir(projectDir+"third_part/jsc_ios/src");
@@ -142,6 +153,7 @@ if __name__ == '__main__':
     # IMAGE_KEY = "spzhejiangfanyu2018" #sp渠道加密
 
     # main("D:/glp/GitHub/Fish2")
+    # 加密增加的图片文件
     # temp("D:/glp/work/UI/temp",False);#是否遍历子目录
 
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
@@ -150,10 +162,11 @@ if __name__ == '__main__':
     #第一步更改版本号，生成，版本文件，
     #第二步VS编译jsc文件
     #第三步再次执行我们的脚本文件
-    version = "2.0.0.13"
+    version = "2.0.0.15"
     #打包整个项目
     projectDir = "D:/glp/Github/Fish2/"
-    productGen(version,projectDir)
+    # productGen(version,projectDir)
+    productGen(version,projectDir,False)
     
 
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
