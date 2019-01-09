@@ -162,7 +162,7 @@ if __name__ == '__main__':
     #第一步更改版本号，生成，版本文件，
     #第二步VS编译jsc文件
     #第三步再次执行我们的脚本文件
-    version = "2.0.0.15"
+    version = "2.0.0.23"
     #打包整个项目
     projectDir = "D:/glp/Github/Fish2/"
     # productGen(version,projectDir)
