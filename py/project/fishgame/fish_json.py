@@ -1167,6 +1167,9 @@ def ParseCCSChildren(json_children, str_parent, cur_cnt, ret_cnt):
         elif(json_content["ctype"] == "TextBMFontObjectData"):
             cur_cnt = ParseFnt(json_content, str_parent, cur_cnt, ret_cnt)
         elif(json_content["ctype"] == "ProjectNodeObjectData"):
+            if not "FileData" in json_content:
+                raise Exception("json_content="+str(json_content))
+
             json_file = json_content["FileData"]["Path"]  # 获取到json文件
 
             name,ret = getJsonPropName(json_content["Name"],str_parent);

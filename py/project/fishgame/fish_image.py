@@ -102,7 +102,7 @@ def enc_jss(path):
     print("完成加密jsc文件...")
 
 
-def productGen(ver,dir,onlyVer=True):
+def productGen(ver,dir,isTest=True,onlyVer=True):
     version = ver
     projectDir = dir
     if onlyVer:
@@ -143,7 +143,7 @@ var Ver = {
 
     print(version+"更新包生成。。。")
     #然后执行manifest生成脚本
-    fish_hotupdate.lailaifish_manifest_gen(version,True,True)
+    fish_hotupdate.lailaifish_manifest_gen(version,True,isTest)
 
 if __name__ == '__main__':
     # 以后路径统一使用 '/ 请勿使用 '\\'
@@ -162,11 +162,12 @@ if __name__ == '__main__':
     #第一步更改版本号，生成，版本文件，
     #第二步VS编译jsc文件
     #第三步再次执行我们的脚本文件
-    version = "2.0.0.23"
+    version = "2.0.0.29"
     #打包整个项目
     projectDir = "D:/glp/Github/Fish2/"
-    # productGen(version,projectDir)
-    productGen(version,projectDir,False)
+    isTest = True
+    # productGen(version,projectDir,isTest)
+    productGen(version,projectDir,isTest,False)
     
 
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
