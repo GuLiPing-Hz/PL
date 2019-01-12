@@ -224,6 +224,7 @@ def getMySqlState(isProduction,host,user,pwd,db):
 	vThreads = cursor.fetchone()
 	# print(vThreads,type(vThreads))
 
+	# mysqladmin -u root -p show full processlist;
 	cursor.execute("show full processlist;")
 	cCur = cursor.fetchall()
 	print("cCur=",cCur)

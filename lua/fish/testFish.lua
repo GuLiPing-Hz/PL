@@ -210,5 +210,73 @@ end
 
 
 
-print(randOne(100,200,300,400))
-print(randOneList({100,200,300,400}))
+-- print(randOne(100,200,300,400))
+-- print(randOneList({100,200,300,400}))
+
+--读取鱼ID配置的类型，提高效率
+Cfg = {
+    FishType = {
+        {1, 2, 3, 4, 5, 6},
+        {{8}, {7, 9, 10, 11, 12, 13, 14, 15, 16}},
+        {17, 18, 19, 20, 21, 23, 25},
+        {22, 24, 26, 27, 28},
+        {},
+        {31},
+        {30},
+        {29}
+    }
+}
+Cfg.FishType2Category = {}
+Cfg.FishType2Probability = {}
+for i = 1, #Cfg.FishType do
+    local curList = Cfg.FishType[i]
+    if i == 2 then
+        --有两种鱼
+        local fishsProbabilityInSameType = {} --同类鱼的权重
+        local total = 0
+        for j = 1, #curList do
+            local curListList = curList[j]
+            for k = 1, #curListList do
+                -- statements
+                print(k)
+                Cfg.FishType2Category[curListList[k]] = i
+                fishsProbabilityInSameType[total+k] = j
+            end
+            total = total + #curListList
+        end
+        fishsProbabilityInSameType.total = total
+        print(tableToStr(fishsProbabilityInSameType))
+        Cfg.FishType2Probability[i] = fishsProbabilityInSameType
+    else
+        for j = 1, #curList do
+            Cfg.FishType2Category[curList[j]] = i
+        end
+    end
+end
+
+print("FishType2Probability=",tableToStr(Cfg.FishType2Probability))
+
+i = 2
+t = Cfg.FishType2Probability[i].total
+print(t)
+math.randomseed(os.time())
+local r = math.random(t)
+print(r)
+local mid_idx = 0--Cfg.FishType2Probability[i][r]
+print(r,mid_idx,math.random(10),math.random(t))
+
+
+local objsPool = {}
+local mgr = {}
+mgr.pool = objsPool
+table.insert(mgr.pool,{})
+table.insert(mgr.pool,{})
+table.insert(mgr.pool,{})
+table.insert(mgr.pool,{})
+table.insert(mgr.pool,{})
+
+print("#objsPool",#objsPool)
+print("#mgr.pool",#mgr.pool)
+local obj = table.remove(mgr.pool)
+print("#objsPool",#objsPool)
+print("#mgr.pool",#mgr.pool)
