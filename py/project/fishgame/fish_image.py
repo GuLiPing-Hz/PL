@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
     # main("D:/glp/GitHub/Fish2")
     # 加密增加的图片文件
-    # temp("D:/glp/work/UI/temp",False);#是否遍历子目录
+    temp("D:/glp/work/UI/temp",False);#是否遍历子目录
 
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
@@ -162,12 +162,12 @@ if __name__ == '__main__':
     #第一步更改版本号，生成，版本文件，
     #第二步VS编译jsc文件
     #第三步再次执行我们的脚本文件
-    version = "2.0.0.29"
+    version = "2.0.0.35"
     #打包整个项目
     projectDir = "D:/glp/Github/Fish2/"
     isTest = True
-    # productGen(version,projectDir,isTest)
-    productGen(version,projectDir,isTest,False)
+    productGen(version,projectDir,isTest)
+    # productGen(version,projectDir,isTest,False)
     
 
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
