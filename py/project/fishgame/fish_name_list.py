@@ -35,6 +35,21 @@ def optionRenameFishId(path, file):
     print(fullpath, ">>", new_path)
     file_helper.move_file(fullpath, new_path)
 
+def optionJSRes0(path, file):
+    name = file.replace(".", "_")
+    ext_file = file.replace(".png", "")
+
+    path_new = path[path.find("res"):].replace("/", "/")+"/"
+    is_png = False
+    if("_png" in name):
+        is_png = True
+
+    if(is_png):
+        # games/fish ; platform
+        print(name+": '"+path_new+ext_file+"' + cfgImageExt,")
+    else:
+        print(name+": '"+path_new+ext_file+"',")  # games/fish ; platform
+
 def optionJSResLobby(path,file):
     optionJSRes1(path,file)
 
@@ -125,8 +140,6 @@ def optionJSRes3(path, file):
         print(name+": '"+path_new+ext_file+"',")  # games/fish ; platform
 
 # 修改plist文件的纹理为png->webp
-
-
 def optionJSRes4(path, file):
     plist_filename = path+"/"+file
     print(plist_filename)
@@ -233,6 +246,8 @@ if __name__ == '__main__':
     # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish/fishs",False).walk(optionJSRes2);
     # 捕鱼图片文件
     file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",True).walk(optionJSResFish);
+    #粒子文件
+    # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish/particle",False).walk(optionJSRes0);
 
     # 鱼图片文件名字修改
     # file_helper.Diskwalk("D:/glp/work/UI/20170919/package/fishs",False).walk(optionRenameFishId);

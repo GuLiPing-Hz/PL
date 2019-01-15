@@ -114,6 +114,7 @@ for i in range(1, 10, 1):  # range参数 前闭后开 [起点，终点)，步长
     print(i, end=",")
 print()
 
+# range(start, stop[, step])
 for i in range(len(fruits)):
     print("fruits[", i, "]=", fruits[i], end=",")
     continue  # 跳过后面的语句
