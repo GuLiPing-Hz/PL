@@ -1284,8 +1284,8 @@ if __name__ == '__main__':
     # TestJson()
 
     # 更新
-    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,False)
-    ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new_x.json",True,False)
+    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new.json",False,False)
+    # ChangePosition("../../test/pfishRoutes.json","../../test/pfishRoutes_new_x.json",True,False)
 
     # 解析所有的node节点，转化成js函数
 
@@ -1295,7 +1295,7 @@ if __name__ == '__main__':
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 捕鱼游戏
-    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")
