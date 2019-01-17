@@ -1292,10 +1292,10 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/Fish2/res1"
     # # 大厅
-    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 捕鱼游戏
-    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")
