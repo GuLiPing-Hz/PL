@@ -383,18 +383,26 @@ if __name__ == '__main__':
 	print(sys.argv,len(sys.argv))
 
 	IsProduction = False
-	#@注意 路径必须以 / 分隔
+
+	mySqlPwd1 = ""
+	mySqlPwd2 = ""
+	with open("mysqlpwd.txt","r") as f:
+		mySqlPwd1 = f.readline()[:-1]
+		mySqlPwd2 = f.readline()
+	print(mySqlPwd1,mySqlPwd2)
+
+	# #@注意 路径必须以 / 分隔
 	if len(sys.argv) >= 2 and sys.argv[1] == "production":#正式服
 		IsProduction = True
 		names = ["skynet","auth","xqtpay","slot","lottery"]
 		cmds = ["/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
-		mysql = ["192.168.100.2","root","WY#Bzd!@Pwd$","Buyu",0.8]
+		mysql = ["192.168.100.2","root",mySqlPwd1,"Buyu",0.8]
 	else:#测试服
-		names = ["tcpproxy","tcpproxy_test","skynet","auth","xqtpay","slot","lottery"]
+		names = ["tcpproxy1","tcpproxy","skynet","auth","xqtpay","slot","lottery"]
 		cmds = ["/opt/tcpproxy/start.sh","/opt/tcpproxy_test/start.sh","/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
-		mysql = ["127.0.0.1","root","gate%buyu_test","Buyu",0.5]
+		mysql = ["127.0.0.1","root",mySqlPwd2,"Buyu",0.5]
 
 	print(names)
 	worker(IsProduction,mysql,90,mb100,"/home",mb1000,names,cmds)

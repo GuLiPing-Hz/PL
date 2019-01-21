@@ -1,12 +1,12 @@
 import redis
 import pymysql
 
-def cleanUsers(start=None,end=None):
+def cleanUsers(pwd,pwd2,start=None,end=None):
 
 	if not start or not end:
 		connection = pymysql.connect(host='121.196.203.52',
 	                             user="root",
-	                             password="gate%buyu_test",
+	                             password=pwd,
 	                             db="Buyu",
 	                             charset='utf8mb4',
 	                             cursorclass=pymysql.cursors.DictCursor)
@@ -25,14 +25,14 @@ def cleanUsers(start=None,end=None):
 			vMax = cursor.fetchone()
 			end = vMax["uid"]
 
-	r = redis.Redis(host='121.196.203.52', port=6379, db=0,password="C9BE6E8D-F2CF-4154-BD34-922844BEAC11")
+	r = redis.Redis(host='121.196.203.52', port=6379, db=0,password=pwd2)
 	# print(dir(r))
 	for i in range(start,end):
 		print("del usr_"+str(i),r.delete("usr_"+str(i)))
 		r.delete("usrStat_"+str(i))
 
-def cleanUsrByUids(uids):
-	r = redis.Redis(host='121.196.203.52', port=6379, db=0,password="C9BE6E8D-F2CF-4154-BD34-922844BEAC11")
+def cleanUsrByUids(uids,pwd):
+	r = redis.Redis(host='121.196.203.52', port=6379, db=0,password=pwd)
 	# print(dir(r))
 	for i in range(len(uids)):
 		uid = uids[i]
@@ -41,6 +41,16 @@ def cleanUsrByUids(uids):
 
 if __name__ == '__main__':
 	print("清理redis 测试服缓存...")
-	cleanUsers() #清除所有人的redis缓存，慎用
-	# cleanUsrByUids([165616]) #清除指定uid
+
+	mySqlPwd1 = ""
+	mySqlPwd2 = ""
+	redisPwd = ""
+	with open("mysqlpwd.txt","r") as f:
+		mySqlPwd1 = f.readline()[:-1]
+		mySqlPwd2 = f.readline()[:-1]
+		redisPwd = f.readline()
+	print(mySqlPwd1,mySqlPwd2,redisPwd)
+
+	# cleanUsers(mySqlPwd1,redisPwd) #清除所有人的redis缓存，慎用
+	cleanUsrByUids([165616],redisPwd) #清除指定uid
 
