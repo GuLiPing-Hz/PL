@@ -70,21 +70,6 @@ def write_str_to_file(file, str):
     return v_writed
 
 
-def move_file(src_file, dst_file):
-    # print("move_file",src_file,dst_file)
-    try:
-        os.rename(src_file, dst_file)
-    except FileNotFoundError:
-        pass
-    except FileExistsError:
-        # 文件已经存在
-        # print(dst_file)
-        os.remove(dst_file)  # 先移除文件
-        os.rename(src_file, dst_file)  # 再尝试移动
-
-        # raise RuntimeError();
-
-
 def copy_file(src_path, dst_path):
     """ 拷贝文件 """
     try:
@@ -125,6 +110,24 @@ def copy_dir(src_path, dst_path):
     if os.path.isdir(dst_path):
         print(dst_path, "Copy Dir Success")
 
+
+def move_file(src_file, dst_file):
+    print(src_file,"->",dst_file)
+    try:
+        os.rename(src_file, dst_file)
+    except FileNotFoundError:
+        pass
+    except FileExistsError:
+        # 文件已经存在
+        # print(dst_file)
+        os.remove(dst_file)  # 先移除文件
+        os.rename(src_file, dst_file)  # 再尝试移动
+
+        # raise RuntimeError();
+
+def move_dir(src_dir,dst_dir):
+    print(src_dir,"->",dst_dir)
+    shutil.move(src_dir,dst_dir)
 
 def file_size(file):
     with open(file, "r") as f:  # r rb r+ rb+ w wb w+ wb+ a ab a+ ab+
@@ -260,7 +263,7 @@ def main():
 
     # r w a
     with zipfile.ZipFile('D:/glp/cocos/spam.zip', 'a') as myzip:
-        myzip.write('D:/glp/cocos/eggs.txt',"eggs.txt")
+        myzip.write('D:/glp/cocos/eggs.txt','D:/glp/cocos/eggs.txt')
         myzip.write('D:/glp/cocos/eggs1.txt',"eggs1.txt")
 
     text = """	

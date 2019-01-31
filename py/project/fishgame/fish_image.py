@@ -102,20 +102,19 @@ def enc_jss(path):
     print("完成加密jsc文件...")
 
 
-def productGen(ver,dir,isTest=True,onlyVer=True):
+def productGen(ver,dir,urlCDN,urlVer,isTest=True,onlyVer=True):
     version = ver
     projectDir = dir
-    if onlyVer:
-        
-        #打包整个项目
-        
 
-        file_helper.write_str_to_file(projectDir+"src/ver.js","""
+    #打包整个项目
+    file_helper.write_str_to_file(projectDir+"src/ver.js","""
 var Ver = {
-    version: """+repr(version)+"""//auto write by python
+    version: """+repr(version)+""",//auto write by python
+    test: """+(str(isTest).lower())+"""
 };
-        """)
-        print("Write ver.js")
+    """)
+    print("Write ver.js")
+    if onlyVer:
         return
 
     # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
@@ -143,7 +142,38 @@ var Ver = {
 
     print(version+"更新包生成。。。")
     #然后执行manifest生成脚本
-    fish_hotupdate.lailaifish_manifest_gen(version,True,isTest)
+    fish_hotupdate.lailaifish_manifest_gen(version,True,isTest,urlCDN,urlVer)
+
+def publish():
+    #第一步更改版本号，生成，版本文件，
+    #第二步VS编译jsc文件
+    #第三步再次执行我们的脚本文件
+    version = "2.0.0.76" #2.0.0.53  #ios version = "2.0.1.0"
+    projectDir = "D:/glp/Github/Fish2/"#打包整个项目
+    urlCDN = "https://fanyu123.com/bao/ver/game/" #正式服下载文件的CDN服务器
+    urlVer = "https://fanyu123.com/bao/ver/game/"
+    isTest = False
+    isOnlyVer = False #True#
+
+    if isTest:
+        urlCDN = None
+        urlVer = None
+    if isOnlyVer:
+        productGen(version,projectDir,urlCDN,None,isTest)
+    else:
+        print("移除之前的更新文件中。。。")
+        file_helper.remove_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game")
+        productGen(version,projectDir,urlCDN,urlCDN,isTest,False)
+        
+        print("移动热更新文件中。。。")
+        file_helper.make_dirs("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update")
+        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res/manifest/project_platform.manifest","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/project_platform.manifest")
+        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res/manifest/version_platform.manifest","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/version_platform.manifest")
+        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/project.json","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/project.json")
+        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/res")
+        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/script","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/script")
+        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/src","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/src")
+        print("完成。。。")
 
 if __name__ == '__main__':
     # 以后路径统一使用 '/ 请勿使用 '\\'
@@ -155,25 +185,8 @@ if __name__ == '__main__':
     # main("D:/glp/GitHub/Fish2")
     # 加密增加的图片文件
     # temp("D:/glp/work/UI/temp",False);#是否遍历子目录
-
+    publish()
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
 
-    #第一步更改版本号，生成，版本文件，
-    #第二步VS编译jsc文件
-    #第三步再次执行我们的脚本文件
-    version = "2.0.0.54" #2.0.0.53
-    #打包整个项目
-    projectDir = "D:/glp/Github/Fish2/"
-    isTest = True
-    # productGen(version,projectDir,isTest)
-    productGen(version,projectDir,isTest,False)
     
-
-    # enc_jss("D:/glp/Github/Fish2/third_part/jsc")
-    # enc_jss("D:/glp/Github/Fish2/third_part/jsc_sp")//短信渠道包
-
-    # 热更新 jsc加密一下
-    # enc_jss("D:/glp/work/temp/update/src")
-
-    # encFile("D:/glp/work/UI/temp","jinbi5.png")

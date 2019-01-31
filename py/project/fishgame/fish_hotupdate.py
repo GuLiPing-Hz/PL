@@ -161,7 +161,7 @@ def main(src_dir, dst_dir):
 curAssetCnt = 0
 
 
-def createManifestEx(url, src, dest, update, ver,force,project=True):
+def createManifestEx(urlCDN,url, src, dest, update, ver,force,project=True):
     """
         @url 域名地址
         @src 文件release存放位置
@@ -173,7 +173,7 @@ def createManifestEx(url, src, dest, update, ver,force,project=True):
     version_manifest = "version_platform.manifest"
 
     manifest = {
-        "packageUrl": url,
+        "packageUrl": urlCDN,
         "remoteManifestUrl": url+project_manifest,
         "remoteVersionUrl": url+version_manifest,
         "version": ver,
@@ -184,6 +184,10 @@ def createManifestEx(url, src, dest, update, ver,force,project=True):
     def walk_dir(path, file):
         full_path_file = path+"/"+file
 
+        print("walk_dir",path,file)
+
+        if(file == "game.zip" or file == "Release.win32.zip"):
+            return
         if(file.endswith(".js.map")):  # 解释文件不记录
             file_helper.remove_file(full_path_file)
             return
@@ -413,17 +417,21 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
         print("第一版游戏资源生成完毕")
 
 
-def lailaifish_manifest_gen(version,force,test):
+def lailaifish_manifest_gen(version,force,test,urlCDN,urlVer):
     # 生成捕鱼更新包 manifest
     # 必须是已经加密过的jsc和图片资源
 
     if not test:
-        createManifestEx("https://fanyu123.com/bao/ver/game/",
+        urlVer = urlVer or "https://fanyu123.com/bao/ver/game/"
+        createManifestEx(urlCDN,
+                         urlVer,
                          "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
                          "D:/glp/Github/Fish2", 
                          "update", version,force)#"1.0.8"
     else:
-        createManifestEx("https://www.fanyu123.cn/ver3/game/",
+        urlCDN = urlCDN or "https://www.fanyu123.cn/ver3/game/"
+        createManifestEx(urlCDN,
+                         "https://www.fanyu123.cn/ver3/game/",
                          "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
                          "D:/glp/Github/Fish2", 
                          "update", version,force)#"1.0.8"
@@ -442,7 +450,7 @@ if __name__ == '__main__':
     
     print(version+"更新包生成。。。")
     # 来来捕鱼更新包配置文件
-    lailaifish_manifest_gen(version,True,True)
+    lailaifish_manifest_gen(version,True,True,None)
 
     """
 		额。。。有点繁琐，先这样吧。。
