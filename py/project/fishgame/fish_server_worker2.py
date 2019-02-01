@@ -88,12 +88,32 @@ def dint_text_me(text):
 	numbers = ["15088603329","18758032593"]
 	ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494",text,numbers,False)
 
+def getProcByCmdline(name):
+	# attrs = ['pid', 'memory_percent', 'name', 'cpu_times', 'create_time','memory_info']
+	procRet = None
+	attrs = ['pid', 'memory_percent', 'name', 'cpu_times','memory_info','cmdline']
+	for proc in psutil.process_iter(attrs=attrs):
+		# print(proc.info)
+		print(proc)
+		try:
+			cmdline = proc.cmdline()
+			print(cmdline)
+			if cmdline and len(cmdline) > 0 and cmdline[0] == name:
+				procRet = proc
+				# procRet = psutil.Process(proc.pid)
+				# print(procRet == proc)
+				break
+		except psutil.AccessDenied as e:
+			print(e)
+			pass
+	return procRet
+
 def getProcByName(name):
 	# attrs = ['pid', 'memory_percent', 'name', 'cpu_times', 'create_time','memory_info']
 	procRet = None
-	attrs = ['pid', 'memory_percent', 'name', 'cpu_times','memory_info']
+	attrs = ['pid', 'memory_percent', 'name', 'cpu_times','memory_info','cmdline']
 	for proc in psutil.process_iter(attrs=attrs):
-		# print(proc.info)
+		print(proc.info)
 		if proc.name() == name:
 			procRet = proc
 			# procRet = psutil.Process(proc.pid)
@@ -127,12 +147,12 @@ def tryRestart(name,cmd):
 	p.start()
 
 	time.sleep(1)
-	proc = getProcByName(name)
+	proc = getProcByCmdline(name)
 	return proc
 
 def checkProc(name,restartCmd):
 	text = ""
-	proc = getProcByName(name)
+	proc = getProcByCmdline(name)
 	if not proc or not proc.is_running():
 		text += "# Exe Warning\n"
 		text += "The Exe="+name+" is not running!!!\n" \
@@ -392,20 +412,23 @@ if __name__ == '__main__':
 	#@注意 路径必须以 / 分隔
 	if len(sys.argv) >= 2 and sys.argv[1] == "production":#正式服
 		IsProduction = True
-		names = ["skynet","auth","xqtpay","slot","lottery"]
+		names = ["/opt/fish2/skynet/skynet","/opt/auth2/auth","/opt/xqtpay/xqtpay",
+		"/opt/slot2/slot","/opt/lottery/lottery"]
 		cmds = ["/opt/fish2/sh_start.sh"
 		,"/opt/auth2/start.sh","/opt/xqtpay/start.sh","/opt/slot2/start.sh","/opt/lottery/start.sh"]
 		mysql = ["192.168.100.2","root",mySqlPwd1,"Buyu",0.8]
 		print("pwd=",mySqlPwd1)
 	else:#测试服
-		names = ["tcpproxy2","tcpproxy","skynet","auth","xqtpay","slot","lottery"]
-		cmds = ["/opt/tcpproxy2/start.sh","/opt/tcpproxy_test/start.sh","/opt/fish/sh_start.sh"
+		names = ["/opt/tcpproxy3/tcpproxy","/opt/tcpproxy_test/tcpproxy","/opt/fish/skynet/skynet",
+		"/opt/auth/auth","/opt/xqtpay/xqtpay","/opt/slot/slot","/opt/lottery/lottery"]
+		cmds = ["/opt/tcpproxy3/start.sh","/opt/tcpproxy_test/start.sh","/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
 		mysql = ["127.0.0.1","root",mySqlPwd2,"Buyu",0.5]
 		print("pwd=",mySqlPwd2)
 	print(names)
 	worker(IsProduction,mysql,90,mb100,"/home",mb1000,names,cmds)
 
+	# print(getProcByCmdline("/opt/tcpproxy_test/tcpproxy"))
 	#单个函数测试
 	# checkProc("fishjs.exe","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Debug.win32/fishjs.exe")
 	# checkProc("skynet","/opt/fish/sh_start.sh")
