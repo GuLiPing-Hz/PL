@@ -94,10 +94,10 @@ def getProcByCmdline(name):
 	attrs = ['pid', 'memory_percent', 'name', 'cpu_times','memory_info','cmdline']
 	for proc in psutil.process_iter(attrs=attrs):
 		# print(proc.info)
-		print(proc)
+		# print(proc)
 		try:
 			cmdline = proc.cmdline()
-			print(cmdline)
+			# print(cmdline)
 			if cmdline and len(cmdline) > 0 and cmdline[0] == name:
 				procRet = proc
 				# procRet = psutil.Process(proc.pid)
@@ -111,9 +111,9 @@ def getProcByCmdline(name):
 def getProcByName(name):
 	# attrs = ['pid', 'memory_percent', 'name', 'cpu_times', 'create_time','memory_info']
 	procRet = None
-	attrs = ['pid', 'memory_percent', 'name', 'cpu_times','memory_info']
+	attrs = ['pid', 'memory_percent', 'name', 'cpu_times','memory_info','cmdline']
 	for proc in psutil.process_iter(attrs=attrs):
-		# print(proc.info)
+		print(proc.info)
 		if proc.name() == name:
 			procRet = proc
 			# procRet = psutil.Process(proc.pid)
@@ -244,7 +244,6 @@ def getMySqlState(isProduction,host,user,pwd,db):
 	vThreads = cursor.fetchone()
 	# print(vThreads,type(vThreads))
 
-	# mysqladmin -u root -p show full processlist;
 	cursor.execute("show full processlist;")
 	cCur = cursor.fetchall()
 	print("cCur=",cCur)
@@ -301,11 +300,6 @@ def worker(isProduction,mysql,thresholdCpu,thresholdAvailableMem,path,thresholdF
 	procs = []
 	for i in range(len(names)):
 		procText,proc = checkProc(names[i],restartCmds[i])
-		text += procText
-		if proc:
-			procs.append(proc)
-	
-	if text == curTime:#所有程序都在正常运行,检查运行状态
 		# print(proc)
 		# print(proc.exe())
 		# print("cmdline=",proc.cmdline())
@@ -314,21 +308,29 @@ def worker(isProduction,mysql,thresholdCpu,thresholdAvailableMem,path,thresholdF
 		# else:
 		# 	print("num_fds=",proc.num_fds())
 		# print("num_threads=",proc.num_threads())
-		print("memory_info=",proc.memory_info())
+		# print("memory_info=",proc.memory_info())
 		# print("memory_percent=",proc.memory_percent())
 		# print("connections=",proc.connections())
 
-		cpu = psutil.cpu_percent(interval=0.1)
-		exeCpu = proc.cpu_percent(0.1)
+		text += procText
+		if proc:
+			procs.append(proc)
+	
+	if text == curTime:#所有程序都在正常运行,检查运行状态
 
-		print("cpu=",cpu,exeCpu)
+		cpu = psutil.cpu_percent(interval=0.1)
+		print("cpu=",cpu,"cpucnt=",psutil.cpu_count()) #测试发现简单所有的cpu没有的，要检查主要的程序的cpu
 		if(cpu > thresholdCpu):
-			text += "# CPU Warning\n"
+			text += "# CPU TOTAL Warning\n"
 			text += "#### TOTAL CPU="+str(cpu)+" is over threshold("+str(thresholdCpu)+").\n"
 
-			for i in range(len(procs)):
-				exeCpu = procs[i].cpu_percent(0.1)
-				text += "##### ["+names[i]+",cpu=]"+str(exeCpu)+"]\n"
+		#检查单个cpu运行状况
+		for i in range(len(procs)):
+			exeCpu = procs[i].cpu_percent(0.1)
+			print("cpu["+names[i]+"]="+str(exeCpu)+"\n")
+			if cpu > thresholdCpu:
+				text += "# CPU Single Warning\n"
+				text += "#### ["+names[i]+",cpu=]"+str(exeCpu)+"]\n"
 		# print("*"*60)
 		vm = psutil.virtual_memory()
 		# print("virtual_memory=",type(vm), vm)
@@ -420,9 +422,9 @@ if __name__ == '__main__':
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
 		mysql = ["192.168.100.2","root",mySqlPwd1,"Buyu",0.8]
 	else:#测试服
-		names = ["/opt/tcpproxy/tcpproxy","/opt/tcpproxy_test/tcpproxy","/opt/fish/skynet/skynet",
-		"/opt/auth/auth","/opt/xqtpay/xqtpay","/opt/slot/slot","/opt/lottery/lottery"]
-		cmds = ["/opt/tcpproxy/start.sh","/opt/tcpproxy_test/start.sh","/opt/fish/sh_start.sh"
+		names = ["/opt/fish/skynet/skynet","/opt/tcpproxy/tcpproxy","/opt/tcpproxy_test/tcpproxy"
+		,"/opt/auth/auth","/opt/xqtpay/xqtpay","/opt/slot/slot","/opt/lottery/lottery"]
+		cmds = ["/opt/fish/sh_start.sh","/opt/tcpproxy/start.sh","/opt/tcpproxy_test/start.sh",
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
 		mysql = ["127.0.0.1","root",mySqlPwd2,"Buyu",0.5]
 
