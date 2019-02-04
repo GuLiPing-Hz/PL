@@ -29,9 +29,12 @@ import json
 #HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
 HEADERS = {"Content-type": "application/json", "Accept": "text/plain"}
 
+#crontab 中执行的文件路径必须是全路径，否则会有问题
+LOG_FILE = "/opt/py/1.txt"
+PWD_FILE = "/opt/py/mysqlpwd.txt"
+
+
 # 启动钉钉通知消息
-
-
 def ding_text(token, content, numbers, is_all):
 	"""
 	token：Token令牌
@@ -113,7 +116,7 @@ def getProcByName(name):
 	procRet = None
 	attrs = ['pid', 'memory_percent', 'name', 'cpu_times','memory_info','cmdline']
 	for proc in psutil.process_iter(attrs=attrs):
-		print(proc.info)
+		# print(proc.info)
 		if proc.name() == name:
 			procRet = proc
 			# procRet = psutil.Process(proc.pid)
@@ -162,7 +165,6 @@ def checkProc(name,restartCmd):
 		text += "result = " + str((proc and proc.is_running())) + "\n"
 	return text,proc
 
-
 def parseNetstatTPN(path,useLocal=True):
 	"""
 	Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
@@ -204,7 +206,6 @@ def parseNetstatTPN(path,useLocal=True):
 			# cells.append(cell)
 		# print(cells)
 		return dicts
-
 
 def getMySqlState(isProduction,host,user,pwd,db):
 	"""
@@ -387,8 +388,7 @@ def worker(isProduction,mysql,thresholdCpu,thresholdAvailableMem,path,thresholdF
 	if text != curTime:
 		print(text)
 		dint_text_me(text)
-		pass
-	
+		pass	
 
 if __name__ == '__main__':
 
@@ -408,25 +408,29 @@ if __name__ == '__main__':
 
 	mySqlPwd1 = ""
 	mySqlPwd2 = ""
-	with open("mysqlpwd.txt","r") as f:
+	# print("Test 1")
+	with open("/opt/py/mysqlpwd.txt","r") as f:
+		pass
 		mySqlPwd1 = f.readline()[:-1]
-		mySqlPwd2 = f.readline()
-	print(mySqlPwd1,mySqlPwd2)
+		mySqlPwd2 = f.readline()[:-1]
+	print("MySqlPwd=",mySqlPwd1,mySqlPwd2)
 
 	# #@注意 路径必须以 / 分隔
-	if len(sys.argv) >= 2 and sys.argv[1] == "production":#正式服
+	if len(sys.argv) >= 2 and sys.argv[1] == "debug":#测试服
+		names = ["/opt/fish/skynet/skynet","/opt/tcpproxy/tcpproxy","/opt/tcpproxy_test/tcpproxy"
+		,"/opt/auth/auth","/opt/xqtpay/xqtpay","/opt/slot/slot","/opt/lottery/lottery"]
+		cmds = ["/opt/fish/sh_start.sh","/opt/tcpproxy/start.sh","/opt/tcpproxy_test/start.sh",
+		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
+		mysql = ["127.0.0.1","root",mySqlPwd2,"Buyu",0.5]
+		printToFile("pwd=",mySqlPwd2)
+	else:#正式服
 		IsProduction = True
 		names = ["/opt/fish/skynet/skynet","/opt/auth/auth","/opt/xqtpay/xqtpay",
 		"/opt/slot/slot","/opt/lottery/lottery"]
 		cmds = ["/opt/fish/sh_start.sh"
 		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
 		mysql = ["192.168.100.2","root",mySqlPwd1,"Buyu",0.8]
-	else:#测试服
-		names = ["/opt/fish/skynet/skynet","/opt/tcpproxy/tcpproxy","/opt/tcpproxy_test/tcpproxy"
-		,"/opt/auth/auth","/opt/xqtpay/xqtpay","/opt/slot/slot","/opt/lottery/lottery"]
-		cmds = ["/opt/fish/sh_start.sh","/opt/tcpproxy/start.sh","/opt/tcpproxy_test/start.sh",
-		,"/opt/auth/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
-		mysql = ["127.0.0.1","root",mySqlPwd2,"Buyu",0.5]
+		printToFile("pwd=",mySqlPwd1)
 
 	print(names)
 	worker(IsProduction,mysql,90,mb100,"/home",mb1000,names,cmds)
