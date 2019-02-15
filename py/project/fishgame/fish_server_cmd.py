@@ -85,7 +85,7 @@ def fish_server_cmd():
 			print("再见")
 			break
 		elif number == 1:
-			fish_server_cmd1()
+			# fish_server_cmd1()
 			break
 		elif number == 2:
 			fish_server_cmd2()

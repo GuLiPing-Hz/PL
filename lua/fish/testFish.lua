@@ -258,25 +258,58 @@ print("FishType2Probability=",tableToStr(Cfg.FishType2Probability))
 
 i = 2
 t = Cfg.FishType2Probability[i].total
-print(t)
+tempT = {}
+tempS = string.sub(tostring({}),7)
+print(tempS)
+print(t,os.time(),tonumber(tempS,16))
 math.randomseed(os.time())
 local r = math.random(t)
 print(r)
 local mid_idx = 0--Cfg.FishType2Probability[i][r]
 print(r,mid_idx,math.random(10),math.random(t))
 
+local randomTab = {}
+function randomInitEx(key, number)
+    randomTab[key] = {}
+    number = number or randomTab[key .. "len"] or 1000
+    randomTab[key .. "len"] = number
+    for i = 1, number do
+        table.insert(randomTab[key], i)
+    end
 
-local objsPool = {}
-local mgr = {}
-mgr.pool = objsPool
-table.insert(mgr.pool,{})
-table.insert(mgr.pool,{})
-table.insert(mgr.pool,{})
-table.insert(mgr.pool,{})
-table.insert(mgr.pool,{})
+    for i = 1, number * 3 do
+        local j = math.random(number)
+        local k = math.random(number)
+        randomTab[key][j], randomTab[key][k] = randomTab[key][k], randomTab[key][j]
+    end
+end
 
-print("#objsPool",#objsPool)
-print("#mgr.pool",#mgr.pool)
-local obj = table.remove(mgr.pool)
-print("#objsPool",#objsPool)
-print("#mgr.pool",#mgr.pool)
+function randomEx(key)
+    local r = table.remove(randomTab[key])
+    if #(randomTab[key]) == 0 then
+        randomInitEx(key) --我们已经把随机队列取完了。。那么我们开始新的一轮循环
+    end
+    return r
+end
+
+randomInitEx("glp",20)
+for i=1,40 do
+    print("glp",i,randomEx("glp"))
+end
+print("tab=",tableToStr(randomTab["glp"]))
+
+
+-- local objsPool = {}
+-- local mgr = {}
+-- mgr.pool = objsPool
+-- table.insert(mgr.pool,{})
+-- table.insert(mgr.pool,{})
+-- table.insert(mgr.pool,{})
+-- table.insert(mgr.pool,{})
+-- table.insert(mgr.pool,{})
+
+-- print("#objsPool",#objsPool)
+-- print("#mgr.pool",#mgr.pool)
+-- local obj = table.remove(mgr.pool)
+-- print("#objsPool",#objsPool)
+-- print("#mgr.pool",#mgr.pool)
