@@ -8,7 +8,7 @@ import os
 # curl -i http://127.0.0.1:56799/reloadGold
 
 #服务器切换配置要一致。
-PortCfg = 56799
+PortCfg = 56800
 FishCrontab = "crontab /opt/py/fish2.crontab"
 
 def fish_server_cmd1():
@@ -85,7 +85,7 @@ def fish_server_cmd():
 			print("再见")
 			break
 		elif number == 1:
-			# fish_server_cmd1()
+			fish_server_cmd1()
 			break
 		elif number == 2:
 			fish_server_cmd2()
