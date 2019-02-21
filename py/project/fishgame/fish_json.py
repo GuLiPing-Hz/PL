@@ -332,7 +332,11 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
     printSpace8(ret_cnt,name+".setTitleFontSize(32);")
     printSpace8(ret_cnt,name+".setTitleText('');")
     printSpace8(ret_cnt,name+".setTitleColor(cc.color('#ffffff'));")
-    printSpace8(ret_cnt,name+".setZoomScale(0);")
+
+    if(name.startswith("btn_")):
+        printSpace8(ret_cnt,name+".setZoomScale(-0.1);")
+    else:
+        printSpace8(ret_cnt,name+".setZoomScale(0);")
 
     # 设置纹理
     img_path, is_frame = ParseCCSSpriteProp(json_content,"NormalFileData")
@@ -1292,10 +1296,10 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/Fish2/res1"
     # # 大厅
-    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 捕鱼游戏
-    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")
