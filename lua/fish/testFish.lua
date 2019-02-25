@@ -313,3 +313,22 @@ print("tab=",tableToStr(randomTab["glp"]))
 -- local obj = table.remove(mgr.pool)
 -- print("#objsPool",#objsPool)
 -- print("#mgr.pool",#mgr.pool)
+local t1 = {uid=165271,pay_type=15,oid=113}
+local t2 = {order_15_113 = t1}
+t2['order_15_113'] = nil
+print(t2['order_15_113'],tableToStr(t2))
+
+local function savePayOrderToLocal(order)
+    local file = io.open("payOrder.json", "w")
+    --覆盖文件
+    if file ~= nil then
+        file:write(order)
+        file:flush()
+        file:close()
+    else
+        tlog.error("savePayOrderToLocal order=%s", order)
+    end
+end
+
+savePayOrderToLocal("2")
+
