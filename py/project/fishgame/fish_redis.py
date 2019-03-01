@@ -52,5 +52,5 @@ if __name__ == '__main__':
 	print(mySqlPwd1,mySqlPwd2,redisPwd)
 
 	# cleanUsers(mySqlPwd1,redisPwd) #清除所有人的redis缓存，慎用
-	cleanUsrByUids([167343],redisPwd) #清除指定uid
+	cleanUsrByUids([167362],redisPwd) #清除指定uid
 

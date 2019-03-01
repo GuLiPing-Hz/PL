@@ -50,35 +50,37 @@ function Split(str, reps)
 end
 
 function CompileVersion(verA,verB)
-    if(verA == verB) then return 0 end
+    if verA == verB then return 0 end
 
     local verAs = Split(verA,".")
     local verBs = Split(verB,".")
 
-    local isVerANew = -1;
+    local isVerANew = 0;
     local i = 1;
     while(i<=#verAs and i<=#verBs) do
         print(verAs[i],verBs[i])
-        if (tonumber(verAs[i]) > tonumber(verBs[i])) then
+        if tonumber(verAs[i]) > tonumber(verBs[i]) then
             isVerANew = 1;
+            break;
+        elseif tonumber(verAs[i]) < tonumber(verBs[i]) then
+            isVerANew = -1;
             break;
         end
 
         i = i+1
     end
 
-    if(isVerANew ~= 1) then
-        if(#verAs > #verBs) then
+    if(isVerANew == 0) then
+        if #verAs > #verBs then
             return 1
         else
             return -1
         end
     else
-        return 1
+        return isVerANew
     end
 end
 
--- print(CompileVersion("1.0.0.0","1.0.0"))
 function getOrder()
     local order = { 1, 2, 3 }
     local AskRate = {10,30,60}
@@ -330,5 +332,6 @@ local function savePayOrderToLocal(order)
     end
 end
 
-savePayOrderToLocal("2")
+-- savePayOrderToLocal("2")
 
+print(CompileVersion("1.0.62.1","1.2.0"))
