@@ -34,10 +34,33 @@ def cleanUsers(pwd,pwd2,start=None,end=None):
 def cleanUsrByUids(uids,pwd):
 	r = redis.Redis(host='121.196.203.52', port=6379, db=0,password=pwd)
 	# print(dir(r))
+
 	for i in range(len(uids)):
 		uid = uids[i]
 		print("del usr_"+str(uid),r.delete("usr_"+str(uid)))
 		r.delete("usrStat_"+str(uid))
+
+def cleanUsrAndStat(pwd,pattern="",host=None):
+	host = host or '121.196.203.52'
+	r = redis.Redis(host=host, port=6379, db=0,password=pwd)
+	# print(dir(r))
+
+	keys = r.keys()
+	for i in range(len(keys)):
+		theKey = (keys[i]).decode("utf-8") #byte -> str
+		print(theKey)
+		if pattern == "":
+			print("del "+theKey,r.delete(theKey))
+		elif theKey.startswith(pattern):
+			print("del "+theKey,r.delete(theKey))
+
+
+def testRedis():
+	r = redis.Redis(host='121.196.203.52', port=6379, db=0,password=redisPwd)
+	token = "bfb38d68b426b5cb96cd5d8f44aed117"
+	print(r.exists(token))
+	print(r.get(token))
+
 
 if __name__ == '__main__':
 	print("清理redis 测试服缓存...")
@@ -51,6 +74,13 @@ if __name__ == '__main__':
 		redisPwd = f.readline()
 	print(mySqlPwd1,mySqlPwd2,redisPwd)
 
-	# cleanUsers(mySqlPwd1,redisPwd) #清除所有人的redis缓存，慎用
-	cleanUsrByUids([167362],redisPwd) #清除指定uid
+
+	# cleanUsers(mySqlPwd1,redisPwd) #清除所有人的redis缓存，慎用 -这个方法最low，从数据获取到uid最大的
+	# cleanUsrByUids([167362],redisPwd) #清除指定uid
+
+	# cleanUsrAndStat(redisPwd,"usr_") #清除指定用户缓存信息
+	cleanUsrAndStat(redisPwd)#清除所有人的redis缓存，慎用
+
+	
+	# testRedis()
 

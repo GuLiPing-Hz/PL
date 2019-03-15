@@ -26,6 +26,7 @@ def get_from_caipiaokong():
     cj = http.cookiejar.MozillaCookieJar(filename)
     handler = urllib.request.HTTPCookieProcessor(cj)
     opener = urllib.request.build_opener(handler)
+
     postdata = urllib.parse.urlencode({'username': 'jjhhh', 'password': 'e10adc3949ba59abbe56e057f20f883e', 'questionid': 0, 'answer': ''}
                                       ).encode('utf-8')
     # 登录的URL
@@ -233,17 +234,17 @@ if __name__ == '__main__':
     try:
         get_from_caipiaokong()
     except Exception as e:
-        print(e)
+        print("Exception=",e)
         print("爬取彩票控结果:异常")
     else:
         print("爬取彩票控结果:正常")
     finally:
-        print("爬取北京福彩结束")
+        print("爬取彩票控结束")
 
     try:
         get_from_bjfc()
     except Exception as e:
-        print(e)
+        print("Exception=",e)
         print("爬取北京福彩结果:异常")
     else:
         print("爬取北京福彩结果:正常")

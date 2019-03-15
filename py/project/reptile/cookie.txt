@@ -1,0 +1,48 @@
+# Netscape HTTP Cookie File
+# http://curl.haxx.se/rfc/cookie_spec.html
+# This is a generated file!  Do not edit.
+
+.login.taobao.com	TRUE	/	FALSE	1554972628	lc	VypS3Bd2Kc0yXk20
+.login.taobao.com	TRUE	/	FALSE	1583916628	lid	glp4703
+.login.taobao.com	TRUE	/	FALSE	1554972628	log	lty=Ug%3D%3D
+.taobao.com	TRUE	/	FALSE	1583916628	_cc_	W5iHLLyFfA%3D%3D
+.taobao.com	TRUE	/	FALSE		_l_g_	Ug%3D%3D
+.taobao.com	TRUE	/	FALSE		_nk_	glp4703
+.taobao.com	TRUE	/	FALSE		_tb_token_	31b53e7985ee
+.taobao.com	TRUE	/	FALSE		cookie1	VyoGwNA9Ee8Juc%2B8JbhYGAg9UKkxj5NPfxVrxaFVpXs%3D
+.taobao.com	TRUE	/	FALSE		cookie17	Vy0T4dBOehAE
+.taobao.com	TRUE	/	FALSE		cookie2	35304b209f6e10d9f7f393734b4c0818
+.taobao.com	TRUE	/	FALSE		csg	56c7bf16
+.taobao.com	TRUE	/	FALSE		dnk	glp4703
+.taobao.com	TRUE	/	FALSE		existShop	MTU1MjM4MDYyOA%3D%3D
+.taobao.com	TRUE	/	FALSE	1554972628	lgc	glp4703
+.taobao.com	TRUE	/	FALSE	1552985428	mt	np=
+.taobao.com	TRUE	/	FALSE		publishItemObj	Ng%3D%3D
+.taobao.com	TRUE	/	FALSE		sg	37a
+.taobao.com	TRUE	/	FALSE		skt	399a1d0769fc3e3e
+.taobao.com	TRUE	/	FALSE	1560156628	t	9058c31c8527d3fe4a5cef6cea11d982
+.taobao.com	TRUE	/	FALSE	1606380628	tg	0
+.taobao.com	TRUE	/	FALSE	1583916628	tracknick	glp4703
+.taobao.com	TRUE	/	FALSE		uc1	cookie16=U%2BGCWk%2F74Mx5tgzv3dWpnhjPaQ%3D%3D&cookie21=V32FPkk%2FhodrpstKOCa5aA%3D%3D&cookie15=U%2BGCWk%2F75gdr5Q%3D%3D&existShop=false&pas=0&cookie14=UoTZ5iY5ErCkqA%3D%3D&tag=8&lng=zh_CN
+.taobao.com	TRUE	/	FALSE	1554972628	uc3	vt3=F8dByEv9pNIVBiixfEw%3D&id2=Vy0T4dBOehAE&nk2=BJreIObyDw%3D%3D&lg2=UtASsssmOIJ0bQ%3D%3D
+.taobao.com	TRUE	/	FALSE		unb	410490877
+.taobao.com	TRUE	/	FALSE		v	0
+.tmall.com	TRUE	/	FALSE		_l_g_	Ug%3D%3D
+.tmall.com	TRUE	/	FALSE		_nk_	glp4703
+.tmall.com	TRUE	/	FALSE		_tb_token_	31b53e7985ee
+.tmall.com	TRUE	/	FALSE		cookie1	VyoGwNA9Ee8Juc%2B8JbhYGAg9UKkxj5NPfxVrxaFVpXs%3D
+.tmall.com	TRUE	/	FALSE		cookie17	Vy0T4dBOehAE
+.tmall.com	TRUE	/	FALSE		cookie2	35304b209f6e10d9f7f393734b4c0818
+.tmall.com	TRUE	/	FALSE		csg	56c7bf16
+.tmall.com	TRUE	/	FALSE		dnk	glp4703
+.tmall.com	TRUE	/	FALSE		lgc	glp4703
+.tmall.com	TRUE	/	FALSE	1583916629	lid	glp4703
+.tmall.com	TRUE	/	FALSE		login	true
+.tmall.com	TRUE	/	FALSE		sg	37a
+.tmall.com	TRUE	/	FALSE		t	9058c31c8527d3fe4a5cef6cea11d982
+.tmall.com	TRUE	/	FALSE		tracknick	glp4703
+.tmall.com	TRUE	/	FALSE		uc1	cookie16=U%2BGCWk%2F74Mx5tgzv3dWpnhjPaQ%3D%3D&cookie21=V32FPkk%2FhodrpstKOCa5aA%3D%3D&cookie15=U%2BGCWk%2F75gdr5Q%3D%3D&existShop=false&pas=0&cookie14=UoTZ5iY5ErCkqA%3D%3D&tag=8&lng=zh_CN
+.tmall.com	TRUE	/	FALSE		uc3	vt3=F8dByEv9pNIVBiixfEw%3D&id2=Vy0T4dBOehAE&nk2=BJreIObyDw%3D%3D&lg2=UtASsssmOIJ0bQ%3D%3D
+.tmall.com	TRUE	/	FALSE		unb	410490877
+login.taobao.com	FALSE	/	FALSE		XSRF-TOKEN	a0e45a20-b7e2-4373-9f1d-d3cc9a2f4d3c
+pass.tmall.com	FALSE	/	FALSE		XSRF-TOKEN	f942fe80-a45d-4809-86d5-6937d5de1b07
