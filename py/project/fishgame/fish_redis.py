@@ -60,6 +60,7 @@ def testRedis():
 	token = "bfb38d68b426b5cb96cd5d8f44aed117"
 	print(r.exists(token))
 	print(r.get(token))
+	print(r.keys())
 
 
 if __name__ == '__main__':
@@ -78,9 +79,11 @@ if __name__ == '__main__':
 	# cleanUsers(mySqlPwd1,redisPwd) #清除所有人的redis缓存，慎用 -这个方法最low，从数据获取到uid最大的
 	# cleanUsrByUids([167362],redisPwd) #清除指定uid
 
-	# cleanUsrAndStat(redisPwd,"usr_") #清除指定用户缓存信息
-	cleanUsrAndStat(redisPwd)#清除所有人的redis缓存，慎用
+	# cleanUsrAndStat(redisPwd,"wx_") #清除微信登录授权信息
+	# cleanUsrAndStat(redisPwd,"usr_") #清除用户缓存信息
+	# cleanUsrAndStat(redisPwd,"usr_today_") #清除用户当日缓存信息
+	# cleanUsrAndStat(redisPwd)#清除所有人的redis缓存，慎用
 
 	
-	# testRedis()
+	testRedis()
 
