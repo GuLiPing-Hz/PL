@@ -1,5 +1,9 @@
 import platform
 import os
+#yum install python-devel
+#yum install patch
+#pip install readline #要使用readline必须安装上面的python开发包
+import readline #引入该包可以再读取input的时候使用delete
 
 #更新充值配置
 #通知认证服务器
@@ -51,12 +55,22 @@ def fish_server_cmd7():
 	os.system(cmd)
 
 def fish_server_cmd8():
-	cmd = "curl -i http://127.0.0.1:56800/reloadUp"
+	cmd = "curl -i http://127.0.0.1:"+str(PortCfg)+"/reloadUp"
 	print("cmd=",cmd)
 	os.system(cmd)
 	# cmd = "curl -i http://127.0.0.1:56800/reloadUp"
 	# print("cmd=",cmd)
 	# os.system(cmd)
+
+def fish_server_cmd9():
+	cmd = "curl -i http://127.0.0.1:"+str(PortCfg)+"/stat"
+	print("cmd=",cmd)
+	os.system(cmd)
+
+def fish_server_cmd10():
+	cmd = "curl -i http://127.0.0.1:"+str(PortCfg)+"/snapshot"
+	print("cmd=",cmd)
+	os.system(cmd)
 
 
 def fish_server_cmd():
@@ -71,6 +85,8 @@ def fish_server_cmd():
 	6.开启redis
 	7.关闭redis
 	8.通知服务器充值配置变更
+	9.查看当前服务器的STAT
+	10.查看当前服务器的内存快照SNAPSHOT
 """
 	print(strHelp)
 	while(True):
@@ -85,7 +101,9 @@ def fish_server_cmd():
 			print("再见")
 			break
 		elif number == 1:
-			fish_server_cmd1()
+			number2 = int(input("\n确实要停止服务器吗?："))
+			if number2 == 1:
+				fish_server_cmd1()
 			break
 		elif number == 2:
 			fish_server_cmd2()
@@ -101,6 +119,10 @@ def fish_server_cmd():
 			fish_server_cmd7()
 		elif number == 8:
 			fish_server_cmd8()
+		elif number == 9:
+			fish_server_cmd9()
+		elif number == 10:
+			fish_server_cmd10()
 		else:
 			print(strHelp)
 
