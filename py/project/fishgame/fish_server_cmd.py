@@ -5,6 +5,10 @@ import os
 #pip install readline #要使用readline必须安装上面的python开发包
 import readline #引入该包可以再读取input的时候使用delete
 
+#测试linux服务器网速
+#pip install speedtest-cli
+#python3 /usr/local/python3/lib/python3.6/site-packages/speedtest.py
+
 #更新充值配置
 #通知认证服务器
 # curl -i http://127.0.0.1:32767/updateCfg?token=auth_notify
@@ -13,6 +17,7 @@ import readline #引入该包可以再读取input的时候使用delete
 
 #服务器切换配置要一致。
 PortCfg = 56799
+AuthCfg = 6101
 FishCrontab = "crontab /opt/py/fish2.crontab"
 
 def fish_server_cmd1():
@@ -72,6 +77,11 @@ def fish_server_cmd10():
 	print("cmd=",cmd)
 	os.system(cmd)
 
+#curl -i http://127.0.0.1:6101/listProxy
+def fish_server_cmd11():
+	cmd = "curl -i http://127.0.0.1:"+str(AuthCfg)+"/listProxy"
+	print("cmd=",cmd)
+	os.system(cmd)
 
 def fish_server_cmd():
 	strHelp ="""
@@ -87,6 +97,8 @@ def fish_server_cmd():
 	8.通知服务器充值配置变更
 	9.查看当前服务器的STAT
 	10.查看当前服务器的内存快照SNAPSHOT
+	11.查看当前认证服务器的代理,curl -i http://127.0.0.1:"""+str(AuthCfg)+"""/listProxy
+	12.移除当前认证服务器代理 ip
 """
 	print(strHelp)
 	while(True):
@@ -123,6 +135,8 @@ def fish_server_cmd():
 			fish_server_cmd9()
 		elif number == 10:
 			fish_server_cmd10()
+		elif number == 11:
+			fish_server_cmd11()
 		else:
 			print(strHelp)
 
