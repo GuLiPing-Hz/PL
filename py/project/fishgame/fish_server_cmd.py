@@ -12,7 +12,7 @@ import readline #引入该包可以再读取input的时候使用delete
 # curl -i http://127.0.0.1:56799/reloadGold
 
 #服务器切换配置要一致。
-PortCfg = 56800
+PortCfg = 56799
 FishCrontab = "crontab /opt/py/fish2.crontab"
 
 def fish_server_cmd1():
