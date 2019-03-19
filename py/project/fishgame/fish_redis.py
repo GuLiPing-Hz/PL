@@ -1,6 +1,6 @@
 import redis
 import pymysql
-import redaline
+# import redaline
 
 def cleanUsers(pwd,pwd2,start=None,end=None):
 
@@ -61,6 +61,7 @@ def testRedis():
 	token = "bfb38d68b426b5cb96cd5d8f44aed117"
 	print(r.exists(token))
 	print(r.get(token))
+	print(r.get("token_188787"))
 	print(r.keys())
 
 
@@ -87,8 +88,8 @@ if __name__ == '__main__':
 	# cleanUsrAndStat(redisPwd,"wx_") #清除微信登录授权信息
 	# cleanUsrAndStat(redisPwd,"usr_") #清除用户缓存信息
 	# cleanUsrAndStat(redisPwd,"usr_today_") #清除用户当日缓存信息
-	cleanUsrAndStat(redisPwd)#清除所有人的redis缓存，慎用
+	# cleanUsrAndStat(redisPwd)#清除所有人的redis缓存，慎用
 
 	
-	# testRedis()
+	testRedis()
 

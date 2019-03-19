@@ -83,6 +83,12 @@ def fish_server_cmd11():
 	print("cmd=",cmd)
 	os.system(cmd)
 
+def fish_server_cmd12(port):
+	if port == 56799:
+	elif port == 56800:
+	else:
+		print("Port Error:",port)
+
 def fish_server_cmd():
 	strHelp ="""
 捕鱼命令行,选择号码并回车：
@@ -98,7 +104,8 @@ def fish_server_cmd():
 	9.查看当前服务器的STAT
 	10.查看当前服务器的内存快照SNAPSHOT
 	11.查看当前认证服务器的代理,curl -i http://127.0.0.1:"""+str(AuthCfg)+"""/listProxy
-	12.移除当前认证服务器代理 ip
+		curl -i http://127.0.0.1:"""+str(AuthCfg)+"""/removeProxy?ip=??
+	12.服务器热切换，输入想要切换的端口地址(56799/56800)
 """
 	print(strHelp)
 	while(True):
@@ -137,6 +144,9 @@ def fish_server_cmd():
 			fish_server_cmd10()
 		elif number == 11:
 			fish_server_cmd11()
+		elif number == 12:
+			prot = int(input("\n切换的服务器端口地址(56799/56800)?："))
+			fish_server_cmd12(prot)
 		else:
 			print(strHelp)
 
