@@ -426,10 +426,10 @@ if __name__ == '__main__':
 	else:#正式服
 		IsProduction = True
 		#正式服，目前auth用的是auth2，slot用的slot2
-		names = ["/opt/fish2/skynet/skynet","/opt/auth2/auth2","/opt/xqtpay/xqtpay"
-		,"/opt/slot2/slot2","/opt/lottery/lottery"]
+		names = ["/opt/fish2/skynet/skynet","/opt/auth2/auth","/opt/xqtpay/xqtpay"
+		,"/opt/slot/slot","/opt/lottery/lottery"]
 		cmds = ["/opt/fish2/sh_start.sh"
-		,"/opt/auth2/start.sh","/opt/xqtpay/start.sh","/opt/slot2/start.sh","/opt/lottery/start.sh"]
+		,"/opt/auth2/start.sh","/opt/xqtpay/start.sh","/opt/slot/start.sh","/opt/lottery/start.sh"]
 		mysql = ["192.168.100.2","root",mySqlPwd1,"Buyu",0.8]
 		print("pwd=",mySqlPwd1)
 	print(names)
