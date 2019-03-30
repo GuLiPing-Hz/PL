@@ -85,7 +85,9 @@ def fish_server_cmd11():
 
 def fish_server_cmd12(port):
 	if port == 56799:
+		pass
 	elif port == 56800:
+		pass
 	else:
 		print("Port Error:",port)
 
