@@ -2,8 +2,11 @@ import redis
 import pymysql
 # import redaline
 
+def resetUsrCard(uid):
+	pass
+	
+	
 def cleanUsers(pwd,pwd2,start=None,end=None):
-
 	if not start or not end:
 		connection = pymysql.connect(host='121.196.203.52',
 	                             user="root",
