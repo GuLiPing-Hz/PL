@@ -19,7 +19,9 @@ def joke():
 joke()
 # print(c)    # 报错，这里c是未定义
 
-#局部变量测试 nonlocal global
+# 局部变量测试 nonlocal global
+
+
 def scope_test():
     def do_local():
         spam = "local spam"
@@ -39,6 +41,7 @@ def scope_test():
     print("After nonlocal assignment:", spam)
     do_global()
     print("After global assignment:", spam)
+
 
 scope_test()
 print("In global scope:", spam)

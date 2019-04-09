@@ -2,6 +2,7 @@
 # @ guliping
 
 # Http 模块
+import urllib.request
 import http.client
 import urllib.parse
 # 日期
@@ -247,10 +248,6 @@ def http_common_post(conn, url, dict_params=None):
         pass
     finally:
         return data, ok
-
-
-import urllib.request
-import urllib.parse
 
 
 def http_test1(url):

@@ -1,5 +1,6 @@
 #!python 3.6
 
+import file_helper
 from xml.etree import ElementTree
 import os
 
@@ -8,7 +9,6 @@ import os
 # 正确的方法应该是把我们自己写的脚本都放到一个目录，并且子目录的脚本不能引用上级目录的模块
 import sys
 sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
-import file_helper
 
 
 def optionRename(path, file):
@@ -35,6 +35,7 @@ def optionRenameFishId(path, file):
     print(fullpath, ">>", new_path)
     file_helper.move_file(fullpath, new_path)
 
+
 def optionJSRes0(path, file):
     name = file.replace(".", "_")
     ext_file = file.replace(".png", "")
@@ -50,13 +51,16 @@ def optionJSRes0(path, file):
     else:
         print(name+": '"+path_new+ext_file+"',")  # games/fish ; platform
 
-def optionJSResLobby(path,file):
-    optionJSRes1(path,file)
 
-def optionJSResFish(path,file):
-    optionJSRes1(path,file,True)
+def optionJSResLobby(path, file):
+    optionJSRes1(path, file)
 
-def optionJSRes1(path, file,inFish=False):
+
+def optionJSResFish(path, file):
+    optionJSRes1(path, file, True)
+
+
+def optionJSRes1(path, file, inFish=False):
 
     if not inFish:
         if(file.startswith("particle_") or file.startswith("Plist")):
@@ -101,7 +105,7 @@ def optionJSRes1_(path, file):
 def optionJSRes2(path, file):
     name = file.replace(".", "_")
 
-    name = file.replace(".png","' + cfgImageExt")
+    name = file.replace(".png", "' + cfgImageExt")
     if name.endswith("+ cfgImageExt"):
         print("'res/games/fish/fishs/"+name+",")
     else:
@@ -140,6 +144,8 @@ def optionJSRes3(path, file):
         print(name+": '"+path_new+ext_file+"',")  # games/fish ; platform
 
 # 修改plist文件的纹理为png->webp
+
+
 def optionJSRes4(path, file):
     plist_filename = path+"/"+file
     print(plist_filename)
@@ -245,8 +251,9 @@ if __name__ == '__main__':
     # 捕鱼 游动plist文件
     # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish/fishs",False).walk(optionJSRes2);
     # 捕鱼图片文件
-    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",True).walk(optionJSResFish);
-    #粒子文件
+    file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish",
+                         True).walk(optionJSResFish)
+    # 粒子文件
     # file_helper.Diskwalk("D:/glp/GitHub/Fish2/res/games/fish/particle",False).walk(optionJSRes0);
 
     # 鱼图片文件名字修改

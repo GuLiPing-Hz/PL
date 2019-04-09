@@ -112,7 +112,7 @@ def copy_dir(src_path, dst_path):
 
 
 def move_file(src_file, dst_file):
-    print(src_file,"->",dst_file)
+    print(src_file, "->", dst_file)
     try:
         os.rename(src_file, dst_file)
     except FileNotFoundError:
@@ -125,9 +125,11 @@ def move_file(src_file, dst_file):
 
         # raise RuntimeError();
 
-def move_dir(src_dir,dst_dir):
-    print(src_dir,"->",dst_dir)
-    shutil.move(src_dir,dst_dir)
+
+def move_dir(src_dir, dst_dir):
+    print(src_dir, "->", dst_dir)
+    shutil.move(src_dir, dst_dir)
+
 
 def file_size(file):
     with open(file, "r") as f:  # r rb r+ rb+ w wb w+ wb+ a ab a+ ab+
@@ -259,12 +261,12 @@ def main():
     # print("**************************遍历目录目录结构")
     # testDir = "D:\\glp\\work"
     # print("结果数组=", Diskwalk(testDir).walk_dir())
-    #### remove_dir(testDir)
+    # remove_dir(testDir)
 
     # r w a
     with zipfile.ZipFile('D:/glp/cocos/spam.zip', 'a') as myzip:
-        myzip.write('D:/glp/cocos/eggs.txt','D:/glp/cocos/eggs.txt')
-        myzip.write('D:/glp/cocos/eggs1.txt',"eggs1.txt")
+        myzip.write('D:/glp/cocos/eggs.txt', 'D:/glp/cocos/eggs.txt')
+        myzip.write('D:/glp/cocos/eggs1.txt', "eggs1.txt")
 
     text = """	
 	echo 当前盘符：%~d0

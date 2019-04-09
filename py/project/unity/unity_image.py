@@ -1,3 +1,4 @@
+import file_helper
 import os
 import sys
 # pip install Pillow
@@ -7,7 +8,6 @@ import math
 
 import sys
 sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
-import file_helper
 
 
 def simple_make_dirs(outfile, is_file=True):

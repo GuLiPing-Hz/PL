@@ -234,7 +234,7 @@ if __name__ == '__main__':
     try:
         get_from_caipiaokong()
     except Exception as e:
-        print("Exception=",e)
+        print("Exception=", e)
         print("爬取彩票控结果:异常")
     else:
         print("爬取彩票控结果:正常")
@@ -244,7 +244,7 @@ if __name__ == '__main__':
     try:
         get_from_bjfc()
     except Exception as e:
-        print("Exception=",e)
+        print("Exception=", e)
         print("爬取北京福彩结果:异常")
     else:
         print("爬取北京福彩结果:正常")

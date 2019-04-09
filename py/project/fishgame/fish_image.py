@@ -1,10 +1,10 @@
 
+import fish_hotupdate
+import file_helper
 import os
 
 import sys
 sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
-import file_helper
-import fish_hotupdate
 
 IMAGE_KEY = "key"
 
@@ -60,10 +60,11 @@ def encFile(path, file):
         fp.flush()
 
 
-def png2Jpg(path,file):
+def png2Jpg(path, file):
     filePath = path + "/" + file
-    newFilePath = filePath.replace(".png",".jpg")
-    file_helper.move_file(filePath,newFilePath)
+    newFilePath = filePath.replace(".png", ".jpg")
+    file_helper.move_file(filePath, newFilePath)
+
 
 def temp(path, recursive=False):
     # 图片处理的一些列操作 后缀.webp改成.png
@@ -102,12 +103,12 @@ def enc_jss(path):
     print("完成加密jsc文件...")
 
 
-def productGen(ver,dir,urlCDN,urlVer,isTest=True,onlyVer=True):
+def productGen(ver, dir, urlCDN, urlVer, isTest=True, onlyVer=True):
     version = ver
     projectDir = dir
 
-    #打包整个项目
-    file_helper.write_str_to_file(projectDir+"src/ver.js","""
+    # 打包整个项目
+    file_helper.write_str_to_file(projectDir+"src/ver.js", """
 var Ver = {
     version: """+repr(version)+""",//auto write by python
     test: """+(str(isTest).lower())+"""
@@ -119,61 +120,77 @@ var Ver = {
 
     # enc_jss("D:/glp/Github/fishjs/third_part/jsc/src")
     enc_jss(projectDir+"third_part/jsc/src")
-    file_helper.remove_dir(projectDir+"third_part/jsc_ios/src");
-    file_helper.copy_dir(projectDir+"third_part/jsc/src"
-        ,projectDir+"third_part/jsc_ios/src");
-    file_helper.remove_file(projectDir+"/third_part/jsc_ios/src/app.jsc")#ios目录不需要这个文件
-    
-    #release路径js替换成jsc
-    file_helper.remove_dir(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/script");
-    file_helper.remove_dir(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/src");
+    file_helper.remove_dir(projectDir+"third_part/jsc_ios/src")
+    file_helper.copy_dir(projectDir+"third_part/jsc/src",
+                         projectDir+"third_part/jsc_ios/src")
+    file_helper.remove_file(
+        projectDir+"/third_part/jsc_ios/src/app.jsc")  # ios目录不需要这个文件
+
+    # release路径js替换成jsc
+    file_helper.remove_dir(
+        projectDir+"frameworks/runtime-src/proj.win32/Release.win32/script")
+    file_helper.remove_dir(
+        projectDir+"frameworks/runtime-src/proj.win32/Release.win32/src")
     try:
-        file_helper.remove_file(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/main.js")
+        file_helper.remove_file(
+            projectDir+"frameworks/runtime-src/proj.win32/Release.win32/main.js")
     except Exception as e:
         pass
     try:
-        file_helper.remove_file(projectDir+"frameworks/runtime-src/proj.win32/Release.win32/main_ios.js")
+        file_helper.remove_file(
+            projectDir+"frameworks/runtime-src/proj.win32/Release.win32/main_ios.js")
     except Exception as e:
         pass
-    file_helper.copy_dir(projectDir+"third_part/jsc/script"
-        ,projectDir+"frameworks/runtime-src/proj.win32/Release.win32/script");
-    file_helper.copy_dir(projectDir+"third_part/jsc/src"
-        ,projectDir+"frameworks/runtime-src/proj.win32/Release.win32/src");
+    file_helper.copy_dir(projectDir+"third_part/jsc/script", projectDir +
+                         "frameworks/runtime-src/proj.win32/Release.win32/script")
+    file_helper.copy_dir(projectDir+"third_part/jsc/src", projectDir +
+                         "frameworks/runtime-src/proj.win32/Release.win32/src")
 
     print(version+"更新包生成。。。")
-    #然后执行manifest生成脚本
-    fish_hotupdate.lailaifish_manifest_gen(version,True,isTest,urlCDN,urlVer)
+    # 然后执行manifest生成脚本
+    fish_hotupdate.lailaifish_manifest_gen(
+        version, True, isTest, urlCDN, urlVer)
+
 
 def publish():
-    #第一步更改版本号，生成，版本文件，
-    #第二步VS编译jsc文件
-    #第三步再次执行我们的脚本文件
-    version = "2.0.0.116"#"2.0.0.95" #ios version = "2.0.1.0"
-    projectDir = "D:/glp/Github/Fish2/"#打包整个项目
-    urlCDN = "https://fanyu123.com/bao/ver/game/" #正式服下载文件的CDN服务器
+    # 第一步更改版本号，生成，版本文件，
+    # 第二步VS编译jsc文件
+    # 第三步再次执行我们的脚本文件
+    version = "2.0.0.116"  # "2.0.0.95" #ios version = "2.0.1.0"
+    projectDir = "D:/glp/Github/Fish2/"  # 打包整个项目
+    urlCDN = "https://fanyu123.com/bao/ver/game/"  # 正式服下载文件的CDN服务器
     urlVer = "https://fanyu123.com/bao/ver/game/"
     isTest = False
-    isOnlyVer = False #True#
+    isOnlyVer = False  # True#
 
     if isTest:
         urlCDN = None
         urlVer = None
     if isOnlyVer:
-        productGen(version,projectDir,urlCDN,None,isTest)
+        productGen(version, projectDir, urlCDN, None, isTest)
     else:
         print("移除之前的更新文件中。。。")
-        file_helper.remove_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game")
-        productGen(version,projectDir,urlCDN,urlCDN,isTest,False)
-        
+        file_helper.remove_dir(
+            "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game")
+        productGen(version, projectDir, urlCDN, urlCDN, isTest, False)
+
         print("移动热更新文件中。。。")
-        file_helper.make_dirs("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update")
-        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res/manifest/project_platform.manifest","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/project_platform.manifest")
-        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res/manifest/version_platform.manifest","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/version_platform.manifest")
-        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/project.json","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/project.json")
-        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/res")
-        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/script","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/script")
-        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/src","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/src")
+        file_helper.make_dirs(
+            "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update")
+        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res/manifest/project_platform.manifest",
+                              "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/project_platform.manifest")
+        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res/manifest/version_platform.manifest",
+                              "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/version_platform.manifest")
+        file_helper.move_file("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/project.json",
+                              "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/project.json")
+        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/res",
+                             "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/res")
+        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/script",
+                             "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/script")
+        file_helper.move_dir("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/src",
+                             "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/game/update/src")
         print("完成。。。")
+
 
 if __name__ == '__main__':
     # 以后路径统一使用 '/ 请勿使用 '\\'
@@ -189,5 +206,3 @@ if __name__ == '__main__':
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/src")
-
-    

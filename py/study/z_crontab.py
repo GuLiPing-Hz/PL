@@ -16,9 +16,9 @@
 # 当第1列为 */n 时表示每 n 分钟个时间间隔执行一次，其余类推
 # 当第1列为 a, b, c,... 时表示第 a, b, c,... 分钟要执行，其余类推
 
-# crontab –e : 修改 crontab 文件. 如果文件不存在会自动创建。 
+# crontab –e : 修改 crontab 文件. 如果文件不存在会自动创建。
 # crontab –l : 显示 crontab 文件。 查看当前的任务
 # crontab -r : 删除 crontab 文件。
 # crontab -ir : 删除 crontab 文件前提醒用户。
 
-#crontab xxx.cron 替换当前用户的crontab文件
+# crontab xxx.cron 替换当前用户的crontab文件

@@ -72,6 +72,4 @@ class MobSMS:
 if __name__ == '__main__':
     mobsms = MobSMS('1eb63d197f5c7')
 
-    
-
     # print mobsms.verify_sms_code(86, 15000003329)

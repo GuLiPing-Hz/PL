@@ -1,11 +1,11 @@
+import json
+import file_helper
 import os
 # 当我们脚本是主入口的时候,如果要引入上层目录的脚本,那么只能通过添加sys.path的方式
 # 然后并不推荐这样写,这样是由于设计目录的时候原本就不规范导致
 # 正确的方法应该是把我们自己写的脚本都放到一个目录，并且子目录的脚本不能引用上级目录的模块
 import sys
 sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
-import file_helper
-import json
 
 """
 本文件是依赖python3
@@ -161,7 +161,7 @@ def main(src_dir, dst_dir):
 curAssetCnt = 0
 
 
-def createManifestEx(urlCDN,url, src, dest, update, ver,force,project=True):
+def createManifestEx(urlCDN, url, src, dest, update, ver, force, project=True):
     """
         @url 域名地址
         @src 文件release存放位置
@@ -184,7 +184,7 @@ def createManifestEx(urlCDN,url, src, dest, update, ver,force,project=True):
     def walk_dir(path, file):
         full_path_file = path+"/"+file
 
-        print("walk_dir",path,file)
+        print("walk_dir", path, file)
 
         if(file == "game.zip" or file == "Release.win32.zip"):
             return
@@ -235,9 +235,8 @@ def createManifestEx(urlCDN,url, src, dest, update, ver,force,project=True):
         cur_manifest_file_dest = dest+"/res/manifest/"+project_manifest
         cur_main_manifest_file_dest = dest+"/res_main/manifest/"+project_manifest
         # if(force or not file_helper.is_file_exits(cur_manifest_file_src)):
-        
 
-         # 工程目录
+        # 工程目录
         file_helper.write_str_to_file(cur_manifest_file_dest, json.dumps(
             manifest, indent=0, sort_keys=False))
         # git 工程目录
@@ -250,7 +249,6 @@ def createManifestEx(urlCDN,url, src, dest, update, ver,force,project=True):
     # Debug目录
     file_helper.write_str_to_file(cur_manifest_file_src, json.dumps(
         manifest, indent=0, sort_keys=False))
-   
 
     # 版本校验
     del manifest["assets"]
@@ -417,7 +415,7 @@ def createGameManifest(game_id, url, ver, game_dir, src, dest, need_first=True):
         print("第一版游戏资源生成完毕")
 
 
-def lailaifish_manifest_gen(version,force,test,urlCDN,urlVer):
+def lailaifish_manifest_gen(version, force, test, urlCDN, urlVer):
     # 生成捕鱼更新包 manifest
     # 必须是已经加密过的jsc和图片资源
 
@@ -426,16 +424,15 @@ def lailaifish_manifest_gen(version,force,test,urlCDN,urlVer):
         createManifestEx(urlCDN,
                          urlVer,
                          "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
-                         "D:/glp/Github/Fish2", 
-                         "update", version,force)#"1.0.8"
+                         "D:/glp/Github/Fish2",
+                         "update", version, force)  # "1.0.8"
     else:
         urlCDN = urlCDN or "https://www.fanyu123.cn/ver3/game/"
         createManifestEx(urlCDN,
                          "https://www.fanyu123.cn/ver3/game/",
                          "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
-                         "D:/glp/Github/Fish2", 
-                         "update", version,force)#"1.0.8"
-
+                         "D:/glp/Github/Fish2",
+                         "update", version, force)  # "1.0.8"
 
 
 if __name__ == '__main__':
@@ -447,10 +444,10 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         str_ver = sys.argv[1]
         version = str_ver[str_ver.find("-v=")+3:]
-    
+
     print(version+"更新包生成。。。")
     # 来来捕鱼更新包配置文件
-    lailaifish_manifest_gen(version,True,True,None)
+    lailaifish_manifest_gen(version, True, True, None)
 
     """
 		额。。。有点繁琐，先这样吧。。

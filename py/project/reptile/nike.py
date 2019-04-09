@@ -245,21 +245,21 @@ if __name__ == '__main__':
 
 	# # www.tmall.com
 	# # https://jordan.tmall.com/view_shop.htm?spm=a220m.1000858.0.0.688170c6cMIhxm&shop_id=350171485&rn=b81727dabe6a3bf724b2fd4090fc6a66
-	# conn = http.client.HTTPSConnection("jordan.tmall.com")
-	# # cj.add_cookie_header()
-	# headers = {}
+	conn = http.client.HTTPSConnection("jordan.tmall.com")
+	# cj.add_cookie_header()
+	headers = {}
 
-	# conn.request("GET", "/view_shop.htm", None, headers)
-	# response = conn.getresponse()
-	# print("*"*50+"status"+"*"*50)
-	# print(response.status, response.reason)
-	# print("*"*50+"info"+"*"*50)
-	# print(response.info())
-	# data = response.read()
-	# print("*"*50+"data"+"*"*50)
-	# print(data.decode("utf-8"))
+	conn.request("GET", "/view_shop.htm", None, headers)
+	response = conn.getresponse()
+	print("*"*50+"status"+"*"*50)
+	print(response.status, response.reason)
+	print("*"*50+"info"+"*"*50)
+	print(response.info())
+	data = response.read()
+	print("*"*50+"data"+"*"*50)
+	print(data.decode("utf-8"))
 
-	taoba_login('glp4703','4488d9ae53982c895d5b78292465f29043421f2e4c91b31c156582b4701bbcf14304cb1058ba81a01c58f2bd9ac115e694dc6e679ecfe36a2b795e0b678a0a62ec924bb4d7faa956bf05c07cdc6670c53ed3dbe63f9c28f2e26d0f4ba9a1c2f799e274d530b93ff8bdeec4a09aa458ba00a695673f4c0472b364a7fd0b31c4f3',
-		'115#1+Tn711O1TaLSUX0GCFY1CsoE51GBaVN1g4H5sDTr5SlVywCfxaW6njrf91CIkf6web8s9ZcvLTgyUFP8HNcaB6fy5XQmMpWSzL8aw+Qi/JJhUeh3uPc28MfcUUjxsbGeK/0zkaJi7Schae8Aka4aTKbyzemASbneK1rsMZQi/y8h6/4OWNDaTpvs6/nbWnkeKT8yWKpiQJRHZzhb2GVaLBfDzFQOSfkeKT8uWNIi/JJhUU4AWwwaTpfurPKvAGK+JDloRbug7Dv6VXgdPYMTNTW6Cko1vZItDvE8c5df+h+pVM+3UZ83gIuYZO5NZ/lF3lOdXSm2O5bGaNrRKUnSnPHrxNJ0O4/JN7slRAl8ZKctssmKg3r7utd2H+kmBp4lAY6BMU5JgdxUtyapuKy66e15WwKmrP6gOtxQPzJC9JUAzHG/ywk7hOwO7Uv8edz66LTb+blbtMw9QktWDS4m5feQOzB5lfn0oCC7u/s0QK4ZyJeHQof6krMqXL/lO/ZXAV46wlAEM4PERYnBtU+m3N2xVzFu/owg2jZfwHbS7Tx2wWXwiD7t+TDKrsRD/QddGtW8zXC+iMikRLgF89AOV8bS7gJV70Z1EyzZNlZ0UGYerZfutB8aDnQTv6fyDDqbMYjf98TTwhinWB9VrRWOoRf9GMUPsrbr4LKXiQhqF+mf10ggqe1E5+mwyIcc4Teg3GdhTWwwJfEI5yMPEUPdrtIYV+wOZNWWTXY1Rs5/TAWJDuCtqevpguQwpLEyd/BoV9TBoAAwSMRXn5EsnlN3sddOHrrtBjDUcCA1CaH+970wd97ujp215gaZGyeTwGP8HGeoWuRWHmCJtJ+PBsR9lDYqVK1G5Fm6nYuYIcAcsQLyY4mVCqQl0e0kaPqN31e9ZEYiOOoUmQCWdKUznme/SVOZNSMl2Zka1IqcfamiVu2jmenbeMPhKffMq4gBGUp/e769phU1BdgrR7IJE2oBaUJb19hfjt8r5PJiNdD83nVxUhU7IlH0RzgK+CGRrfQKRVexU1LqBndJGH59/ifSJ3vvUBvlc9PTDmrizmthvrAiQ/b8XoY5LWJ1GejOcyDrnvotjoGpEFFxx2+SPYgkOMMMfT4OGcP/W41K7gj1bv2jeQIqGKpiwdmBzQWyvkavB6YlvIKhW5E9rCu75==')
+	# taoba_login('glp4703','4488d9ae53982c895d5b78292465f29043421f2e4c91b31c156582b4701bbcf14304cb1058ba81a01c58f2bd9ac115e694dc6e679ecfe36a2b795e0b678a0a62ec924bb4d7faa956bf05c07cdc6670c53ed3dbe63f9c28f2e26d0f4ba9a1c2f799e274d530b93ff8bdeec4a09aa458ba00a695673f4c0472b364a7fd0b31c4f3',
+	# 	'115#1+Tn711O1TaLSUX0GCFY1CsoE51GBaVN1g4H5sDTr5SlVywCfxaW6njrf91CIkf6web8s9ZcvLTgyUFP8HNcaB6fy5XQmMpWSzL8aw+Qi/JJhUeh3uPc28MfcUUjxsbGeK/0zkaJi7Schae8Aka4aTKbyzemASbneK1rsMZQi/y8h6/4OWNDaTpvs6/nbWnkeKT8yWKpiQJRHZzhb2GVaLBfDzFQOSfkeKT8uWNIi/JJhUU4AWwwaTpfurPKvAGK+JDloRbug7Dv6VXgdPYMTNTW6Cko1vZItDvE8c5df+h+pVM+3UZ83gIuYZO5NZ/lF3lOdXSm2O5bGaNrRKUnSnPHrxNJ0O4/JN7slRAl8ZKctssmKg3r7utd2H+kmBp4lAY6BMU5JgdxUtyapuKy66e15WwKmrP6gOtxQPzJC9JUAzHG/ywk7hOwO7Uv8edz66LTb+blbtMw9QktWDS4m5feQOzB5lfn0oCC7u/s0QK4ZyJeHQof6krMqXL/lO/ZXAV46wlAEM4PERYnBtU+m3N2xVzFu/owg2jZfwHbS7Tx2wWXwiD7t+TDKrsRD/QddGtW8zXC+iMikRLgF89AOV8bS7gJV70Z1EyzZNlZ0UGYerZfutB8aDnQTv6fyDDqbMYjf98TTwhinWB9VrRWOoRf9GMUPsrbr4LKXiQhqF+mf10ggqe1E5+mwyIcc4Teg3GdhTWwwJfEI5yMPEUPdrtIYV+wOZNWWTXY1Rs5/TAWJDuCtqevpguQwpLEyd/BoV9TBoAAwSMRXn5EsnlN3sddOHrrtBjDUcCA1CaH+970wd97ujp215gaZGyeTwGP8HGeoWuRWHmCJtJ+PBsR9lDYqVK1G5Fm6nYuYIcAcsQLyY4mVCqQl0e0kaPqN31e9ZEYiOOoUmQCWdKUznme/SVOZNSMl2Zka1IqcfamiVu2jmenbeMPhKffMq4gBGUp/e769phU1BdgrR7IJE2oBaUJb19hfjt8r5PJiNdD83nVxUhU7IlH0RzgK+CGRrfQKRVexU1LqBndJGH59/ifSJ3vvUBvlc9PTDmrizmthvrAiQ/b8XoY5LWJ1GejOcyDrnvotjoGpEFFxx2+SPYgkOMMMfT4OGcP/W41K7gj1bv2jeQIqGKpiwdmBzQWyvkavB6YlvIKhW5E9rCu75==')
 
 

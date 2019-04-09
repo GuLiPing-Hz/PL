@@ -1,4 +1,4 @@
-import pandas #pip install pandas
+import pandas  # pip install pandas
 import random
 
 indexs = [0]
@@ -9,8 +9,8 @@ for i in range(3):
 print(cols)
 
 print("*"*100)
-data = [[1,2,3]] #传入DataFrame的必须是二维数组
-df = pandas.DataFrame(data,columns=columns)
+data = [[1, 2, 3]]  # 传入DataFrame的必须是二维数组
+df = pandas.DataFrame(data, columns=columns)
 print(df)
 
 print("*"*100)

@@ -29,7 +29,6 @@ def ding_text(token, content, numbers, is_all):
     is_all：是否全员通知
     """
     # https://oapi.dingtalk.com/robot/send?access_token=75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494
-    
 
     print("ding_text")
     conn = http.client.HTTPSConnection("oapi.dingtalk.com")
@@ -91,11 +90,11 @@ if __name__ == '__main__':
     # print(psutil.net_io_counters(pernic=True))  # 查看网络链接
     # print(psutil.net_connections()) #查看网络连接
 
-
     """
 	Token令牌
 	通知内容
 	通知列表
 	是否全员通知
 	"""
-    ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494","Hello World",numbers,False)
+    ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494",
+              "Hello World", numbers, False)

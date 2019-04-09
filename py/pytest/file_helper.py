@@ -250,12 +250,12 @@ def main():
     # print("**************************遍历目录目录结构")
     # testDir = "D:\\glp\\work"
     # print("结果数组=", Diskwalk(testDir).walk_dir())
-    #### remove_dir(testDir)
+    # remove_dir(testDir)
 
     # r w a
     with zipfile.ZipFile('D:/glp/cocos/spam.zip', 'a') as myzip:
-        myzip.write('D:/glp/cocos/eggs.txt',"eggs.txt")
-        myzip.write('D:/glp/cocos/eggs1.txt',"eggs1.txt")
+        myzip.write('D:/glp/cocos/eggs.txt', "eggs.txt")
+        myzip.write('D:/glp/cocos/eggs1.txt', "eggs1.txt")
 
     text = """	
 	echo 当前盘符：%~d0

@@ -13,6 +13,7 @@
 # 搜tesseract 单独下载,并且需要放到path目录
 # TESSDATA_PREFIX 标记到环境变量中 训练数据位置 C:\Program Files (x86)\Tesseract-OCR\tessdata
 
+import quant.haigui as quant_strategy
 import tushare
 import numpy as np
 
@@ -204,7 +205,6 @@ context.account.commission_base = 5  # 佣金最低额
 context.account.tax = 0.001  # 印花税  交易上海的股票需要过户费,我暂且忽略过户费
 
 # 海龟策略
-import quant.haigui as quant_strategy
 
 
 def main(fromFile=False):

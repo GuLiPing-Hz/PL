@@ -1,14 +1,18 @@
 #!python3.4
 # @ guliping
 
+import tempfile
+import shutil
+import os
+import math
+import sys
 """
 IO，标准IO，文件IO
 """
 
 print("命令行参数")
-import sys
 for i in range(len(sys.argv)):
-    print("sys[",i,"]=",sys.argv[i])
+    print("sys[", i, "]=", sys.argv[i])
 
 # 格式化字符串输出  str.format()
 # str()： 函数返回一个用户易读的表达形式。
@@ -34,7 +38,6 @@ print('Runoob: {0[Runoob]:d}; Google: {0[Google]:d}; '
 
 # '!a' (使用 ascii()), '!s' (使用 str()) 和 '!r' (使用 repr())
 # 可以用于在格式化某个值之前对其进行转化:
-import math
 print('常量 PI 的值近似为： {}。'.format(math.pi))
 # 常量 PI 的值近似为： 3.141592653589793。
 print('常量 PI 的值近似为： {!r}。'.format(math.pi))
@@ -124,7 +127,6 @@ with open("zzz_io_test", "r") as f5:
 '''
 
 print("*"*60)
-import os
 '''
 修改访问权限
 os.chmod(path, mode, *, dir_fd=None, follow_symlinks=True) 
@@ -227,8 +229,6 @@ os.system(command)
 print("**************************拷贝目录")
 
 # 拷贝目录与文件
-import shutil
-import tempfile
 
 
 def copyFile(src_path, dst_path):
