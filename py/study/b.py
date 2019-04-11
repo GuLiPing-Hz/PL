@@ -92,7 +92,7 @@ else:
     print("a~=0")
 print("*"*30)
 
-# ? python
+# ? python 三目运算符
 b = 5 if a != 1 else 6
 print("? b =", b)
 print("*"*30)

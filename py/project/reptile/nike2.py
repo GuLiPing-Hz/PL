@@ -99,10 +99,7 @@ def defend_with_tb2(browser):
     browser.execute_script(js3)
     browser.execute_script(js4)
 
-# https://oapi.dingtalk.com/robot/send?access_token=383f740bf2612f3879f89d1029834779882338dee31a2ac8126605b5569bc9b6
 # 启动钉钉通知消息
-
-
 def ding_text(token, content, numbers, is_all):
     """
     token：Token令牌
@@ -158,6 +155,20 @@ def ding_text(token, content, numbers, is_all):
     finally:
         pass
 
+def ding_text_ex(result,title):
+    content = "# "+title+"\n"
+    for i in range(len(result)):
+        content = content+"## "+result[i]["color"]+"\n"
+        sizes = result[i]["sizes"]
+        for j in range(len(sizes)):
+            if not sizes[j]["stock"]:
+                continue
+            stock = "有货" if sizes[j]["stock"] else "无货"
+            content = content+"### "+ sizes[j]["size"]+"-("+stock+")\n"
+
+    # https://oapi.dingtalk.com/robot/send?access_token=828b77c2b4eccc95e3d0e30335824cad2d58bd761d82d3023b0fad4cfbdab4f0
+    ding_text("828b77c2b4eccc95e3d0e30335824cad2d58bd761d82d3023b0fad4cfbdab4f0", content, [], True)
+
 
 """
 淘宝乔丹鞋子数据结构
@@ -166,20 +177,55 @@ def ding_text(token, content, numbers, is_all):
     sizes = [
         {
             size = 40,
-            stock = 0 表示无库存
+            stock = False 表示无库存
         },
     ]
 }
 """
-def random_sleep(base=0.5,x=1):
+def random_sleep(base=0.5,x=1,can=False):
     time.sleep(random.random()*x+base)
+    print("模拟人等待。。。")
 
     try:
         times = int(random.random()*20)
-        element_body = Browser.find_element_by_xpath("//body")
-        for i in range(times):
-            element_body.click()
-            time.sleep(random.random()*0.5)
+        if can and times > 17:
+            try:
+                element_tmsy = Browser.find_element_by_xpath('//*[@id="sn-bd"]/div/p[1]/a')
+                element_tmsy.click()
+                time.sleep(random.random()*5+3)
+                print("模拟人等待。。。")
+                Browser.back()
+            except Exception as e:
+                print("模拟点击首页失败，尝试点击店铺,e=",e)
+
+                # //*[@id="shop16722994182"]/div/div[2]/div/div/div/div[2]
+                try:
+                    element_sp = Browser.find_element_by_xpath("//a[@class=shopLink]")
+                    element_sp.click()
+                    time.sleep(random.random()*5+3)
+                    print("模拟人等待。。。")
+                    Browser.back()
+                except Exception as e:
+                    print("模拟点击商铺失败,e=",e)
+                    time.sleep(random.random()*5+3)
+        elif times > 14:
+            # //*[@id="shop16722994182"]/div/div[2]/div/div/div/div[2]
+            try:
+                element_gwc = Browser.find_element_by_xpath('//*[@id="J_MUIMallbar"]/div/div[2]/div[10]/div[3]')
+                element_gwc.click()
+            except Exception as e:
+                print("模拟点击购物车失败... e=",e)
+
+            # driver.switch_to.window(driver.window_handles[1])
+            time.sleep(random.random()*10+5)
+            print("模拟人等待。。。")
+            # driver.close()
+        else:
+            element_body = Browser.find_element_by_xpath("//body")
+            for i in range(times):
+                element_body.click()
+                time.sleep(random.random()*1)
+                print("模拟人等待。。。")
     except Exception as e:
         print("随机等待异常,e=",e)
 
@@ -197,34 +243,30 @@ def get_stock(elements_ys_status, elements_cm_status, elements_cm, elements_kc):
             if elements_ys_status[i].get_attribute("class") != "tb-selected":
                 elements_ys_status[i].click()  # 选中颜色
             for j in range(len(elements_cm_status)):
-                stockInt = 0
+                stockFlag  = False
                 if elements_cm_status[j].get_attribute("class") != "tb-out-of-stock":
-                    elements_cm_status[j].click()
-                    random_sleep()
-                    elements_cm_status[j].click()
-                    random_sleep()
-                    elements_cm_status[j].click()
-                    stock = elements_kc.text
-                    stockInt = int(stock[2:-1])
-                    print(stock, stockInt)  # 过滤 库存 件
+                    # stock = elements_kc.text
+                    # stockInt = int(stock[2:-1])
+                    # print(stock, stockInt)  # 过滤 库存 件
                     random_sleep(1)
+                    stockFlag = True
 
                 shoes["sizes"].append({
                     "size": elements_cm[j].text,
-                    "stock": stockInt
+                    "stock": stockFlag
                 })
         else:
             for j in range(len(elements_cm_status)):
                 shoes["sizes"].append({
                     "size": elements_cm[j].text,
-                    "stock": 0
+                    "stock": False
                 })
 
         ret.append(shoes)
     return ret
 
 
-def get_stocks(browser, clsId):
+def get_stocks(browser, clsId, title):
     """
     tb-sku
     """
@@ -266,11 +308,10 @@ def get_stocks(browser, clsId):
                        elements_cm, elements_kc)
     print(result)  # 通知服务器
 
-    ding_text("383f740bf2612f3879f89d1029834779882338dee31a2ac8126605b5569bc9b6", str(
-        result), [], True)
+    ding_text_ex(result,title)
 
 
-def main_nike2(browser, url, targetUrl):
+def main_nike2(browser, url, targetUrl, title):
     defend_with_tb(browser)
     browser.get(url)
     defend_with_tb2(browser)
@@ -360,16 +401,16 @@ def main_nike2(browser, url, targetUrl):
 
     while True:
         try:
-            get_stocks(browser, "tb-sku")
+            get_stocks(browser, "tb-sku", title)
         except Exception as e:
             print("获取商品信息失败,e=", e)
-        random_sleep(60) # 10秒后刷新页面，重新获取商品库存。
+        random_sleep(90,1,True) # 10秒后刷新页面，重新获取商品库存。
         Browser.refresh()
+
 
 
 if __name__ == '__main__':
     url = r"https://login.tmall.com/?spm=a220o.1000855.a2226mz.2.1f627ecbpROZxN&redirectURL=https%3A%2F%2Fdetail.tmall.com%2Fitem.htm%3Fspm%3Da1z10.4-b-s.w5003-21076098180.3.31c9174a5Yi3QI%26id%3D576640717890%26scene%3Dtaobao_shop%26sku_properties%3D1627207%3A2471828828"
-
-    main_nike2(Browser, url, "https://detail.tmall.com/item.htm")
+    main_nike2(Browser, url, "https://detail.tmall.com/item.htm","Jordan官方AIR JORDAN XXXIII PF AJ33男子篮球鞋BV5072")
 
     Browser.quit()

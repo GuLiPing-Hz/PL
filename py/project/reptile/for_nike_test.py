@@ -5,7 +5,7 @@
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-from time import sleep
+import time 
 import urllib.request
 import cv2
 import numpy as np
@@ -33,9 +33,9 @@ def get_login(driver, url):
     elem = driver.find_element_by_xpath('//*[@id="password"]')
     elem.send_keys('12345678')
     elem = driver.find_element_by_xpath('//*[@id="login"]')
-    elem.click()
-    sleep(2)
-    driver.switch_to_frame(1)
+    # elem.click()
+    # time.sleep(2)
+    # driver.switch_to_frame(1)
     return driver
 
 
@@ -59,7 +59,7 @@ def get_image(driver):
     return 'slide_bkg.png', 'slide_block.png'
 
 
-bkg, blk = get_image(driver)
+
 
 # 计算缺口的位置，由于缺口位置查找偶尔会出现找不准的现象，这里进行判断，如果查找的缺口位置x坐标小于450，我们进行刷新验证码操作，重新计算缺口位置，知道满足条件位置。（设置为450的原因是因为缺口出现位置的x坐标都大于450）
 
@@ -84,18 +84,13 @@ def get_distance(bkg, blk):
     print('x坐标为：%d' % (y+20))
     if y+20 < 450:
         elem = driver.find_element_by_xpath('//*[@id="reload"]/div')
-        sleep(1)
+        time.sleep(1)
         elem.click()
         bkg, blk = get_image(driver)
         y, template = get_distance(bkg, blk)
     return y, template
 
-
-distance, template = get_distance(bkg, blk)
-
 # 这个是用来模拟人为拖动滑块行为，快到缺口位置时，减缓拖动的速度，服务器就是根据这个来判断是否是人为登录的。
-
-
 def get_tracks(dis):
     v = 0
     t = 0.3
@@ -115,18 +110,25 @@ def get_tracks(dis):
         v = v0+a*t
     return tracks
 
+# bkg, blk = get_image(driver)
+# distance, template = get_distance(bkg, blk)
 
 # 原图的像素是680*390，而网页的是340*195，图像缩小了一倍。
 # 经过尝试，发现滑块的固定x坐标为70，这个地方有待加强，这里加20的原因上面已经解释了。
-double_distance = int((distance-70+20)/2)
-tracks = get_tracks(double_distance)
-# 由于计算机计算的误差，导致模拟人类行为时，会出现分布移动总和大于真实距离，这里就把这个差添加到tracks中，也就是最后进行一步左移。
-tracks.append(-(sum(tracks)-double_distance))
+# double_distance = int((distance-70+20)/2)
+# tracks = get_tracks(double_distance)
+# # 由于计算机计算的误差，导致模拟人类行为时，会出现分布移动总和大于真实距离，这里就把这个差添加到tracks中，也就是最后进行一步左移。
+# tracks.append(-(sum(tracks)-double_distance))
 
-element = driver.find_element_by_id('tcaptcha_drag_thumb')
-ActionChains(driver).click_and_hold(on_element=element).perform()
-for track in tracks:
-    ActionChains(driver).move_by_offset(xoffset=track, yoffset=0).perform()
-sleep(0.5)
-ActionChains(driver).release(on_element=element).perform()
-show(template)
+# element = driver.find_element_by_id('tcaptcha_drag_thumb')
+# ActionChains(driver).click_and_hold(on_element=element).perform()
+# for track in tracks:
+#     ActionChains(driver).move_by_offset(xoffset=track, yoffset=0).perform()
+# time.sleep(0.5)
+# ActionChains(driver).release(on_element=element).perform()
+# show(template)
+
+time.sleep(3)
+element_tzgg = driver.find_element_by_xpath("/html/body/div[2]/div/div[2]/ul/li[2]")
+element_tzgg.click()
+driver.back()
