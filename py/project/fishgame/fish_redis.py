@@ -88,15 +88,8 @@ if __name__ == '__main__':
     print(mySqlPwd1, mySqlPwd2, redisPwd)
 
     # testRedis()
-
+    #废弃了。。。
     # cleanUsers(mySqlPwd1,redisPwd) #清除所有人的redis缓存，慎用 -这个方法最low，从数据获取到uid最大的
-    # cleanUsrByUids([100090],redisPwd,"127.0.0.1") #清除指定uid
-
-    # cleanUsrAndStat(redisPwd,"wx_") #清除微信登录授权信息
-    # cleanUsrAndStat(redisPwd,"usr_") #清除用户缓存信息
-    # cleanUsrAndStat(redisPwd,"usr_today_") #清除用户当日缓存信息
-
-    # cleanUsrAndStat(redisPwd)#清除所有的redis缓存，慎用
 
     # *匹配0次多次 +匹配一次多次 ?匹配0次1次(非贪婪)
     # \d 匹配所有数字 \D匹配任意非数字 ^匹配开头 $匹配末尾 \w匹配字母数字下划线 \W	匹配非字母数字及下划线
