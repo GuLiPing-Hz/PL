@@ -1,6 +1,6 @@
 #!python 3.6
 
-import file_helper
+
 from xml.etree import ElementTree
 import os
 
@@ -9,7 +9,7 @@ import os
 # 正确的方法应该是把我们自己写的脚本都放到一个目录，并且子目录的脚本不能引用上级目录的模块
 import sys
 sys.path.append(__file__[:__file__.rfind("\\")]+"\\..")
-
+import file_helper
 
 def optionRename(path, file):
     fullpath = file_helper.join(path, file)
