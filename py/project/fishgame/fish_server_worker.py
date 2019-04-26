@@ -1,3 +1,5 @@
+#! python3.4
+# @ guliping
 import multiprocessing
 import platform
 import os
@@ -9,9 +11,6 @@ import shutil
 import psutil
 # pip install pymysql
 import pymysql
-
-#! python3.4
-# @ guliping
 
 # Http 模块
 import http.client
@@ -26,7 +25,7 @@ import hashlib
 # json解析模块
 import json
 
-#HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
+# HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
 HEADERS = {"Content-type": "application/json", "Accept": "text/plain"}
 
 # crontab 中执行的文件路径必须是全路径，否则会有问题
@@ -49,7 +48,7 @@ def ding_text(token, content, numbers, is_all):
     # print(conn)
 
     tempHead = dict(HEADERS)
-    #print("tempHead = ",tempHead);
+    # print("tempHead = ",tempHead);
 
     params_at = {"atMobiles": numbers, "isAtAll": is_all}
     # print(params_at)
@@ -334,9 +333,9 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
             procs.append(proc)
 
     if text == curTime:  # 所有程序都在正常运行,检查运行状态
-
         cpu = psutil.cpu_percent(interval=0.1)
         # 测试发现简单所有的cpu没有的，要检查主要的程序的cpu
+        print("*"*60)
         print("cpu=", cpu, "cpucnt=", psutil.cpu_count())
         if(cpu > thresholdCpu):
             text += "# CPU TOTAL Warning\n"
@@ -353,8 +352,8 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
         # print("*"*60)
         vm = psutil.virtual_memory()
         # print("virtual_memory=",type(vm), vm)
-        # print("*"*60)
-        # print("virtual_memory=",vm.total, vm.available, vm.percent)  # 查看虚拟内存
+        print("*"*60)
+        print("virtual_memory=",vm.total, vm.available, vm.percent,"<",thresholdAvailableMem)  # 查看虚拟内存
         if(vm.available < thresholdAvailableMem):
             text += "# Memory Warning\n"
             text += "#### TOTAL Memory Available="+getMbFromByte(vm.available)+" is under threshold(" \
@@ -370,9 +369,9 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
 
         # print("*"*60)
         # print("disk_partitions=",psutil.disk_partitions())  # 查看硬盘分区
-        # print("*"*60)
+        print("*"*60)
         pathDiskUsage = psutil.disk_usage(path)
-        # print("disk_usage=",pathDiskUsage)  # 查看硬盘使用
+        print("disk_usage=",pathDiskUsage,pathDiskUsage.free,"<",thresholdFreeeDisk)  # 查看硬盘使用
         # print("*"*60)
         if(pathDiskUsage.free < thresholdFreeeDisk):
             text += "# Disk Warning\n"
@@ -381,11 +380,11 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
                 getMbFromByte(thresholdFreeeDisk)+")\n"
         # print("net_io_counters=",psutil.net_io_counters(pernic=True))  # 查看网络链接
 
-        mysqlState = getMySqlState(
-            isProduction, mysql[0], mysql[1], mysql[2], mysql[3])
+        mysqlState = getMySqlState(isProduction, mysql[0], mysql[1], mysql[2], mysql[3])
         thresholdConnections = mysqlState[0]*mysql[4]
         curConnections = len(mysqlState[3])
         mysqlProcList = mysqlState[3]
+        print("*"*60)
         print("myslq connections", thresholdConnections, curConnections)
         if thresholdConnections < curConnections:
             text += "# Mysql Connections Warning\n"
@@ -411,59 +410,7 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
         pass
 
 
-			text += "#### TOTAL Memory Available="+getMbFromByte(vm.available)+" is under threshold(" \
-			+getMbFromByte(thresholdAvailableMem)+").\n"
-
-			for i in range(len(procs)):
-				proc = procs[i]
-				##### 下面用5个#，虽然字体大小不变，但是可以强制钉钉内容换行。
-				text += "##### ["+names[i]+" memory_percent="+str(round(proc.memory_percent(),2)) \
-				+"%,rss(虚拟耗用内存)="+getMbFromByte(proc.memory_info().rss)+",vms(实际物理内存)=" \
-				+getMbFromByte(proc.memory_info().vms)+"]\n"
-			text += "\n"
-			
-		# print("*"*60)
-		# print("disk_partitions=",psutil.disk_partitions())  # 查看硬盘分区
-		# print("*"*60)
-		pathDiskUsage = psutil.disk_usage(path)
-		# print("disk_usage=",pathDiskUsage)  # 查看硬盘使用
-		# print("*"*60)
-		if(pathDiskUsage.free < thresholdFreeeDisk):
-			text += "# Disk Warning\n"
-			text += "#### Disk("+path+") Free="+getMbFromByte(pathDiskUsage.free) \
-			+" is under threshold("+getMbFromByte(thresholdFreeeDisk)+")\n"
-		# print("net_io_counters=",psutil.net_io_counters(pernic=True))  # 查看网络链接
-
-		mysqlState = getMySqlState(isProduction,mysql[0],mysql[1],mysql[2],mysql[3])
-		thresholdConnections = mysqlState[0]*mysql[4]
-		curConnections = len(mysqlState[3])
-		mysqlProcList = mysqlState[3]
-		print("myslq connections",thresholdConnections,curConnections)
-		if thresholdConnections < curConnections:
-			text += "# Mysql Connections Warning\n"
-			text += "#### Connections="+str(curConnections)+" is over threshold(" \
-			+str(thresholdConnections)+")\n"
-			text += "#### ConnectionsInfo Max="+str(mysqlState[0]) \
-			+" HistoryMax="+str(mysqlState[1])+" Threads="+str(mysqlState[2])+"\n"
-		
-			for i in range(len(mysqlProcList)):
-				proc = mysqlProcList[i]
-				programName = "unknow-"+ proc["User"]
-				if "Netstat" in proc and proc["Netstat"]:
-					programName = proc["Netstat"]["PID-Program-name"]
-
-				text += "##### ["+programName+",db="+str(proc["db"]) \
-				+",Command="+proc["Command"]+",Time="+str(proc["Time"])+",State="+proc["State"] \
-				+",Info="+str(proc["Info"])+",Host="+proc["Host"]+"]\n"
-
-
-	if text != curTime:
-		print(text)
-		dint_text_me(text)
-		pass	
-
 if __name__ == '__main__':
-
 
     import sys
 
@@ -493,7 +440,7 @@ if __name__ == '__main__':
         names = ["/opt/fish/skynet/skynet", "/opt/tcpproxy/tcpproxy", "/opt/tcpproxy_test/tcpproxy",
                  "/opt/auth/auth", "/opt/xqtpay/xqtpay", "/opt/slot/slot", "/opt/lottery/lottery"]
         cmds = ["/opt/fish/sh_start.sh", "/opt/tcpproxy/start.sh", "/opt/tcpproxy_test/start.sh",
-                , "/opt/auth/start.sh", "/opt/xqtpay/start.sh", "/opt/slot/start.sh", "/opt/lottery/start.sh"]
+                "/opt/auth/start.sh", "/opt/xqtpay/start.sh", "/opt/slot/start.sh", "/opt/lottery/start.sh"]
         mysql = ["127.0.0.1", "root", mySqlPwd2, "Buyu", 0.5]
         print("pwd=", mySqlPwd2)
     else:  # 正式服
