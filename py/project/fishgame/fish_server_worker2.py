@@ -411,7 +411,60 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
         pass
 
 
+			text += "# Memory Warning\n"
+			text += "#### TOTAL Memory Available="+getMbFromByte(vm.available)+" is under threshold(" \
+			+getMbFromByte(thresholdAvailableMem)+").\n"
+
+			for i in range(len(procs)):
+				proc = procs[i]
+				##### 下面用5个#，虽然字体大小不变，但是可以强制钉钉内容换行。
+				text += "##### ["+names[i]+" memory_percent="+str(round(proc.memory_percent(),2)) \
+				+"%,rss(虚拟耗用内存)="+getMbFromByte(proc.memory_info().rss)+",vms(实际物理内存)=" \
+				+getMbFromByte(proc.memory_info().vms)+"]\n"
+			text += "\n"
+			
+		# print("*"*60)
+		# print("disk_partitions=",psutil.disk_partitions())  # 查看硬盘分区
+		# print("*"*60)
+		pathDiskUsage = psutil.disk_usage(path)
+		# print("disk_usage=",pathDiskUsage)  # 查看硬盘使用
+		# print("*"*60)
+		if(pathDiskUsage.free < thresholdFreeeDisk):
+			text += "# Disk Warning\n"
+			text += "#### Disk("+path+") Free="+getMbFromByte(pathDiskUsage.free) \
+			+" is under threshold("+getMbFromByte(thresholdFreeeDisk)+")\n"
+		# print("net_io_counters=",psutil.net_io_counters(pernic=True))  # 查看网络链接
+
+		mysqlState = getMySqlState(isProduction,mysql[0],mysql[1],mysql[2],mysql[3])
+		thresholdConnections = mysqlState[0]*mysql[4]
+		curConnections = len(mysqlState[3])
+		mysqlProcList = mysqlState[3]
+		print("myslq connections",thresholdConnections,curConnections)
+		if thresholdConnections < curConnections:
+			text += "# Mysql Connections Warning\n"
+			text += "#### Connections="+str(curConnections)+" is over threshold(" \
+			+str(thresholdConnections)+")\n"
+			text += "#### ConnectionsInfo Max="+str(mysqlState[0]) \
+			+" HistoryMax="+str(mysqlState[1])+" Threads="+str(mysqlState[2])+"\n"
+		
+			for i in range(len(mysqlProcList)):
+				proc = mysqlProcList[i]
+				programName = "unknow-"+ proc["User"]
+				if "Netstat" in proc and proc["Netstat"]:
+					programName = proc["Netstat"]["PID-Program-name"]
+
+				text += "##### ["+programName+",db="+str(proc["db"]) \
+				+",Command="+proc["Command"]+",Time="+str(proc["Time"])+",State="+proc["State"] \
+				+",Info="+str(proc["Info"])+",Host="+proc["Host"]+"]\n"
+
+
+	if text != curTime:
+		print(text)
+		dint_text_me(text)
+		pass	
+
 if __name__ == '__main__':
+
 
     import sys
 
