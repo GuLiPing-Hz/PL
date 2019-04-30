@@ -367,6 +367,9 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
             printSpace8(ret_cnt,name+".loadTextureDisabled(" +
                         repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
+    if("TouchEnable" not in json_content):
+        printSpace8(ret_cnt,name+".setTouchEnabled(false);")
+
     return ParseCCSNodeProp(json_content, name, cur_cnt, ret_cnt)
 
 def ParseCCSSprite(json_content, str_parent, cur_cnt, ret_cnt):
@@ -1296,10 +1299,10 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/Fish2/res1"
     # # 大厅
-    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 捕鱼游戏
-    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")

@@ -422,14 +422,14 @@ def lailaifish_manifest_gen(version, force, test, urlCDN, urlVer):
         urlVer = urlVer or "https://fanyu123.com/bao/ver/game/"
         createManifestEx(urlCDN,
                          urlVer,
-                         "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
+                         "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/Resources",
                          "D:/glp/Github/Fish2",
                          "update", version, force)  # "1.0.8"
     else:
         urlCDN = urlCDN or "https://www.fanyu123.cn/ver3/game/"
         createManifestEx(urlCDN,
                          "https://www.fanyu123.cn/ver3/game/",
-                         "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32",
+                         "D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/Resources",
                          "D:/glp/Github/Fish2",
                          "update", version, force)  # "1.0.8"
 

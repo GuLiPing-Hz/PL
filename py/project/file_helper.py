@@ -163,7 +163,7 @@ class Diskwalk(object):
     def walk(self, func=None):
         """ 
                 遍历目录和文件
-                @func       指定回调, 回传当前路径和文件
+                @func(dirpath, file)       指定回调, 回传当前路径和文件
 
                 @return     返回 文件名数组,全路径文件名数组  一一对应
         """
@@ -193,7 +193,7 @@ class Diskwalk(object):
     def walk_dir(self, func=None):
         """ 
                 遍历目录不遍历文件
-                @func       指定回调, 回传当前路径和文件
+                @func(dirpath, dirname)       指定回调, 回传当前路径和文件
 
                 @return     返回 所有子目录
         """
@@ -264,23 +264,16 @@ def main():
     # remove_dir(testDir)
 
     # r w a
-    with zipfile.ZipFile('D:/glp/cocos/spam.zip', 'a') as myzip:
-        myzip.write('D:/glp/cocos/eggs.txt', 'D:/glp/cocos/eggs.txt')
-        myzip.write('D:/glp/cocos/eggs1.txt', "eggs1.txt")
+    # with zipfile.ZipFile('D:/glp/cocos/spam.zip', 'a') as myzip:
+    #     myzip.write('D:/glp/cocos/eggs.txt', 'D:/glp/cocos/eggs.txt')
+    #     myzip.write('D:/glp/cocos/eggs1.txt', "eggs1.txt")
 
-    text = """	
-	echo 当前盘符：%~d0
-	echo 当前路径：%cd%
-	echo 当前执行命令行：%0
-	echo 当前bat文件路径：%~dp0
-	echo 当前bat文件短路径：%~sdp0
+    dir = "D:/glp/Github/Fish2/frameworks/runtime-src/Classes"
+    def walk1(dirpath, file):
+        if file.endswith(".h"):
+            print("${RUNTIME_SRC_ROOT}/Classes"+dirpath[len(dir):]+"/"+file)
 
-	%~d0
-	cd %~dp0
-	cocos jscompile -s update -d update_jsc
-			"""
-    # write_str_to_file(join(testDir, "jscompile.bat"), text)
-
+    Diskwalk(dir).walk(walk1)
 
 if __name__ == '__main__':
     main()
