@@ -346,7 +346,7 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
         for i in range(len(procs)):
             exeCpu = procs[i].cpu_percent(0.1)
             print("cpu["+names[i]+"]="+str(exeCpu)+"\n")
-            if cpu > thresholdCpu:
+            if exeCpu > thresholdCpu:
                 text += "# CPU Single Warning\n"
                 text += "#### ["+names[i]+",cpu=]"+str(exeCpu)+"]\n"
         # print("*"*60)
