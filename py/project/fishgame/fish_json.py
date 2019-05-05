@@ -367,6 +367,18 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
             printSpace8(ret_cnt,name+".loadTextureDisabled(" +
                         repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
+    if("Scale9Enable" in json_content):
+        scale9_x = 0 if(
+            "Scale9OriginX" not in json_content) else json_content["Scale9OriginX"]
+        scale9_y = 0 if(
+            "Scale9OriginY" not in json_content) else json_content["Scale9OriginY"]
+        printSpace8(ret_cnt,name+".setScale9Enabled(true);")
+        printSpace8(ret_cnt,
+            name+".setCapInsets(cc.rect("+str(scale9_x)+", "+str(scale9_y)+", 1, 1));")
+            
+    if json_content["ButtonText"] != "":
+        printSpace8(ret_cnt,name+".setTitleText("+json_content["ButtonText"]+");")
+
     if("TouchEnable" not in json_content):
         printSpace8(ret_cnt,name+".setTouchEnabled(false);")
 
@@ -1299,10 +1311,10 @@ if __name__ == '__main__':
     USERIMAGEPLIST = False
     CURGAMERESDIR = "D:/glp/GitHub/Fish2/res1"
     # # 大厅
-    #AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
+    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/vip","AutoUiForMain")
 
     # 捕鱼游戏
-    AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
+    # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game","AutoUiForFish")
 
     # 水浒传
     # AutoParseJsonDir(CURGAMERESDIR+"/scene_ext_ignore/game2","AutoUiForShz")

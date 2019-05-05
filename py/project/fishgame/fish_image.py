@@ -158,7 +158,7 @@ def publish():
     projectDir = "D:/glp/Github/Fish2/"  # 打包整个项目
     urlCDN = "https://fanyu123.com/bao/ver/game/"  # 正式服下载文件的CDN服务器
     urlVer = "https://fanyu123.com/bao/ver/game/"
-    isTest = True
+    isTest = False
     isOnlyVer = False # True#
 
     if isTest:
