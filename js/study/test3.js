@@ -786,7 +786,7 @@ setUTCMonth()
 setUTCSeconds()
 */
 
-// RegExp 对象
+// RegExp对象
 // 新建正则表达式有两种方法。一种是使用字面量，以斜杠表示开始和结束。
 // var regex = /xyz/;
 // 另一种是使用RegExp构造函数。

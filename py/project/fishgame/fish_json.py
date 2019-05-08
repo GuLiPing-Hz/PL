@@ -329,9 +329,6 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
         name+".setPressedActionEnabled(true);//--启用点击动作,只有当设置了按下的图片才有效果")
     
     printSpace8(ret_cnt,name+".setTitleFontName(res.default_font);")
-    printSpace8(ret_cnt,name+".setTitleFontSize(32);")
-    printSpace8(ret_cnt,name+".setTitleText('');")
-    printSpace8(ret_cnt,name+".setTitleColor(cc.color('#ffffff'));")
 
     if(name.startswith("btn_")):
         printSpace8(ret_cnt,name+".setZoomScale(-0.1);")
@@ -377,7 +374,23 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
             name+".setCapInsets(cc.rect("+str(scale9_x)+", "+str(scale9_y)+", 1, 1));")
             
     if json_content["ButtonText"] != "":
-        printSpace8(ret_cnt,name+".setTitleText("+json_content["ButtonText"]+");")
+        printSpace8(ret_cnt,name+".setTitleText("+repr(json_content["ButtonText"])+");")
+        printSpace8(ret_cnt,name+".setTitleFontSize("+str(json_content["FontSize"])+");")
+        json_color = json_content["TextColor"]  # 设置颜色值
+        r = 255
+        g = 255
+        b = 255
+        if("R" in json_color):
+            r = json_color["R"]
+        if("G" in json_color):
+            g = json_color["G"]
+        if("B" in json_color):
+            b = json_color["B"]
+
+        if(r == 255 and g == 255 and b == 255):
+            pass
+        else:
+            printSpace8(ret_cnt,str_node+".setTitleColor(cc.color(" +str(r)+", "+str(g)+", "+str(b)+"));")
 
     if("TouchEnable" not in json_content):
         printSpace8(ret_cnt,name+".setTouchEnabled(false);")
