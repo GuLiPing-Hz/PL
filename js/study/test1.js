@@ -10,6 +10,10 @@
  * 对象
  * 函数
  * 数组
+
+ URL Encode
+ encodeURI 编解码
+ Base64 编解码
  */
 
 /* 变量提升
