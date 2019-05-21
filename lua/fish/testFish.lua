@@ -335,3 +335,57 @@ end
 -- savePayOrderToLocal("2")
 
 print(CompileVersion("1.0.62.1","1.2.0"))
+
+
+function string2time(timeString)
+    if type(timeString) ~= 'string' then
+        error('string2time: timeString is not a string')
+        return 0
+    end
+    local fun = string.gmatch(timeString, "%d+")
+    local y = fun() or 0
+    if y == 0 then
+        error('timeString is a invalid time string')
+        return 0
+    end
+    local m = fun() or 0
+    if m == 0 then
+        error('timeString is a invalid time string')
+        return 0
+    end
+    local d = fun() or 0
+    if d == 0 then
+        error('timeString is a invalid time string')
+        return 0
+    end
+    local H = fun() or 0
+    if H == 0 then
+        error('timeString is a invalid time string')
+        return 0
+    end
+    local M = fun() or 0
+    if M == 0 then
+        error('timeString is a invalid time string')
+        return 0
+    end
+    local S = fun() or 0
+    if S == 0 then
+        error('timeString is a invalid time string')
+        return 0
+    end
+    return os.time({ year = y, month = m, day = d, hour = H, min = M, sec = S })
+end
+
+function todayBegin()
+    local today = os.date("*t")
+    return os.time({ year = today.year, month = today.month,
+                     day = today.day, hour = 0, min = 0, sec = 0 })
+end
+
+local tmutc = string2time('2019-05-28 00:00:00')
+local utc = todayBegin()
+if math.abs(utc - tmutc) % (7 * 86400) == 0 then
+    print("YES Clean")
+else
+    print("NO Clean")
+end
