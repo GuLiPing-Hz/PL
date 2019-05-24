@@ -389,3 +389,6 @@ if math.abs(utc - tmutc) % (7 * 86400) == 0 then
 else
     print("NO Clean")
 end
+
+
+
