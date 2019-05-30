@@ -14,6 +14,8 @@ import readline  # 引入该包可以再读取input的时候使用delete
 # curl -i http://127.0.0.1:32767/updateCfg?token=auth_notify
 # 更新金币配置
 # curl -i http://127.0.0.1:56799/reloadGold
+#重新加载活动信息
+# curl -i http://127.0.0.1:56799/reloadActivity
 
 # 服务器切换配置要一致。
 PortCfg = 56799
