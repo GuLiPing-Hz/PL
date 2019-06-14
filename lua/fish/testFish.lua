@@ -390,5 +390,10 @@ else
     print("NO Clean")
 end
 
+local wealths = {}
+table.insert(wealths,{uid=0,val=100})
+table.insert(wealths,{uid=1,val=-20})
+table.sort(wealths, function(a, b) return a.val < b.val end)
+print("sort:",tableToStr(wealths))
 
 
