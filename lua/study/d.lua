@@ -25,7 +25,7 @@ print("字符串复制",string.rep("*",30))
 print("字符串格式化",string.format("the first code is %s",s)) -- 格式等价于C语言
 print("字符串全部转为大写字母",string.upper(s))
 print("字符串全部转为小写字母",string.lower(s))
-print("字符串查找",string.find(s,"ll",1)) -- 返回在字符串中的开始位置和结束位置，找不到返回nil
+print("字符串查找 ll",string.find(s,"ll",4)) -- 返回在字符串中的开始位置和结束位置，找不到返回nil
 print("字符串查找替换",string.gsub(s,"l","L",2)) -- 最后一个参数是要替换的次数，不填，默认全部替换
 print("字符串查找替换2",string.gsub(s,"l","L"))
 print("字符串反转",string.reverse(s))
