@@ -275,8 +275,10 @@ def ParseCCSSpriteProp(json_content, name=None):
 
     if str_sprite == "":
         return "", is_frame
-    else:
+    elif not is_frame:
         return "res/"+str_sprite, is_frame
+    else:
+        return str_sprite, is_frame
         
 
 def ParseCCSBtn(json_content, str_parent, str_node, cur_cnt, ret_cnt):
@@ -420,12 +422,7 @@ def ParseCCSSprite(json_content, str_parent, cur_cnt, ret_cnt):
         # 设置纹理
         img_path, is_frame = ParseCCSSpriteProp(json_content)
         if USERIMAGEPLIST or is_frame:
-            printSpace8(ret_cnt,"{")
-            printSpace8(ret_cnt,
-                "    var spriteFrame = cc.spriteFrameCache.getSpriteFrame("+repr(img_path)+");")
-            printSpace8(ret_cnt,"    if(spriteFrame)")
-            printSpace8(ret_cnt,"        "+name+".setSpriteFrame(spriteFrame);")
-            printSpace8(ret_cnt,"}")
+            printSpace8(ret_cnt,name+".initWithSpriteFrameName("+repr(img_path)+");")
         else:
             printSpace8(ret_cnt,name+".initWithFile("+repr(img_path)+");")
 

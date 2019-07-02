@@ -194,8 +194,8 @@ if __name__ == '__main__':
 
     # main("D:/glp/GitHub/Fish2")
     # 加密增加的图片文件
-    # temp("E:/work/UI/temp",False);#是否遍历子目录
-    publish()
+    temp("E:/work/UI/temp",False);#是否遍历子目录
+    # publish()
     # 编译工程 最后一步，加密jsc，跟苹果斗智斗勇
     # enc_jss("D:/glp/Github/Fish2/third_part/jsc/1")#打包单独的jsc
     # enc_jss("D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Release.win32/jsc")
