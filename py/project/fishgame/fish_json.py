@@ -303,7 +303,7 @@ def ParseCCSBtn(json_content, str_parent, str_node, cur_cnt, ret_cnt):
 
     # 设置纹理
     img_path, is_frame = ParseCCSSpriteProp(json_content)
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,str_node+".loadTextureNormal(" +
                     repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
@@ -339,7 +339,7 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
 
     # 设置纹理
     img_path, is_frame = ParseCCSSpriteProp(json_content,"NormalFileData")
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,name+".loadTextureNormal(" +
                     repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
@@ -348,7 +348,7 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
 
     img_path, is_frame = ParseCCSSpriteProp(json_content,"PressedFileData")
     if(img_path != ""):
-        if USERIMAGEPLIST and is_frame:
+        if is_frame:
             printSpace8(ret_cnt,name+".loadTexturePressed(" +
                         repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
         else:
@@ -359,7 +359,7 @@ def ParseCCSBtn2(json_content, str_parent, cur_cnt, ret_cnt):
 
     img_path, is_frame = ParseCCSSpriteProp(json_content,"DisabledFileData")
     if(img_path != ""):
-        if USERIMAGEPLIST and is_frame:
+        if is_frame:
             printSpace8(ret_cnt,name+".loadTextureDisabled(" +
                         repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
         else:
@@ -421,7 +421,7 @@ def ParseCCSSprite(json_content, str_parent, cur_cnt, ret_cnt):
 
         # 设置纹理
         img_path, is_frame = ParseCCSSpriteProp(json_content)
-        if USERIMAGEPLIST or is_frame:
+        if is_frame:
             printSpace8(ret_cnt,name+".initWithSpriteFrameName("+repr(img_path)+");")
         else:
             printSpace8(ret_cnt,name+".initWithFile("+repr(img_path)+");")
@@ -459,7 +459,7 @@ def ParseCCSImage(json_content, str_parent, cur_cnt, ret_cnt):
             printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
 
         img_path, is_frame = ParseCCSSpriteProp(json_content)
-        if USERIMAGEPLIST and is_frame:
+        if is_frame:
             printSpace8(ret_cnt,name+".loadTexture("+repr(img_path) +
                         ", ccui.Widget.PLIST_TEXTURE);")
         else:
@@ -688,7 +688,7 @@ def ParseCCSLoadingBar(json_content, str_parent, cur_cnt, ret_cnt):
         printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "ImageFileData")
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,name+".loadTexture("+repr(img_path) +
                     ", ccui.Widget.PLIST_TEXTURE);")
     else:
@@ -771,7 +771,7 @@ def ParseCCSPanel(json_content, str_parent, cur_cnt, ret_cnt):
         if("FileData" in json_content):  # 检查纹理设置
 
             img_path, is_frame = ParseCCSSpriteProp(json_content)
-            if USERIMAGEPLIST and is_frame:
+            if is_frame:
                 printSpace8(ret_cnt,name+".setBackGroundImage("+repr(img_path) +
                             ", ccui.Widget.PLIST_TEXTURE);")
             else:
@@ -851,7 +851,7 @@ def ParseCCSSlider(json_content, str_parent, cur_cnt, ret_cnt):
         printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "BackGroundData")
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,name+".loadBarTexture("+repr(img_path) +
                     ", ccui.Widget.PLIST_TEXTURE);")
     else:
@@ -859,7 +859,7 @@ def ParseCCSSlider(json_content, str_parent, cur_cnt, ret_cnt):
                     ", ccui.Widget.LOCAL_TEXTURE);")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "ProgressBarData")
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,name+".loadProgressBarTexture(" +
                     repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
@@ -867,7 +867,7 @@ def ParseCCSSlider(json_content, str_parent, cur_cnt, ret_cnt):
                     repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "BallNormalData")
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,name+".loadSlidBallTextures(" +
                     repr(img_path)+","+repr(img_path)+","+repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
@@ -924,7 +924,7 @@ def ParseCCSCheckBox(json_content, str_parent, cur_cnt, ret_cnt):
         printSpace8(ret_cnt,getCurRetName(ret_cnt)+".push("+name+");")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "NormalBackFileData")
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,name+".loadTextureBackGround(" +
                     repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
@@ -932,7 +932,7 @@ def ParseCCSCheckBox(json_content, str_parent, cur_cnt, ret_cnt):
                     repr(img_path)+", ccui.Widget.LOCAL_TEXTURE);")
 
     img_path, is_frame = ParseCCSSpriteProp(json_content, "NodeNormalFileData")
-    if USERIMAGEPLIST and is_frame:
+    if is_frame:
         printSpace8(ret_cnt,name+".loadTextureFrontCross(" +
                     repr(img_path)+", ccui.Widget.PLIST_TEXTURE);")
     else:
