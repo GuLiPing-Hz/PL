@@ -287,7 +287,7 @@ def getMySqlState(isProduction, host, user, pwd, db):
             int(vThreads["Value"]), procList)
 
 
-def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thresholdFreeeDisk, names, restartCmds):
+def worker(isProduction, mysql, thresholdCpu,thresholdCpuSingle, thresholdAvailableMem, path, thresholdFreeeDisk, names, restartCmds):
     """
     isProduction True表示正式服，False测试服
     thresholdMysql myslq连接数上限阈值
@@ -346,9 +346,9 @@ def worker(isProduction, mysql, thresholdCpu, thresholdAvailableMem, path, thres
         for i in range(len(procs)):
             exeCpu = procs[i].cpu_percent(0.1)
             print("cpu["+names[i]+"]="+str(exeCpu)+"\n")
-            if exeCpu > thresholdCpu:
+            if exeCpu > thresholdCpuSingle:
                 text += "# CPU Single Warning\n"
-                text += "#### ["+names[i]+",cpu=]"+str(exeCpu)+"]\n"
+                text += "#### ["+names[i]+",cpu="+str(exeCpu)+">"+str(thresholdCpuSingle)+"]\n"
         # print("*"*60)
         vm = psutil.virtual_memory()
         # print("virtual_memory=",type(vm), vm)
@@ -453,7 +453,7 @@ if __name__ == '__main__':
         print("pwd=", mySqlPwd1)
 
     print(names)
-    worker(IsProduction, mysql, 90, mb100, "/home", mb1000, names, cmds)
+    worker(IsProduction, mysql, 90,200, mb100, "/home", mb1000, names, cmds)
 
     # 单个函数测试
     # checkProc("fishjs.exe","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Debug.win32/fishjs.exe")

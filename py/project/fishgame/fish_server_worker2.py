@@ -76,7 +76,7 @@ if __name__ == '__main__':
         mysql = ["192.168.100.2", "root", mySqlPwd1, "Buyu", 0.8]
         print("pwd=", mySqlPwd1)
     print(names)
-    fish_server_worker.worker(IsProduction, mysql, 90, mb100, "/home", mb1000, names, cmds)
+    fish_server_worker.worker(IsProduction, mysql, 90,100, mb100, "/home", mb1000, names, cmds)
 
     # print(getProcByCmdline("/opt/tcpproxy_test/tcpproxy"))
     # 单个函数测试
