@@ -59,24 +59,24 @@ if __name__ == '__main__':
     print("MySqlPwd=", mySqlPwd1, mySqlPwd2)
 
     # #@注意 路径必须以 / 分隔
+    cpuLimit = 100
     if len(sys.argv) >= 2 and sys.argv[1] == "debug":  # 测试服
-        names = ["/opt/fish/skynet/skynet", "/opt/tcpproxy3/tcpproxy", "/opt/tcpproxy_test/tcpproxy",
-                 "/opt/auth/auth", "/opt/xqtpay/xqtpay", "/opt/slot/slot", "/opt/lottery/lottery"]
-        cmds = ["/opt/fish/sh_start.sh", "/opt/tcpproxy3/start.sh", "/opt/tcpproxy_test/start.sh",
-                "/opt/auth/start.sh", "/opt/xqtpay/start.sh", "/opt/slot/start.sh", "/opt/lottery/start.sh"]
+        names = ["/opt/tcpproxy2/tcpproxy"]
+        cmds = ["/opt/tcpproxy2/start.sh"]
         mysql = ["127.0.0.1", "root", mySqlPwd2, "Buyu", 0.5]
         print("pwd=", mySqlPwd2)
     else:  # 正式服
         IsProduction = True
         # 正式服，目前auth用的是auth2，slot用的slot2
         names = ["/opt/fish2/skynet/skynet", "/opt/auth2/auth",
-                 "/opt/xqtpay/xqtpay", "/opt/slot/slot", "/opt/lottery/lottery"]
+                 "/opt/xqtpay/xqtpay", "/opt/slot/slot"]
         cmds = ["/opt/fish2/sh_start.sh", "/opt/auth2/start.sh",
-                "/opt/xqtpay/start.sh", "/opt/slot/start.sh", "/opt/lottery/start.sh"]
+                "/opt/xqtpay/start.sh", "/opt/slot/start.sh"]
         mysql = ["192.168.100.2", "root", mySqlPwd1, "Buyu", 0.8]
         print("pwd=", mySqlPwd1)
+        cpuLimit = 200
     print(names)
-    fish_server_worker.worker(IsProduction, mysql, 90,100, mb100, "/home", mb1000, names, cmds)
+    fish_server_worker.worker(IsProduction, mysql, 90,cpuLimit, mb100, "/home", mb1000, names, cmds)
 
     # print(getProcByCmdline("/opt/tcpproxy_test/tcpproxy"))
     # 单个函数测试

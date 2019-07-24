@@ -435,25 +435,25 @@ if __name__ == '__main__':
         mySqlPwd2 = f.readline()[:-1]
     print("MySqlPwd=", mySqlPwd1, mySqlPwd2)
 
+    cpuLimit = 100
     # #@注意 路径必须以 / 分隔
     if len(sys.argv) >= 2 and sys.argv[1] == "debug":  # 测试服
-        names = ["/opt/fish/skynet/skynet", "/opt/tcpproxy/tcpproxy", "/opt/tcpproxy_test/tcpproxy",
-                 "/opt/auth/auth", "/opt/xqtpay/xqtpay", "/opt/slot/slot", "/opt/lottery/lottery"]
-        cmds = ["/opt/fish/sh_start.sh", "/opt/tcpproxy/start.sh", "/opt/tcpproxy_test/start.sh",
-                "/opt/auth/start.sh", "/opt/xqtpay/start.sh", "/opt/slot/start.sh", "/opt/lottery/start.sh"]
+        names = ["/opt/tcpproxy1/tcpproxy"]
+        cmds = ["/opt/tcpproxy1/start.sh"]
         mysql = ["127.0.0.1", "root", mySqlPwd2, "Buyu", 0.5]
         print("pwd=", mySqlPwd2)
     else:  # 正式服
         IsProduction = True
         names = ["/opt/fish/skynet/skynet", "/opt/auth/auth", "/opt/xqtpay/xqtpay",
-                 "/opt/slot/slot", "/opt/lottery/lottery"]
+                 "/opt/slot/slot"]
         cmds = ["/opt/fish/sh_start.sh", "/opt/auth/start.sh",
-                "/opt/xqtpay/start.sh", "/opt/slot/start.sh", "/opt/lottery/start.sh"]
+                "/opt/xqtpay/start.sh", "/opt/slot/start.sh"]
         mysql = ["192.168.100.2", "root", mySqlPwd1, "Buyu", 0.8]
         print("pwd=", mySqlPwd1)
+        cpuLimit = 200
 
     print(names)
-    worker(IsProduction, mysql, 90,200, mb100, "/home", mb1000, names, cmds)
+    worker(IsProduction, mysql, 90,cpuLimit, mb100, "/home", mb1000, names, cmds)
 
     # 单个函数测试
     # checkProc("fishjs.exe","D:/glp/Github/Fish2/frameworks/runtime-src/proj.win32/Debug.win32/fishjs.exe")
