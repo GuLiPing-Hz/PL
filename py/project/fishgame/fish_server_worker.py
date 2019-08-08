@@ -437,15 +437,15 @@ if __name__ == '__main__':
     cpuLimit = 100
     # #@注意 路径必须以 / 分隔
     if len(sys.argv) >= 2 and sys.argv[1] == "debug":  # 测试服
-        names = ["/opt/tcpproxy1/tcpproxy"]
-        cmds = ["/opt/tcpproxy1/start.sh"]
+        names = ["/opt/gate/fish/skynet/skynet"]
+        cmds = ["/opt/gate/fish/sh-gate.sh"]
         mysql = ["127.0.0.1", "root", mySqlPwd2, "Buyu", 0.5]
         print("pwd=", mySqlPwd2)
     else:  # 正式服
         IsProduction = True
         names = ["/opt/fish/skynet/skynet", "/opt/auth/auth", "/opt/xqtpay/xqtpay",
                  "/opt/slot/slot"]
-        cmds = ["/opt/fish/sh_start.sh", "/opt/auth/start.sh",
+        cmds = ["/opt/fish/sh-center.sh", "/opt/auth/start.sh",
                 "/opt/xqtpay/start.sh", "/opt/slot/start.sh"]
         mysql = ["192.168.100.2", "root", mySqlPwd1, "Buyu", 0.8]
         print("pwd=", mySqlPwd1)

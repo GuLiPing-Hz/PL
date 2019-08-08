@@ -61,8 +61,8 @@ if __name__ == '__main__':
     # #@注意 路径必须以 / 分隔
     cpuLimit = 100
     if len(sys.argv) >= 2 and sys.argv[1] == "debug":  # 测试服
-        names = ["/opt/tcpproxy2/tcpproxy"]
-        cmds = ["/opt/tcpproxy2/start.sh"]
+        names = ["/opt/gate/fish/skynet/skynet"]
+        cmds = ["/opt/gate/fish/sh-gate.sh"]
         mysql = ["127.0.0.1", "root", mySqlPwd2, "Buyu", 0.5]
         print("pwd=", mySqlPwd2)
     else:  # 正式服
@@ -70,7 +70,7 @@ if __name__ == '__main__':
         # 正式服，目前auth用的是auth2，slot用的slot2
         names = ["/opt/fish2/skynet/skynet", "/opt/auth2/auth",
                  "/opt/xqtpay/xqtpay", "/opt/slot/slot"]
-        cmds = ["/opt/fish2/sh_start.sh", "/opt/auth2/start.sh",
+        cmds = ["/opt/fish2/sh-center.sh", "/opt/auth2/start.sh",
                 "/opt/xqtpay/start.sh", "/opt/slot/start.sh"]
         mysql = ["192.168.100.2", "root", mySqlPwd1, "Buyu", 0.8]
         print("pwd=", mySqlPwd1)

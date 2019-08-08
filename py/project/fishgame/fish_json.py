@@ -1249,7 +1249,7 @@ def ParseCCSJson(json_file, str_node=None, str_parent=None, cur_cnt=0, ret_cnt=0
         cur_csj_name = str_node
 
         json_anima = json_file[len(CURGAMERESDIR):]
-        printSpace8(ret_cnt,"{")
+        printSpace4(ret_cnt,"{")
         printSpace8(ret_cnt,"var "+cur_csj_name+" = ccs.load(" +
                     repr("res"+json_anima)+", 'res/');")
 

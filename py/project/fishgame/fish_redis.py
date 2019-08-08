@@ -57,7 +57,7 @@ def cleanUsrAndStat(pwd, pattern=None, host=None,):
     keys = r.keys()
     for i in range(len(keys)):
         theKey = (keys[i]).decode("utf-8")  # byte -> str
-        print("key=", theKey)
+        # print("key=", theKey)
         if not pattern:
             print("del "+theKey, r.delete(theKey))
         elif pattern.match(theKey):
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     # pattern = re.compile(r"^usr_checkin_\d+")#只匹配用户签到信息
     # pattern = re.compile(r"^usr_checkin7_\d+")#只匹配用户7日签到信息
-    # pattern = re.compile(r"^usr_\d+")#只匹配用户信息
+    pattern = re.compile(r"^usr_\d+")#只匹配用户信息
     # pattern = re.compile(r"^usr_today_\d+")#只匹配用户今日信息
     # pattern = re.compile(r"^usr_today_m_\d+")#只匹配用户今日更多信息
 
