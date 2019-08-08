@@ -273,7 +273,7 @@ def getMySqlState(isProduction, host, user, pwd, db):
             procList.append(val)
         elif val["Info"] != "show full processlist":
             procList.append(val)
-    print("procList=", procList)
+    print("procList=", json.dumps(procList))
 
     # print("\n--------------------------------\n")
     # print("统计日期 ：",time.strftime('%Y-%m-%d %H:%M:%S'))
@@ -285,7 +285,6 @@ def getMySqlState(isProduction, host, user, pwd, db):
 
     return (int(vMax["Value"]), int(vHistoryMax["Value"]),
             int(vThreads["Value"]), procList)
-
 
 def worker(isProduction, mysql, thresholdCpu,thresholdCpuSingle, thresholdAvailableMem, path, thresholdFreeeDisk, names, restartCmds):
     """
