@@ -262,7 +262,7 @@ def getMySqlState(isProduction, host, user, pwd, db):
     cursor.execute("show full processlist;")
     cCur = cursor.fetchall()
     print("cCur=", cCur)
-    print("netstats=", netstats)
+    print("netstats=", json.dumps(netstats))
     procList = []
     for i in range(len(cCur)):
         val = cCur[i]
