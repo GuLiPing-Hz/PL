@@ -65,6 +65,7 @@ if __name__ == '__main__':
         cmds = ["/opt/gate/fish/sh-gate.sh"]
         mysql = ["127.0.0.1", "root", mySqlPwd2, "Buyu", 0.5]
         print("pwd=", mySqlPwd2)
+        cpuLimit = 200
     else:  # 正式服
         IsProduction = True
         # 正式服，目前auth用的是auth2，slot用的slot2
