@@ -397,3 +397,4 @@ table.sort(wealths, function(a, b) return a.val < b.val end)
 print("sort:",tableToStr(wealths))
 
 
+print(CompileVersion("2.1.0.0","2.0.1.003"))

@@ -8,6 +8,7 @@ import sys
 python 数据类型详解
 '''
 
+
 # 字符串
 print("\n\n"+"*"*15+"字符串"+"*"*15)
 s = "hello world"
