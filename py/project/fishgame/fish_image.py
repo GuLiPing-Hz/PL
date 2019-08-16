@@ -154,12 +154,12 @@ def publish():
     # 第一步更改版本号，生成，版本文件，
     # 第二步VS编译jsc文件
     # 第三步再次执行我们的脚本文件
-    version = "2.0.2.005"  # "2.0.0.95" #ios version = "2.0.1.0"
+    version = "2.0.2.007"  # "2.0.0.95" #ios version = "2.0.1.0"
     projectDir = "D:/glp/Github/Fish2/"  # 打包整个项目
     urlCDN = "https://fanyu123.com/bao/ver/game/"  # 正式服下载文件的CDN服务器
     urlVer = "https://fanyu123.com/bao/ver/game/"
-    isTest = False
-    isOnlyVer = False # True#
+    isTest = True
+    isOnlyVer = True # True#
 
     if isTest:
         urlCDN = None

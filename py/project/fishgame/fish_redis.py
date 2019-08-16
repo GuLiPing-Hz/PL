@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     # pattern = re.compile(r"^usr_checkin_\d+")#只匹配用户签到信息
     # pattern = re.compile(r"^usr_checkin7_\d+")#只匹配用户7日签到信息
-    pattern = re.compile(r"^usr_\d+")#只匹配用户信息
+    # pattern = re.compile(r"^usr_\d+")#只匹配用户信息
     # pattern = re.compile(r"^usr_today_\d+")#只匹配用户今日信息
     # pattern = re.compile(r"^usr_today_m_\d+")#只匹配用户今日更多信息
 
@@ -108,10 +108,12 @@ if __name__ == '__main__':
     # pattern = re.compile(r"^usr_today_\S+")#匹配用户的所有今日信息，
     # pattern = re.compile(r"^usr_\S+")#匹配用户的所有信息，，在线列表的redis名字后面要换一下。。
 
-    print("pattern=", pattern)
     # if pattern:
-    # 	print("match=",pattern.match("usr_checkin7_165272"))
+    #   print("match=",pattern.match("usr_checkin7_165272"))
 
-    host = "121.196.203.52"
-    # host = "192.168.100.2"
-    cleanUsrAndStat(redisPwd, pattern, host)  # 清除所有的redis缓存，慎用
+    print("pattern=", pattern)
+    number = 1 #int(input("\n请确认pattern是否正确,输入(1执行|0退出)："))
+    if number == 1:
+        host = "121.196.203.52"
+        # host = "127.0.0.1"
+        cleanUsrAndStat(redisPwd, pattern, host)  # 清除所有的redis缓存，慎用
