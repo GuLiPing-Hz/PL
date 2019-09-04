@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
     # if pattern:
     #   print("match=",pattern.match("usr_checkin7_165272"))
-
+    # pattern = re.compile(r"usr_188935")
     print("pattern=", pattern)
     number = 1 #int(input("\n请确认pattern是否正确,输入(1执行|0退出)："))
     if number == 1:
