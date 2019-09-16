@@ -96,5 +96,9 @@ if __name__ == '__main__':
 	通知列表
 	是否全员通知
 	"""
-    ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494",
+    # ding_text("75dc4036476a829d8d4bcfefcc674310c7c1cd3ee373c9851ad64e0f184b2494",
+    #           "Hello World", numbers, False)
+
+    #https://oapi.dingtalk.com/robot/send?access_token=761dd7ffb3ce446f9bebb24b002a5581a41af0a0d7644cf4196f6a5d8b2efdde
+    ding_text("761dd7ffb3ce446f9bebb24b002a5581a41af0a0d7644cf4196f6a5d8b2efdde",
               "Hello World", numbers, False)
